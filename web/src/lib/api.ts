@@ -181,3 +181,115 @@ export async function deleteWallpaper(
     );
   }
 }
+
+export type LocalIconFile = {
+  filename: string;
+  url: string;
+  size: number;
+  modified: string;
+};
+
+export async function listLocalIcons():
+Promise<LocalIconFile[]> {
+  const response =
+    await fetch(
+      '/api/v2/icons'
+    );
+
+  if (!response.ok) {
+    throw new Error(
+      `Unable to load icons: ${
+        await readError(response)
+      }`
+    );
+  }
+
+  return response.json();
+}
+
+export async function uploadLocalIcon(
+  file: File
+): Promise<LocalIconFile> {
+  const form =
+    new FormData();
+
+  form.append(
+    'file',
+    file
+  );
+
+  const response =
+    await fetch(
+      '/api/v2/icons/upload',
+      {
+        method: 'POST',
+        body: form
+      }
+    );
+
+  if (!response.ok) {
+    throw new Error(
+      `Unable to upload icon: ${
+        await readError(response)
+      }`
+    );
+  }
+
+  return response.json();
+}
+
+export async function downloadDashboardLocalIcon(
+  value: string
+): Promise<LocalIconFile> {
+  const response =
+    await fetch(
+      '/api/v2/icons/dashboard',
+      {
+        method: 'POST',
+
+        headers: {
+          'Content-Type':
+            'application/json'
+        },
+
+        body:
+          JSON.stringify({
+            value
+          })
+      }
+    );
+
+  if (!response.ok) {
+    throw new Error(
+      `Unable to download Dashboard Icon: ${
+        await readError(response)
+      }`
+    );
+  }
+
+  return response.json();
+}
+
+export async function deleteLocalIcon(
+  filename: string
+): Promise<void> {
+  const response =
+    await fetch(
+      `/api/v2/icons/${
+        encodeURIComponent(
+          filename
+        )
+      }`,
+      {
+        method: 'DELETE'
+      }
+    );
+
+  if (!response.ok) {
+    throw new Error(
+      `Unable to delete icon: ${
+        await readError(response)
+      }`
+    );
+  }
+}

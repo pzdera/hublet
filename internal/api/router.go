@@ -16,12 +16,14 @@ type Options struct {
 	Store        *config.Store
 	WebFS        fs.FS
 	WallpaperDir string
+	IconDir      string
 }
 
 type Server struct {
 	store        *config.Store
 	webFS        fs.FS
 	wallpaperDir string
+	iconDir      string
 	mux          *http.ServeMux
 }
 
@@ -46,22 +48,42 @@ func New(
 		)
 	}
 
+	if options.IconDir == "" {
+		return nil, errors.New(
+			"icon directory is required",
+		)
+	}
+
+	wallpaperDir :=
+		filepath.Clean(
+			options.WallpaperDir,
+		)
+
+	iconDir :=
+		filepath.Clean(
+			options.IconDir,
+		)
+
 	if err := os.MkdirAll(
-		options.WallpaperDir,
+		wallpaperDir,
+		0o755,
+	); err != nil {
+		return nil, err
+	}
+
+	if err := os.MkdirAll(
+		iconDir,
 		0o755,
 	); err != nil {
 		return nil, err
 	}
 
 	server := &Server{
-		store: options.Store,
-		webFS: options.WebFS,
-
-		wallpaperDir: filepath.Clean(
-			options.WallpaperDir,
-		),
-
-		mux: http.NewServeMux(),
+		store:        options.Store,
+		webFS:        options.WebFS,
+		wallpaperDir: wallpaperDir,
+		iconDir:      iconDir,
+		mux:          http.NewServeMux(),
 	}
 
 	server.routes()
@@ -109,7 +131,28 @@ func (s *Server) routes() {
 		s.deleteWallpaper,
 	)
 
-	wallpaperServer :=
+	s.mux.HandleFunc(
+		"GET /api/v2/icons",
+		s.listIcons,
+	)
+
+	s.mux.HandleFunc(
+		"POST /api/v2/icons/upload",
+		s.uploadIcon,
+	)
+
+	s.mux.HandleFunc(
+		"POST /api/v2/icons/dashboard",
+		s.downloadDashboardIcon,
+	)
+
+	s.mux.HandleFunc(
+		"DELETE /api/v2/icons/{filename}",
+		s.deleteIcon,
+	)
+
+	s.mux.Handle(
+		"GET /wallpapers/",
 		http.StripPrefix(
 			"/wallpapers/",
 			http.FileServer(
@@ -117,11 +160,19 @@ func (s *Server) routes() {
 					s.wallpaperDir,
 				),
 			),
-		)
+		),
+	)
 
 	s.mux.Handle(
-		"GET /wallpapers/",
-		wallpaperServer,
+		"GET /icons/",
+		http.StripPrefix(
+			"/icons/",
+			http.FileServer(
+				http.Dir(
+					s.iconDir,
+				),
+			),
+		),
 	)
 
 	s.mux.Handle(
@@ -171,9 +222,7 @@ func (s *Server) putConfig(
 	var cfg config.Config
 
 	decoder :=
-		json.NewDecoder(
-			r.Body,
-		)
+		json.NewDecoder(r.Body)
 
 	decoder.DisallowUnknownFields()
 

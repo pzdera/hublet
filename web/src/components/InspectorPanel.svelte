@@ -249,6 +249,9 @@
       selection.itemId
     );
   }
+
+  import ServiceIcon from './ServiceIcon.svelte';
+  import LocalIconManager from './LocalIconManager.svelte';
 </script>
 
 <aside class="inspector-panel">
@@ -750,15 +753,7 @@
         </div>
 
         {#if selectedItem.icon.type === 'local'}
-          <label class="inspector-field">
-            <span>Filename</span>
-
-            <input
-              bind:value={selectedItem.icon.value}
-              type="text"
-              placeholder="proxmox.png"
-            />
-          </label>
+          <LocalIconManager item={selectedItem} />
         {/if}
       </div>
 

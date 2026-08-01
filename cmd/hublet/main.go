@@ -31,22 +31,27 @@ func main() {
 		"/app/wallpapers",
 	)
 
-	if err := os.MkdirAll(
-		wallpaperDir,
-		0o755,
-	); err != nil {
+	iconDir := envOr(
+		"HUBLET_ICON_DIR",
+		"/app/icons",
+	)
+
+	absoluteWallpaperDir, err :=
+		prepareDirectory(wallpaperDir)
+
+	if err != nil {
 		log.Fatalf(
 			"initialize wallpaper directory: %v",
 			err,
 		)
 	}
 
-	absoluteWallpaperDir, err :=
-		filepath.Abs(wallpaperDir)
+	absoluteIconDir, err :=
+		prepareDirectory(iconDir)
 
 	if err != nil {
 		log.Fatalf(
-			"resolve wallpaper directory: %v",
+			"initialize icon directory: %v",
 			err,
 		)
 	}
@@ -76,6 +81,7 @@ func main() {
 		Store:        store,
 		WebFS:        webFS,
 		WallpaperDir: absoluteWallpaperDir,
+		IconDir:      absoluteIconDir,
 	})
 
 	if err != nil {
@@ -95,12 +101,30 @@ func main() {
 		absoluteWallpaperDir,
 	)
 
+	log.Printf(
+		"Icon directory: %s",
+		absoluteIconDir,
+	)
+
 	if err := http.ListenAndServe(
 		addr,
 		handler,
 	); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func prepareDirectory(
+	path string,
+) (string, error) {
+	if err := os.MkdirAll(
+		path,
+		0o755,
+	); err != nil {
+		return "", err
+	}
+
+	return filepath.Abs(path)
 }
 
 func envOr(

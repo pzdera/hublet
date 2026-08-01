@@ -15,6 +15,7 @@ import './resource-info.css';
 import './service-resources.css';
 import './appearance.css';
 import './service-icons.css';
+import './local-icon-manager.css';
 
 mount(App, {
   target: document.getElementById('app')!
