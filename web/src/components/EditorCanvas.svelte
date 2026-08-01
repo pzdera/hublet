@@ -22,6 +22,10 @@
   } from '../lib/editor';
 
   import {
+    sectionSurfaceStyle
+  } from '../lib/section-surface';
+
+  import {
     sectionSortable
   } from '../lib/section-sortable';
 
@@ -210,6 +214,7 @@
     return [
       'editor-canvas-section',
       `canvas-width-${section.width}`,
+      `surface-${section.surface}`,
       sectionSelected(section.id)
         ? 'selected'
         : ''
@@ -327,7 +332,7 @@
         <article
           class={sectionClass(section)}
           data-section-id={section.id}
-          style={`--section-accent:${section.accent}`}
+          style={sectionSurfaceStyle(section)}
           aria-label={section.title}
           onclick={(event) => {
             event.stopPropagation();

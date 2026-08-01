@@ -43,10 +43,20 @@ export type SectionCardSize =
   | 'medium'
   | 'large';
 
+export type SectionSurface =
+  | 'solid'
+  | 'transparent'
+  | 'glass'
+  | 'none';
+
 export type Section = {
   id: string;
   title: string;
   accent: string;
+  surface: SectionSurface;
+  surfaceOpacity: number;
+  surfaceBlur: number;
+  showBorder: boolean;
   layout: SectionLayout;
   width: SectionWidth;
   cardSize: SectionCardSize;

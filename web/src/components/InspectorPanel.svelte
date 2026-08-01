@@ -5,6 +5,7 @@
     Section,
     SectionCardSize,
     SectionLayout,
+    SectionSurface,
     SectionWidth
   } from '../lib/types';
 
@@ -71,6 +72,33 @@
       value: 'full',
       label: 'Full',
       description: '12 / 12'
+    }
+  ];
+
+  const sectionSurfaces: Array<{
+    value: SectionSurface;
+    label: string;
+    description: string;
+  }> = [
+    {
+      value: 'solid',
+      label: 'Solid',
+      description: 'Strong dark panel'
+    },
+    {
+      value: 'transparent',
+      label: 'Transparent',
+      description: 'Subtle tinted surface'
+    },
+    {
+      value: 'glass',
+      label: 'Glass',
+      description: 'Transparent with blur'
+    },
+    {
+      value: 'none',
+      label: 'None',
+      description: 'No panel background'
     }
   ];
 
@@ -397,6 +425,100 @@
             />
           </label>
         </details>
+      </div>
+
+
+      <div class="inspector-group section-surface-settings">
+        <div class="inspector-group-heading">
+          <div>
+            <strong>Section surface</strong>
+
+            <small>
+              Controls the panel behind this section.
+            </small>
+          </div>
+        </div>
+
+        <div class="section-surface-options">
+          {#each sectionSurfaces as option}
+            <button
+              class:active={
+                selectedSection.surface === option.value
+              }
+              type="button"
+              onclick={() => {
+                selectedSection.surface = option.value;
+              }}
+            >
+              <span
+                class={`section-surface-preview ${option.value}`}
+              >
+                <i></i>
+                <i></i>
+              </span>
+
+              <span>
+                <strong>{option.label}</strong>
+                <small>{option.description}</small>
+              </span>
+            </button>
+          {/each}
+        </div>
+
+        {#if selectedSection.surface !== 'none'}
+          <label class="section-surface-range">
+            <span>
+              <strong>Opacity</strong>
+
+              <output>
+                {selectedSection.surfaceOpacity}%
+              </output>
+            </span>
+
+            <input
+              bind:value={selectedSection.surfaceOpacity}
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+            />
+          </label>
+        {/if}
+
+        {#if selectedSection.surface === 'glass'}
+          <label class="section-surface-range">
+            <span>
+              <strong>Backdrop blur</strong>
+
+              <output>
+                {selectedSection.surfaceBlur}px
+              </output>
+            </span>
+
+            <input
+              bind:value={selectedSection.surfaceBlur}
+              type="range"
+              min="0"
+              max="40"
+              step="1"
+            />
+          </label>
+        {/if}
+
+        <label class="toggle-control section-border-toggle">
+          <span>
+            <strong>Section border</strong>
+
+            <small>
+              Draw the accent outline around this panel.
+            </small>
+          </span>
+
+          <input
+            bind:checked={selectedSection.showBorder}
+            type="checkbox"
+          />
+        </label>
       </div>
 
       <div class="inspector-group">

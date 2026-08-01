@@ -221,6 +221,35 @@ func Validate(cfg Config) error {
 			)
 		}
 
+		switch section.Surface {
+		case "solid",
+			"transparent",
+			"glass",
+			"none":
+		default:
+			return fmt.Errorf(
+				"section %q has unsupported surface %q",
+				section.ID,
+				section.Surface,
+			)
+		}
+
+		if section.SurfaceOpacity < 0 ||
+			section.SurfaceOpacity > 100 {
+			return fmt.Errorf(
+				"section %q surface opacity must be between 0 and 100",
+				section.ID,
+			)
+		}
+
+		if section.SurfaceBlur < 0 ||
+			section.SurfaceBlur > 40 {
+			return fmt.Errorf(
+				"section %q surface blur must be between 0 and 40",
+				section.ID,
+			)
+		}
+
 		switch section.Layout {
 		case "list",
 			"grid",

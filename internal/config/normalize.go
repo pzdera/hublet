@@ -76,6 +76,13 @@ func Normalize(cfg *Config) {
 			section.Accent = "#4f8cff"
 		}
 
+		if section.Surface == "" {
+			section.Surface = "solid"
+			section.SurfaceOpacity = 82
+			section.SurfaceBlur = 16
+			section.ShowBorder = true
+		}
+
 		switch section.Layout {
 		case "":
 			section.Layout = "list"

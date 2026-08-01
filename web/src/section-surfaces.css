@@ -1,0 +1,502 @@
+/* =========================================================
+   SECTION SURFACE RENDERING
+   ========================================================= */
+
+.section,
+.editor-canvas-section {
+  --section-surface-opacity: 0.82;
+  --section-surface-blur: 16px;
+  --section-border-width: 1px;
+
+  position: relative;
+
+  border-style: solid !important;
+  border-width:
+    var(--section-border-width) !important;
+
+  border-color:
+    color-mix(
+      in srgb,
+      var(--section-accent) 50%,
+      rgba(255, 255, 255, 0.13)
+    ) !important;
+
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    backdrop-filter 160ms ease;
+}
+
+
+/* Solid */
+
+.section.surface-solid,
+.editor-canvas-section.surface-solid {
+  background:
+    rgba(
+      13,
+      18,
+      29,
+      var(--section-surface-opacity)
+    ) !important;
+
+  box-shadow:
+    0 15px 42px
+    rgba(
+      0,
+      0,
+      0,
+      0.23
+    );
+
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+
+/* Transparent */
+
+.section.surface-transparent,
+.editor-canvas-section.surface-transparent {
+  background:
+    rgba(
+      15,
+      21,
+      33,
+      calc(
+        var(--section-surface-opacity) *
+        0.52
+      )
+    ) !important;
+
+  box-shadow:
+    0 10px 32px
+    rgba(
+      0,
+      0,
+      0,
+      0.1
+    );
+
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+
+/* Glass */
+
+.section.surface-glass,
+.editor-canvas-section.surface-glass {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(
+        255,
+        255,
+        255,
+        calc(
+          var(--section-surface-opacity) *
+          0.13
+        )
+      ),
+      rgba(
+        8,
+        13,
+        23,
+        calc(
+          var(--section-surface-opacity) *
+          0.55
+        )
+      )
+    ) !important;
+
+  box-shadow:
+    0 18px 55px
+    rgba(
+      0,
+      0,
+      0,
+      0.22
+    ),
+    inset 0 1px 0
+    rgba(
+      255,
+      255,
+      255,
+      0.07
+    );
+
+  backdrop-filter:
+    blur(
+      var(--section-surface-blur)
+    )
+    saturate(1.18);
+
+  -webkit-backdrop-filter:
+    blur(
+      var(--section-surface-blur)
+    )
+    saturate(1.18);
+}
+
+
+/* None */
+
+.section.surface-none,
+.editor-canvas-section.surface-none {
+  background:
+    transparent !important;
+
+  box-shadow:
+    none !important;
+
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+
+/*
+ * None without border must genuinely disappear,
+ * while its layout and content remain.
+ */
+
+.section.surface-none[style*="--section-border-width:0px"],
+.editor-canvas-section.surface-none[style*="--section-border-width:0px"] {
+  border-color:
+    transparent !important;
+}
+
+
+/* Selected editor section remains visible. */
+
+.editor-canvas-section.selected {
+  outline:
+    2px solid
+    rgba(
+      79,
+      140,
+      255,
+      0.78
+    );
+
+  outline-offset: 3px;
+}
+
+
+/* =========================================================
+   INSPECTOR CONTROLS
+   ========================================================= */
+
+.section-surface-settings {
+  gap: 12px;
+}
+
+.section-surface-options {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: 7px;
+}
+
+.section-surface-options button {
+  min-width: 0;
+  min-height: 83px;
+
+  display: grid;
+
+  grid-template-columns:
+    55px
+    minmax(0, 1fr);
+
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 8px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 11px;
+
+  cursor: pointer;
+
+  color: inherit;
+  text-align: left;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.025
+    );
+}
+
+.section-surface-options button:hover {
+  border-color:
+    rgba(
+      79,
+      140,
+      255,
+      0.34
+    );
+}
+
+.section-surface-options button.active {
+  border-color: #4f8cff;
+
+  background:
+    rgba(
+      79,
+      140,
+      255,
+      0.1
+    );
+
+  box-shadow:
+    0 0 0 3px
+    rgba(
+      79,
+      140,
+      255,
+      0.06
+    );
+}
+
+.section-surface-options button >
+span:last-child {
+  min-width: 0;
+
+  display: grid;
+  gap: 3px;
+}
+
+.section-surface-options strong {
+  font-size: 0.68rem;
+}
+
+.section-surface-options small {
+  color: var(--muted);
+
+  font-size: 0.57rem;
+  line-height: 1.35;
+}
+
+.section-surface-preview {
+  width: 55px;
+  height: 43px;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  align-content: end;
+
+  gap: 4px;
+
+  padding: 7px;
+
+  overflow: hidden;
+
+  border-radius: 9px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #684252,
+      #171c2a
+    );
+}
+
+.section-surface-preview i {
+  height: 12px;
+
+  display: block;
+
+  border-radius: 4px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.27
+    );
+}
+
+.section-surface-preview.solid {
+  border:
+    1px solid
+    #4f6081;
+
+  background: #171e2c;
+}
+
+.section-surface-preview.transparent {
+  border:
+    1px solid
+    rgba(
+      110,
+      147,
+      210,
+      0.52
+    );
+
+  background:
+    linear-gradient(
+      rgba(
+        12,
+        18,
+        30,
+        0.48
+      ),
+      rgba(
+        12,
+        18,
+        30,
+        0.48
+      )
+    ),
+    linear-gradient(
+      145deg,
+      #784e5f,
+      #1b2334
+    );
+}
+
+.section-surface-preview.glass {
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.28
+    );
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(
+        255,
+        255,
+        255,
+        0.19
+      ),
+      rgba(
+        13,
+        20,
+        34,
+        0.42
+      )
+    ),
+    linear-gradient(
+      145deg,
+      #75495c,
+      #172238
+    );
+
+  box-shadow:
+    inset 0 1px 0
+    rgba(
+      255,
+      255,
+      255,
+      0.16
+    );
+}
+
+.section-surface-preview.none {
+  border:
+    1px dashed
+    rgba(
+      255,
+      255,
+      255,
+      0.24
+    );
+
+  background:
+    linear-gradient(
+      145deg,
+      #704657,
+      #182134
+    );
+}
+
+.section-surface-preview.none i {
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.18
+    );
+}
+
+.section-surface-range {
+  display: grid;
+  gap: 8px;
+
+  padding: 10px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 11px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.022
+    );
+}
+
+.section-surface-range > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+}
+
+.section-surface-range strong {
+  font-size: 0.68rem;
+}
+
+.section-surface-range output {
+  min-width: 45px;
+
+  color: #a9c7ff;
+
+  font-size: 0.64rem;
+  text-align: right;
+}
+
+.section-surface-range input {
+  width: 100%;
+  accent-color: #4f8cff;
+}
+
+.section-border-toggle {
+  margin: 0;
+}
+
+
+@media (max-width: 420px) {
+  .section-surface-options {
+    grid-template-columns: 1fr;
+  }
+}

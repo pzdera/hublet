@@ -14,6 +14,7 @@ import './section-sortable.css';
 import './resource-info.css';
 import './service-resources.css';
 import './appearance.css';
+import './section-surfaces.css';
 import './service-icons.css';
 import './local-icon-manager.css';
 

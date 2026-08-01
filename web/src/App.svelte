@@ -14,6 +14,10 @@
     Section
   } from './lib/types';
 
+  import {
+    sectionSurfaceStyle
+  } from './lib/section-surface';
+
   import SearchBar from './components/SearchBar.svelte';
   import EditorPanel from './components/EditorPanel.svelte';
   import ServiceIcon from './components/ServiceIcon.svelte';
@@ -374,9 +378,10 @@
               <section
                 class={[
                   'section',
-                  `width-${section.width}`
+                  `width-${section.width}`,
+                  `surface-${section.surface}`
                 ].join(' ')}
-                style={`--section-accent:${section.accent}`}
+                style={sectionSurfaceStyle(section)}
               >
                 <header class="section-header">
                   <div>

@@ -54,16 +54,20 @@ type Search struct {
 }
 
 type Section struct {
-	ID          string `json:"id"`
-	Title       string `json:"title"`
-	Accent      string `json:"accent"`
-	Layout      string `json:"layout"`
-	Width       string `json:"width"`
-	CardSize    string `json:"cardSize"`
-	GridColumns int    `json:"gridColumns"`
-	FillLastRow bool   `json:"fillLastRow"`
-	Collapsed   bool   `json:"collapsed"`
-	Items       []Item `json:"items"`
+	ID             string `json:"id"`
+	Title          string `json:"title"`
+	Accent         string `json:"accent"`
+	Surface        string `json:"surface"`
+	SurfaceOpacity int    `json:"surfaceOpacity"`
+	SurfaceBlur    int    `json:"surfaceBlur"`
+	ShowBorder     bool   `json:"showBorder"`
+	Layout         string `json:"layout"`
+	Width          string `json:"width"`
+	CardSize       string `json:"cardSize"`
+	GridColumns    int    `json:"gridColumns"`
+	FillLastRow    bool   `json:"fillLastRow"`
+	Collapsed      bool   `json:"collapsed"`
+	Items          []Item `json:"items"`
 }
 
 type Item struct {
