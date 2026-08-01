@@ -67,13 +67,21 @@ type Section struct {
 }
 
 type Item struct {
-	ID           string `json:"id"`
-	Type         string `json:"type"`
-	Name         string `json:"name"`
-	URL          string `json:"url"`
-	Description  string `json:"description"`
-	Icon         Icon   `json:"icon"`
-	OpenInNewTab bool   `json:"openInNewTab"`
+	ID           string           `json:"id"`
+	Type         string           `json:"type"`
+	Name         string           `json:"name"`
+	URL          string           `json:"url"`
+	Description  string           `json:"description"`
+	Icon         Icon             `json:"icon"`
+	OpenInNewTab bool             `json:"openInNewTab"`
+	Resources    ServiceResources `json:"resources"`
+}
+
+type ServiceResources struct {
+	Enabled    bool `json:"enabled"`
+	ShowStatus bool `json:"showStatus"`
+	ShowCPU    bool `json:"showCpu"`
+	ShowMemory bool `json:"showMemory"`
 }
 
 type Icon struct {

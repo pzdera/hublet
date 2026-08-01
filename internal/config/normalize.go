@@ -79,6 +79,7 @@ func Normalize(cfg *Config) {
 		switch section.Layout {
 		case "":
 			section.Layout = "list"
+
 		case "large":
 			section.Layout = "featured"
 		}
@@ -86,8 +87,10 @@ func Normalize(cfg *Config) {
 		switch section.Width {
 		case "":
 			section.Width = "medium"
+
 		case "small":
 			section.Width = "narrow"
+
 		case "large":
 			section.Width = "extra-wide"
 		}
@@ -114,6 +117,10 @@ func Normalize(cfg *Config) {
 			if item.Icon.Type == "" {
 				item.Icon.Type = "auto"
 			}
+
+			normalizeServiceResources(
+				&item.Resources,
+			)
 		}
 	}
 
@@ -131,5 +138,25 @@ func Normalize(cfg *Config) {
 		if shortcut.Icon.Type == "" {
 			shortcut.Icon.Type = "auto"
 		}
+	}
+}
+
+func normalizeServiceResources(
+	resources *ServiceResources,
+) {
+	/*
+		Resource panel ostaje isključen dok ga korisnik
+		ne uključi za konkretnu Service karticu.
+
+		Ako konfiguracija još nema nijednu izabranu
+		metriku, pripremamo razumne podrazumevane opcije.
+	*/
+	if !resources.Enabled &&
+		!resources.ShowStatus &&
+		!resources.ShowCPU &&
+		!resources.ShowMemory {
+		resources.ShowStatus = true
+		resources.ShowCPU = true
+		resources.ShowMemory = true
 	}
 }

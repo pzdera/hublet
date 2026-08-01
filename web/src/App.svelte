@@ -4,6 +4,10 @@
     saveConfig
   } from './lib/api';
 
+  import {
+    appearanceStyle
+  } from './lib/appearance';
+
   import type {
     HubletConfig,
     Item,
@@ -178,11 +182,27 @@
       return 'medium';
     }
 
-    if (section.cardSize === 'inherit') {
+    if (
+      section.cardSize === 'inherit'
+    ) {
       return config.appearance.cards.size;
     }
 
     return section.cardSize;
+  }
+
+  function resourceMetricCount(
+    item: Item
+  ): number {
+    if (!item.resources.enabled) {
+      return 0;
+    }
+
+    return [
+      item.resources.showStatus,
+      item.resources.showCpu,
+      item.resources.showMemory
+    ].filter(Boolean).length;
   }
 
   function startEditing() {
@@ -245,21 +265,6 @@
       saving = false;
     }
   }
-
-  function dashboardBackgroundStyle(
-    value: HubletConfig
-  ): string {
-    const background =
-      value.appearance.background;
-
-    return [
-      `--dashboard-background:${background.color}`,
-      '--dashboard-wallpaper:none',
-      '--dashboard-overlay:0',
-      '--dashboard-brightness:1',
-      '--dashboard-blur:0px'
-    ].join(';');
-  }
 </script>
 
 {#if loading}
@@ -277,9 +282,7 @@
       !config.appearance.animations
     }
     class="dashboard-root"
-    style={dashboardBackgroundStyle(
-      config
-    )}
+    style={appearanceStyle(config)}
   >
     <div
       class="dashboard-background"
@@ -335,110 +338,172 @@
       />
 
       <main class="sections">
-        {#each config.sections as section (section.id)}
-          {@const visibleItems =
-            sectionItems(section.items)}
+        {#if config.sections.length === 0}
+          <section class="empty-dashboard">
+            <div class="empty-dashboard-icon">
+              +
+            </div>
 
-          {#if (
-            visibleItems.length > 0 ||
-            !normalizedQuery
-          )}
-            <section
-              class={[
-                'section',
-                `width-${section.width}`
-              ].join(' ')}
-              style={`--section-accent:${section.accent}`}
+            <h2>
+              Your dashboard is empty
+            </h2>
+
+            <p>
+              Add a section and start organizing
+              your services and favorite websites.
+            </p>
+
+            <button
+              class="save-button"
+              type="button"
+              onclick={startEditing}
             >
-              <header
-                class="section-header"
+              Build your dashboard
+            </button>
+          </section>
+        {:else}
+          {#each config.sections as section (section.id)}
+            {@const visibleItems =
+              sectionItems(section.items)}
+
+            {#if (
+              visibleItems.length > 0 ||
+              !normalizedQuery
+            )}
+              <section
+                class={[
+                  'section',
+                  `width-${section.width}`
+                ].join(' ')}
+                style={`--section-accent:${section.accent}`}
               >
-                <div>
-                  <span
-                    class="accent-dot"
-                  ></span>
+                <header class="section-header">
+                  <div>
+                    <span class="accent-dot"></span>
+                    <h2>{section.title}</h2>
+                  </div>
 
-                  <h2>
-                    {section.title}
-                  </h2>
-                </div>
+                  <span>{visibleItems.length}</span>
+                </header>
 
-                <span>
-                  {visibleItems.length}
-                </span>
-              </header>
+                {#if !section.collapsed}
+                  <div
+                    class={[
+                      'cards',
+                      `arrangement-${section.layout}`,
+                      `card-size-${effectiveCardSize(section)}`
+                    ].join(' ')}
+                    style={`--grid-columns:${section.gridColumns}`}
+                  >
+                    {#each visibleItems as item (item.id)}
+                      {@const metricCount =
+                        resourceMetricCount(item)}
 
-              {#if !section.collapsed}
-                <div
-                  class={[
-                    'cards',
-                    `arrangement-${section.layout}`,
-                    `card-size-${effectiveCardSize(section)}`
-                  ].join(' ')}
-                  style={`--grid-columns:${section.gridColumns}`}
-                >
-                  {#each visibleItems as item (item.id)}
-                    <a
-                      class="card"
-                      href={item.url}
-                      target={
-                        item.openInNewTab
-                          ? '_blank'
-                          : '_self'
-                      }
-                      rel="noreferrer"
-                    >
-                      <span
-                        class="card-icon"
+                      <a
+                        class:has-resources={
+                          metricCount > 0
+                        }
+                        class="card"
+                        href={item.url}
+                        target={
+                          item.openInNewTab
+                            ? '_blank'
+                            : '_self'
+                        }
+                        rel="noreferrer"
                       >
-                        {#if (
-                          item.icon.type ===
-                            'local' &&
-                          item.icon.value
-                        )}
-                          <img
-                            src={`/icons/${item.icon.value}`}
-                            alt=""
-                          />
-                        {:else}
-                          {item.name
-                            .slice(0, 1)
-                            .toUpperCase()}
-                        {/if}
-                      </span>
-
-                      <span
-                        class="card-copy"
-                      >
-                        <strong>
-                          {item.name}
-                        </strong>
-
-                        {#if (
-                          section.layout !==
-                          'compact' &&
-                          item.description
-                        )}
-                          <small>
-                            {item.description}
-                          </small>
-                        {/if}
-                      </span>
-
-                      {#if section.layout !== 'compact'}
-                        <span
-                          class="card-arrow"
-                        >
-                          ↗
+                        <span class="card-icon">
+                          {#if (
+                            item.icon.type ===
+                              'local' &&
+                            item.icon.value
+                          )}
+                            <img
+                              src={`/icons/${item.icon.value}`}
+                              alt=""
+                            />
+                          {:else}
+                            {item.name
+                              .slice(0, 1)
+                              .toUpperCase()}
+                          {/if}
                         </span>
-                      {/if}
-                    </a>
-                  {/each}
-                </div>
-              {/if}
-            </section>
-          {/if}
-        {/each}
+
+                        <span class="card-copy">
+                          <strong>{item.name}</strong>
+
+                          {#if (
+                            section.layout !==
+                              'compact' &&
+                            item.description
+                          )}
+                            <small>
+                              {item.description}
+                            </small>
+                          {/if}
+                        </span>
+
+                        {#if section.layout !== 'compact'}
+                          <span class="card-arrow">
+                            ↗
+                          </span>
+                        {/if}
+
+                        {#if metricCount > 0}
+                          <span
+                            class="service-resource-strip"
+                            aria-label="Service resources"
+                          >
+                            {#if item.resources.showStatus}
+                              <span
+                                class="service-resource-metric status"
+                              >
+                                <span
+                                  class="service-resource-label"
+                                >
+                                  Status
+                                </span>
+
+                                <strong>
+                                  <i></i>
+                                  Not connected
+                                </strong>
+                              </span>
+                            {/if}
+
+                            {#if item.resources.showCpu}
+                              <span class="service-resource-metric">
+                                <span class="service-resource-label">
+                                  CPU
+                                </span>
+                                <strong>—</strong>
+                              </span>
+                            {/if}
+
+                            {#if item.resources.showMemory}
+                              <span class="service-resource-metric">
+                                <span class="service-resource-label">
+                                  Memory
+                                </span>
+                                <strong>—</strong>
+                              </span>
+                            {/if}
+                          </span>
+                        {/if}
+                      </a>
+                    {/each}
+
+                    {#if section.items.length === 0}
+                      <div class="empty-section">
+                        No services in this section.
+                      </div>
+                    {/if}
+                  </div>
+                {/if}
+              </section>
+            {/if}
+          {/each}
+        {/if}
       </main>
     </div>
   </div>

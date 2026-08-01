@@ -3,6 +3,13 @@ export type Icon = {
   value: string;
 };
 
+export type ServiceResources = {
+  enabled: boolean;
+  showStatus: boolean;
+  showCpu: boolean;
+  showMemory: boolean;
+};
+
 export type ItemType =
   | 'service';
 
@@ -14,6 +21,7 @@ export type Item = {
   description: string;
   icon: Icon;
   openInNewTab: boolean;
+  resources: ServiceResources;
 };
 
 export type SectionLayout =
@@ -65,7 +73,10 @@ export type HubletConfig = {
   };
 
   appearance: {
-    mode: 'minimal' | 'standard' | 'advanced';
+    mode:
+      | 'minimal'
+      | 'standard'
+      | 'advanced';
 
     font: {
       family:
@@ -139,6 +150,7 @@ export type HubletConfig = {
   modules: {
     weather: {
       enabled: boolean;
+
       mode:
         | 'current'
         | 'today'
@@ -151,6 +163,7 @@ export type HubletConfig = {
 
     clock: {
       enabled: boolean;
+
       style:
         | 'minimal'
         | 'digital'

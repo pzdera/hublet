@@ -129,6 +129,20 @@
     }
   );
 
+  const enabledResourceCount = $derived.by(
+    (): number => {
+      if (!selectedItem) {
+        return 0;
+      }
+
+      return [
+        selectedItem.resources.showStatus,
+        selectedItem.resources.showCpu,
+        selectedItem.resources.showMemory
+      ].filter(Boolean).length;
+    }
+  );
+
   let sectionDeleteArmed = $state(false);
   let itemDeleteArmed = $state(false);
 
@@ -161,6 +175,37 @@
     ) {
       selectedSection.gridColumns = 3;
     }
+  }
+
+  function enableResources() {
+    if (!selectedItem) {
+      return;
+    }
+
+    selectedItem.resources.enabled = true;
+
+    if (
+      !selectedItem.resources.showStatus &&
+      !selectedItem.resources.showCpu &&
+      !selectedItem.resources.showMemory
+    ) {
+      selectedItem.resources.showStatus = true;
+      selectedItem.resources.showCpu = true;
+      selectedItem.resources.showMemory = true;
+    }
+  }
+
+  function toggleResources() {
+    if (!selectedItem) {
+      return;
+    }
+
+    if (selectedItem.resources.enabled) {
+      selectedItem.resources.enabled = false;
+      return;
+    }
+
+    enableResources();
   }
 
   function requestSectionDelete() {
@@ -235,6 +280,7 @@
         <div class="inspector-group-heading">
           <div>
             <strong>Background</strong>
+
             <small>
               Choose the dashboard base color.
             </small>
@@ -262,6 +308,7 @@
       <label class="toggle-control">
         <span>
           <strong>Animations</strong>
+
           <small>
             Use subtle movement and transitions.
           </small>
@@ -306,6 +353,7 @@
         <div class="inspector-group-heading">
           <div>
             <strong>Accent</strong>
+
             <small>
               Used for the section border and indicator.
             </small>
@@ -352,6 +400,7 @@
         <div class="inspector-group-heading">
           <div>
             <strong>Card arrangement</strong>
+
             <small>
               Controls how cards flow inside this section.
             </small>
@@ -452,6 +501,7 @@
           <div class="inspector-group-heading">
             <div>
               <strong>Columns</strong>
+
               <small>
                 Maximum cards displayed in each row.
               </small>
@@ -486,6 +536,7 @@
         <div class="inspector-group-heading">
           <div>
             <strong>Section width</strong>
+
             <small>
               Space occupied by the complete section.
             </small>
@@ -511,6 +562,7 @@
 
               <span>
                 <strong>{option.label}</strong>
+
                 <small>
                   {option.description}
                 </small>
@@ -524,6 +576,7 @@
         <div class="inspector-group-heading">
           <div>
             <strong>Card size</strong>
+
             <small>
               Overrides the dashboard default in this section.
             </small>
@@ -558,6 +611,7 @@
       <label class="toggle-control">
         <span>
           <strong>Collapsed by default</strong>
+
           <small>
             Show only the section header at startup.
           </small>
@@ -592,6 +646,7 @@
 
       <div>
         <p>SERVICE</p>
+
         <h2>
           {selectedItem.name || 'Untitled service'}
         </h2>
@@ -601,6 +656,7 @@
     <div class="inspector-content">
       <div class="service-type-badge">
         <span>Service card</span>
+
         <small>
           Opens a self-hosted service or website.
         </small>
@@ -646,6 +702,7 @@
         <div class="inspector-group-heading">
           <div>
             <strong>Icon</strong>
+
             <small>
               Automatic icon discovery comes next.
             </small>
@@ -705,9 +762,210 @@
         {/if}
       </div>
 
+      <section
+        class:enabled={
+          selectedItem.resources.enabled
+        }
+        class="resource-settings"
+      >
+        <header class="resource-settings-header">
+          <div>
+            <span class="resource-settings-icon">
+              ◔
+            </span>
+
+            <div>
+              <strong>Resource information</strong>
+
+              <small>
+                Show live service metrics on this card.
+              </small>
+            </div>
+          </div>
+
+          <button
+            class:active={
+              selectedItem.resources.enabled
+            }
+            class="resource-master-toggle"
+            type="button"
+            role="switch"
+            aria-checked={
+              selectedItem.resources.enabled
+            }
+            onclick={toggleResources}
+          >
+            <span></span>
+          </button>
+        </header>
+
+        {#if selectedItem.resources.enabled}
+          <div class="resource-settings-body">
+            <div class="resource-option-list">
+              <label class="resource-option">
+                <span class="resource-option-icon status">
+                  ●
+                </span>
+
+                <span>
+                  <strong>Status</strong>
+
+                  <small>
+                    Online, offline, or unavailable.
+                  </small>
+                </span>
+
+                <input
+                  bind:checked={
+                    selectedItem.resources.showStatus
+                  }
+                  type="checkbox"
+                />
+              </label>
+
+              <label class="resource-option">
+                <span class="resource-option-icon">
+                  CPU
+                </span>
+
+                <span>
+                  <strong>CPU usage</strong>
+
+                  <small>
+                    Current service CPU utilization.
+                  </small>
+                </span>
+
+                <input
+                  bind:checked={
+                    selectedItem.resources.showCpu
+                  }
+                  type="checkbox"
+                />
+              </label>
+
+              <label class="resource-option">
+                <span class="resource-option-icon">
+                  RAM
+                </span>
+
+                <span>
+                  <strong>Memory usage</strong>
+
+                  <small>
+                    Memory currently used by the service.
+                  </small>
+                </span>
+
+                <input
+                  bind:checked={
+                    selectedItem.resources.showMemory
+                  }
+                  type="checkbox"
+                />
+              </label>
+            </div>
+
+            {#if enabledResourceCount === 0}
+              <div class="resource-empty-warning">
+                Select at least one metric to display.
+              </div>
+            {/if}
+
+            <div class="resource-preview">
+              <header>
+                <span>Card preview</span>
+
+                <small>
+                  Data source not connected
+                </small>
+              </header>
+
+              <div class="resource-preview-card">
+                <div class="resource-preview-title">
+                  <span class="resource-preview-icon">
+                    {selectedItem.name
+                      .trim()
+                      .slice(0, 1)
+                      .toUpperCase() || '?'}
+                  </span>
+
+                  <div>
+                    <strong>
+                      {selectedItem.name ||
+                        'Untitled service'}
+                    </strong>
+
+                    <small>
+                      {selectedItem.description ||
+                        selectedItem.url ||
+                        'Service'}
+                    </small>
+                  </div>
+                </div>
+
+                {#if selectedItem.resources.showStatus}
+                  <div class="resource-preview-row">
+                    <span>Status</span>
+
+                    <strong class="resource-unavailable">
+                      <i></i>
+                      Not connected
+                    </strong>
+                  </div>
+                {/if}
+
+                {#if selectedItem.resources.showCpu}
+                  <div class="resource-preview-row">
+                    <span>CPU</span>
+                    <strong>—</strong>
+                  </div>
+                {/if}
+
+                {#if selectedItem.resources.showMemory}
+                  <div class="resource-preview-row">
+                    <span>Memory</span>
+                    <strong>—</strong>
+                  </div>
+                {/if}
+              </div>
+            </div>
+
+            <div class="resource-source-note">
+              <span>i</span>
+
+              <p>
+                Metrics will remain unavailable until a Docker,
+                Proxmox, or another supported data source is
+                configured.
+              </p>
+            </div>
+          </div>
+        {:else}
+          <button
+            class="resource-enable-prompt"
+            type="button"
+            onclick={enableResources}
+          >
+            <span>+</span>
+
+            <div>
+              <strong>
+                Enable resource information
+              </strong>
+
+              <small>
+                Configure metrics for this service only.
+              </small>
+            </div>
+          </button>
+        {/if}
+      </section>
+
       <label class="toggle-control">
         <span>
           <strong>Open in new tab</strong>
+
           <small>
             Keep Hublet open in the current tab.
           </small>

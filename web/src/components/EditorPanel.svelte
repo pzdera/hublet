@@ -17,6 +17,7 @@
 
   import EditorCanvas from './EditorCanvas.svelte';
   import InspectorPanel from './InspectorPanel.svelte';
+  import AppearancePanel from './AppearancePanel.svelte';
 
   let {
     config,
@@ -103,7 +104,13 @@
         type: 'auto',
         value: ''
       },
-      openInNewTab: true
+      openInNewTab: true,
+      resources: {
+        enabled: false,
+        showStatus: true,
+        showCpu: true,
+        showMemory: true
+      }
     };
 
     section.items.push(item);
@@ -257,12 +264,16 @@
       onAddItem={addItem}
     />
 
-    <InspectorPanel
-      {config}
-      {selection}
-      onDeleteSection={deleteSection}
-      onDeleteItem={deleteItem}
-    />
+    {#if selection.type === 'dashboard'}
+      <AppearancePanel {config} />
+    {:else}
+      <InspectorPanel
+        {config}
+        {selection}
+        onDeleteSection={deleteSection}
+        onDeleteItem={deleteItem}
+      />
+    {/if}
   </div>
 
   {#if dirty}
