@@ -26,6 +26,10 @@
   } from '../lib/section-surface';
 
   import {
+    sectionPlacementStyle
+  } from '../lib/section-placement';
+
+  import {
     sectionSortable
   } from '../lib/section-sortable';
 
@@ -332,7 +336,10 @@
         <article
           class={sectionClass(section)}
           data-section-id={section.id}
-          style={sectionSurfaceStyle(section)}
+          style={[
+            sectionSurfaceStyle(section),
+            sectionPlacementStyle(section)
+          ].filter(Boolean).join(';')}
           aria-label={section.title}
           onclick={(event) => {
             event.stopPropagation();

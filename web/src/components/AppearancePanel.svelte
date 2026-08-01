@@ -204,6 +204,8 @@
         '';
     }
   }
+
+  import DashboardIdentityPanel from './DashboardIdentityPanel.svelte';
 </script>
 
 <aside class="appearance-panel">
@@ -219,6 +221,7 @@
   </header>
 
   <div class="appearance-content">
+    <DashboardIdentityPanel {config} />
     <section class="appearance-group">
       <header>
         <div>

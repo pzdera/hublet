@@ -67,6 +67,7 @@
       showBorder: true,
       layout: 'grid',
       width: 'wide',
+      startColumn: 0,
       cardSize: 'inherit',
       gridColumns: 2,
       fillLastRow: false,

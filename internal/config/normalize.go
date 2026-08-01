@@ -9,6 +9,24 @@ func Normalize(cfg *Config) {
 		cfg.Dashboard.Title = "Hublet"
 	}
 
+	if cfg.Dashboard.Description == "" {
+		cfg.Dashboard.Description = "My self-hosted dashboard"
+		cfg.Dashboard.DescriptionVisible = true
+	}
+
+	if cfg.Dashboard.Icon.Type == "" {
+		cfg.Dashboard.Icon.Type = "initial"
+	}
+
+	if cfg.Dashboard.Icon.Type == "initial" &&
+		cfg.Dashboard.Icon.Value == "" {
+		cfg.Dashboard.Icon.Value = "H"
+	}
+
+	if cfg.Dashboard.IconSize == "" {
+		cfg.Dashboard.IconSize = "medium"
+	}
+
 	if cfg.Dashboard.Theme == "" {
 		cfg.Dashboard.Theme = "midnight"
 	}
@@ -100,6 +118,11 @@ func Normalize(cfg *Config) {
 
 		case "large":
 			section.Width = "extra-wide"
+		}
+
+		if section.StartColumn < 0 ||
+			section.StartColumn > 12 {
+			section.StartColumn = 0
 		}
 
 		if section.CardSize == "" {

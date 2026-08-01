@@ -280,6 +280,8 @@
 
   import ServiceIcon from './ServiceIcon.svelte';
   import LocalIconManager from './LocalIconManager.svelte';
+
+  import SectionPlacementPicker from './SectionPlacementPicker.svelte';
 </script>
 
 <aside class="inspector-panel">
@@ -695,6 +697,22 @@
             </button>
           {/each}
         </div>
+      </div>
+
+      <div class="inspector-group">
+        <div class="inspector-group-heading">
+          <div>
+            <strong>Desktop placement</strong>
+
+            <small>
+              Choose the section's horizontal start position.
+            </small>
+          </div>
+        </div>
+
+        <SectionPlacementPicker
+          section={selectedSection}
+        />
       </div>
 
       <div class="inspector-group">

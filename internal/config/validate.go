@@ -39,6 +39,51 @@ func Validate(cfg Config) error {
 		)
 	}
 
+	if len(cfg.Dashboard.Description) > 160 {
+		return errors.New(
+			"dashboard description may contain at most 160 characters",
+		)
+	}
+
+	switch cfg.Dashboard.Icon.Type {
+	case "initial", "local", "none":
+	default:
+		return fmt.Errorf(
+			"unsupported dashboard icon type %q",
+			cfg.Dashboard.Icon.Type,
+		)
+	}
+
+	if cfg.Dashboard.Icon.Type == "initial" {
+		value := strings.TrimSpace(
+			cfg.Dashboard.Icon.Value,
+		)
+
+		if value == "" || len([]rune(value)) > 2 {
+			return errors.New(
+				"dashboard initial must contain one or two characters",
+			)
+		}
+	}
+
+	if cfg.Dashboard.Icon.Type == "local" &&
+		strings.TrimSpace(
+			cfg.Dashboard.Icon.Value,
+		) == "" {
+		return errors.New(
+			"local dashboard icon requires a filename",
+		)
+	}
+
+	switch cfg.Dashboard.IconSize {
+	case "small", "medium", "large":
+	default:
+		return fmt.Errorf(
+			"unsupported dashboard icon size %q",
+			cfg.Dashboard.IconSize,
+		)
+	}
+
 	switch cfg.Appearance.Mode {
 	case "minimal", "standard", "advanced":
 	default:
@@ -263,17 +308,47 @@ func Validate(cfg Config) error {
 			)
 		}
 
+		sectionSpan := 0
+
 		switch section.Width {
-		case "narrow",
-			"medium",
-			"wide",
-			"extra-wide",
-			"full":
+		case "narrow":
+			sectionSpan = 3
+
+		case "medium":
+			sectionSpan = 4
+
+		case "wide":
+			sectionSpan = 6
+
+		case "extra-wide":
+			sectionSpan = 8
+
+		case "full":
+			sectionSpan = 12
+
 		default:
 			return fmt.Errorf(
 				"section %q has unsupported width %q",
 				section.ID,
 				section.Width,
+			)
+		}
+
+		if section.StartColumn < 0 ||
+			section.StartColumn > 12 {
+			return fmt.Errorf(
+				"section %q start column must be between 0 and 12",
+				section.ID,
+			)
+		}
+
+		if section.StartColumn > 0 &&
+			section.StartColumn+sectionSpan-1 > 12 {
+			return fmt.Errorf(
+				"section %q does not fit from column %d with width %d",
+				section.ID,
+				section.StartColumn,
+				sectionSpan,
 			)
 		}
 

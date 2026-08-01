@@ -18,9 +18,14 @@
     sectionSurfaceStyle
   } from './lib/section-surface';
 
+  import {
+    sectionPlacementStyle
+  } from './lib/section-placement';
+
   import SearchBar from './components/SearchBar.svelte';
   import EditorPanel from './components/EditorPanel.svelte';
   import ServiceIcon from './components/ServiceIcon.svelte';
+  import DashboardBrand from './components/DashboardBrand.svelte';
 
   let config =
     $state<HubletConfig | null>(null);
@@ -301,21 +306,9 @@
 
     <div class="page">
       <header class="header">
-        <div class="brand">
-          <span class="brand-mark">
-            H
-          </span>
-
-          <div>
-            <p>
-              SELF-HOSTED DASHBOARD
-            </p>
-
-            <h1>
-              {config.dashboard.title}
-            </h1>
-          </div>
-        </div>
+        <DashboardBrand
+          dashboard={config.dashboard}
+        />
 
         <button
           class="edit-button"
@@ -381,7 +374,10 @@
                   `width-${section.width}`,
                   `surface-${section.surface}`
                 ].join(' ')}
-                style={sectionSurfaceStyle(section)}
+                style={[
+                  sectionSurfaceStyle(section),
+                  sectionPlacementStyle(section)
+                ].filter(Boolean).join(';')}
               >
                 <header class="section-header">
                   <div>

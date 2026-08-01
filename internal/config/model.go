@@ -11,9 +11,18 @@ type Config struct {
 }
 
 type Dashboard struct {
-	Title     string  `json:"title"`
-	Theme     string  `json:"theme"`
-	Wallpaper *string `json:"wallpaper"`
+	Title              string        `json:"title"`
+	Description        string        `json:"description"`
+	DescriptionVisible bool          `json:"descriptionVisible"`
+	Icon               DashboardIcon `json:"icon"`
+	IconSize           string        `json:"iconSize"`
+	Theme              string        `json:"theme"`
+	Wallpaper          *string       `json:"wallpaper"`
+}
+
+type DashboardIcon struct {
+	Type  string `json:"type"`
+	Value string `json:"value"`
 }
 
 type Appearance struct {
@@ -63,6 +72,7 @@ type Section struct {
 	ShowBorder     bool   `json:"showBorder"`
 	Layout         string `json:"layout"`
 	Width          string `json:"width"`
+	StartColumn    int    `json:"startColumn"`
 	CardSize       string `json:"cardSize"`
 	GridColumns    int    `json:"gridColumns"`
 	FillLastRow    bool   `json:"fillLastRow"`
@@ -130,8 +140,15 @@ func Default() Config {
 		Version: 2,
 
 		Dashboard: Dashboard{
-			Title: "Hublet",
-			Theme: "midnight",
+			Title:              "Hublet",
+			Description:        "My self-hosted dashboard",
+			DescriptionVisible: true,
+			Icon: DashboardIcon{
+				Type:  "initial",
+				Value: "H",
+			},
+			IconSize: "medium",
+			Theme:    "midnight",
 		},
 
 		Appearance: Appearance{

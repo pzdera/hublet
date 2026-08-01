@@ -59,6 +59,7 @@ export type Section = {
   showBorder: boolean;
   layout: SectionLayout;
   width: SectionWidth;
+  startColumn: number;
   cardSize: SectionCardSize;
   gridColumns: number;
   fillLastRow: boolean;
@@ -78,6 +79,23 @@ export type HubletConfig = {
 
   dashboard: {
     title: string;
+    description: string;
+    descriptionVisible: boolean;
+
+    icon: {
+      type:
+        | 'initial'
+        | 'local'
+        | 'none';
+
+      value: string;
+    };
+
+    iconSize:
+      | 'small'
+      | 'medium'
+      | 'large';
+
     theme: string;
     wallpaper: string | null;
   };
