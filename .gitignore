@@ -1,0 +1,25 @@
+# Frontend
+node_modules/
+dist/
+.svelte-kit/
+
+# Go
+bin/
+*.test
+coverage.out
+
+# Runtime data
+data/
+icons/
+wallpapers/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
