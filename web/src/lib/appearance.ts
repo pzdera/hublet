@@ -98,7 +98,7 @@ function fontFamily(
   switch (family) {
     case 'inter':
       return [
-        'Inter',
+        'Inter Variable',
         'ui-sans-serif',
         'system-ui',
         'sans-serif'
@@ -106,8 +106,8 @@ function fontFamily(
 
     case 'geist':
       return [
-        'Geist',
-        'Inter',
+        'Geist Variable',
+        'Inter Variable',
         'ui-sans-serif',
         'system-ui',
         'sans-serif'
@@ -115,8 +115,8 @@ function fontFamily(
 
     case 'manrope':
       return [
-        'Manrope',
-        'Inter',
+        'Manrope Variable',
+        'Inter Variable',
         'ui-sans-serif',
         'system-ui',
         'sans-serif'
@@ -124,8 +124,8 @@ function fontFamily(
 
     case 'ibm-plex-sans':
       return [
-        '"IBM Plex Sans"',
-        'Inter',
+        '"IBM Plex Sans Variable"',
+        'Inter Variable',
         'ui-sans-serif',
         'system-ui',
         'sans-serif'

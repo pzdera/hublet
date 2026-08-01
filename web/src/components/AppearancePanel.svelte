@@ -13,6 +13,8 @@
     restoreAppearanceVariables
   } from '../lib/appearance';
 
+  import WallpaperManager from './WallpaperManager.svelte';
+
   let {
     config
   }: {
@@ -356,23 +358,7 @@
         config.appearance.background.type ===
         'wallpaper'
       )}
-        <label class="appearance-field">
-          <span>Wallpaper filename</span>
-
-          <input
-            bind:value={
-              config.appearance.background.wallpaper
-            }
-            type="text"
-            placeholder="mountains.webp"
-          />
-
-          <small>
-            The file must currently exist inside
-            <code>/app/wallpapers</code>. Upload and
-            gallery management are the next milestone.
-          </small>
-        </label>
+        <WallpaperManager {config} />
       {/if}
 
       <label class="appearance-range">

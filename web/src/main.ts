@@ -1,3 +1,8 @@
+import '@fontsource-variable/inter';
+import '@fontsource-variable/geist';
+import '@fontsource-variable/manrope';
+import '@fontsource-variable/ibm-plex-sans';
+
 import { mount } from 'svelte';
 
 import App from './App.svelte';
