@@ -1,0 +1,1123 @@
+/* =========================================================
+   HUBLET UI POLISH
+   Loaded last so it refines existing styles without
+   changing the config model or component structure.
+   ========================================================= */
+
+
+/* =========================================================
+   SECTION FOUNDATION
+   ========================================================= */
+
+.section,
+.editor-canvas-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  padding: 16px;
+
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    backdrop-filter 180ms ease;
+}
+
+/*
+ * Very subtle accent illumination. It is deliberately
+ * restrained so section colors do not overpower wallpaper.
+ */
+.section::before,
+.editor-canvas-section::before {
+  content: "";
+
+  position: absolute;
+  top: -90px;
+  left: -80px;
+
+  width: 210px;
+  height: 210px;
+
+  z-index: -1;
+  pointer-events: none;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      color-mix(
+        in srgb,
+        var(--section-accent) 16%,
+        transparent
+      ) 0%,
+      transparent 68%
+    );
+
+  opacity: 0.72;
+
+  transition:
+    opacity 180ms ease,
+    transform 240ms ease;
+}
+
+.section:hover::before,
+.editor-canvas-section:hover::before {
+  opacity: 1;
+
+  transform:
+    translate(
+      8px,
+      6px
+    )
+    scale(1.06);
+}
+
+
+/* =========================================================
+   SURFACE DISTINCTION
+   ========================================================= */
+
+.section.surface-solid,
+.editor-canvas-section.surface-solid {
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(
+        in srgb,
+        var(--section-accent) 5%,
+        transparent
+      ),
+      transparent 42%
+    ),
+    rgba(
+      11,
+      16,
+      26,
+      var(--section-surface-opacity)
+    ) !important;
+
+  box-shadow:
+    0 16px 44px
+    rgba(
+      0,
+      0,
+      0,
+      0.26
+    ),
+    inset 0 1px 0
+    rgba(
+      255,
+      255,
+      255,
+      0.025
+    );
+}
+
+.section.surface-transparent,
+.editor-canvas-section.surface-transparent {
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(
+        in srgb,
+        var(--section-accent) 8%,
+        transparent
+      ),
+      rgba(
+        8,
+        13,
+        22,
+        calc(
+          var(--section-surface-opacity) *
+          0.38
+        )
+      )
+    ) !important;
+
+  box-shadow:
+    0 11px 34px
+    rgba(
+      0,
+      0,
+      0,
+      0.12
+    );
+}
+
+.section.surface-glass,
+.editor-canvas-section.surface-glass {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(
+        255,
+        255,
+        255,
+        calc(
+          var(--section-surface-opacity) *
+          0.16
+        )
+      ),
+      color-mix(
+        in srgb,
+        var(--section-accent) 7%,
+        rgba(
+          8,
+          13,
+          23,
+          calc(
+            var(--section-surface-opacity) *
+            0.48
+          )
+        )
+      )
+    ) !important;
+
+  box-shadow:
+    0 20px 58px
+    rgba(
+      0,
+      0,
+      0,
+      0.24
+    ),
+    inset 0 1px 0
+    rgba(
+      255,
+      255,
+      255,
+      0.1
+    ),
+    inset 0 -1px 0
+    rgba(
+      255,
+      255,
+      255,
+      0.025
+    );
+
+  backdrop-filter:
+    blur(
+      var(--section-surface-blur)
+    )
+    saturate(1.28);
+
+  -webkit-backdrop-filter:
+    blur(
+      var(--section-surface-blur)
+    )
+    saturate(1.28);
+}
+
+.section.surface-none,
+.editor-canvas-section.surface-none {
+  padding-right: 4px;
+  padding-left: 4px;
+
+  background:
+    transparent !important;
+
+  box-shadow:
+    none !important;
+}
+
+.section.surface-none::before,
+.editor-canvas-section.surface-none::before {
+  display: none;
+}
+
+
+/* =========================================================
+   SECTION HEADERS
+   ========================================================= */
+
+.section-header,
+.canvas-section-header {
+  position: relative;
+
+  min-height: 44px;
+
+  align-items: center;
+
+  margin-bottom: 10px;
+  padding:
+    1px
+    3px
+    12px;
+
+  border-bottom:
+    1px solid
+    color-mix(
+      in srgb,
+      var(--section-accent) 14%,
+      rgba(
+        255,
+        255,
+        255,
+        0.065
+      )
+    );
+}
+
+/*
+ * Accent line below the header. It is short rather than
+ * spanning the whole section, which keeps the UI minimal.
+ */
+.section-header::after,
+.canvas-section-header::after {
+  content: "";
+
+  position: absolute;
+  bottom: -1px;
+  left: 3px;
+
+  width: 52px;
+  height: 2px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--section-accent),
+      color-mix(
+        in srgb,
+        var(--section-accent) 20%,
+        transparent
+      )
+    );
+
+  box-shadow:
+    0 0 14px
+    color-mix(
+      in srgb,
+      var(--section-accent) 28%,
+      transparent
+    );
+}
+
+
+/* Dashboard section title group */
+
+.section-header > div {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+
+/* Section title */
+
+.section-header h2,
+.canvas-section-header h2 {
+  margin: 0;
+
+  overflow: hidden;
+
+  color:
+    rgba(
+      247,
+      248,
+      252,
+      0.96
+    );
+
+  font-size: 0.91rem;
+  font-weight: 720;
+  letter-spacing: 0.025em;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/*
+ * Old circular accent dot becomes a clean vertical marker.
+ */
+
+.accent-dot,
+.canvas-accent-dot {
+  width: 4px;
+  height: 20px;
+
+  flex: 0 0 auto;
+
+  border-radius: 999px;
+
+  background:
+    var(--section-accent);
+
+  box-shadow:
+    0 0 12px
+    color-mix(
+      in srgb,
+      var(--section-accent) 45%,
+      transparent
+    );
+}
+
+
+/* Dashboard item count */
+
+.section-header > span {
+  min-width: 27px;
+  height: 25px;
+
+  display: grid;
+  place-items: center;
+
+  padding: 0 7px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.075
+    );
+
+  border-radius: 999px;
+
+  color:
+    rgba(
+      202,
+      211,
+      226,
+      0.82
+    );
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.035
+    );
+
+  font-size: 0.62rem;
+  font-weight: 760;
+}
+
+
+/* Editor item count */
+
+.canvas-item-count {
+  min-width: 27px;
+  height: 25px;
+
+  display: grid;
+  place-items: center;
+
+  padding: 0 7px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.075
+    );
+
+  border-radius: 999px;
+
+  color:
+    rgba(
+      202,
+      211,
+      226,
+      0.82
+    );
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.035
+    );
+
+  font-size: 0.6rem;
+  font-weight: 760;
+}
+
+
+/* Editor section width badge */
+
+.canvas-section-width {
+  min-width: 42px;
+  height: 25px;
+
+  border:
+    1px solid
+    color-mix(
+      in srgb,
+      var(--section-accent) 20%,
+      rgba(
+        255,
+        255,
+        255,
+        0.07
+      )
+    );
+
+  border-radius: 999px;
+
+  color:
+    color-mix(
+      in srgb,
+      var(--section-accent) 42%,
+      #d7dfec
+    );
+
+  background:
+    color-mix(
+      in srgb,
+      var(--section-accent) 7%,
+      rgba(
+        255,
+        255,
+        255,
+        0.025
+      )
+    );
+}
+
+
+/* =========================================================
+   CARD FOUNDATION
+   ========================================================= */
+
+.card,
+.canvas-card {
+  position: relative;
+  isolation: isolate;
+
+  overflow: hidden;
+
+  border-color:
+    rgba(
+      255,
+      255,
+      255,
+      0.045
+    ) !important;
+
+  transition:
+    transform 170ms cubic-bezier(
+      0.2,
+      0.75,
+      0.25,
+      1
+    ),
+    background 170ms ease,
+    border-color 170ms ease,
+    box-shadow 170ms ease;
+}
+
+
+/*
+ * Subtle highlight that becomes visible during hover.
+ */
+
+.card::before,
+.canvas-card::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  z-index: -1;
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      125deg,
+      color-mix(
+        in srgb,
+        var(--section-accent) 8%,
+        transparent
+      ),
+      transparent 48%
+    );
+
+  opacity: 0;
+
+  transition:
+    opacity 170ms ease;
+}
+
+.card:hover::before,
+.canvas-card:hover::before {
+  opacity: 1;
+}
+
+
+/* Dashboard card hover */
+
+.card:hover {
+  transform:
+    translateY(-3px);
+
+  border-color:
+    color-mix(
+      in srgb,
+      var(--section-accent) 24%,
+      rgba(
+        255,
+        255,
+        255,
+        0.1
+      )
+    ) !important;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      calc(
+        var(
+          --hublet-card-background-alpha,
+          0.045
+        ) +
+        0.035
+      )
+    ) !important;
+
+  box-shadow:
+    0 14px 34px
+    rgba(
+      0,
+      0,
+      0,
+      0.26
+    ),
+    0 0 0 1px
+    color-mix(
+      in srgb,
+      var(--section-accent) 6%,
+      transparent
+    ) !important;
+}
+
+
+/* Editor card hover */
+
+.canvas-card:hover {
+  transform:
+    translateY(-2px);
+
+  border-color:
+    color-mix(
+      in srgb,
+      var(--section-accent) 25%,
+      rgba(
+        255,
+        255,
+        255,
+        0.1
+      )
+    ) !important;
+
+  box-shadow:
+    0 12px 28px
+    rgba(
+      0,
+      0,
+      0,
+      0.24
+    ) !important;
+}
+
+
+/* Selected editor card */
+
+.canvas-card.selected {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--section-accent) 64%,
+      #ffffff
+    ) !important;
+
+  box-shadow:
+    0 0 0 3px
+    color-mix(
+      in srgb,
+      var(--section-accent) 13%,
+      transparent
+    ),
+    0 12px 30px
+    rgba(
+      0,
+      0,
+      0,
+      0.25
+    ) !important;
+}
+
+
+/* =========================================================
+   CARD ICON POLISH
+   ========================================================= */
+
+.card-icon,
+.canvas-card-icon {
+  position: relative;
+
+  border:
+    1px solid
+    color-mix(
+      in srgb,
+      var(--section-accent) 15%,
+      rgba(
+        255,
+        255,
+        255,
+        0.055
+      )
+    );
+
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(
+        in srgb,
+        var(--section-accent) 12%,
+        rgba(
+          255,
+          255,
+          255,
+          0.05
+        )
+      ),
+      rgba(
+        255,
+        255,
+        255,
+        0.025
+      )
+    ) !important;
+
+  box-shadow:
+    inset 0 1px 0
+    rgba(
+      255,
+      255,
+      255,
+      0.05
+    );
+
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.card:hover .card-icon,
+.canvas-card:hover .canvas-card-icon {
+  transform:
+    scale(1.055);
+
+  border-color:
+    color-mix(
+      in srgb,
+      var(--section-accent) 36%,
+      rgba(
+        255,
+        255,
+        255,
+        0.08
+      )
+    );
+
+  box-shadow:
+    inset 0 1px 0
+    rgba(
+      255,
+      255,
+      255,
+      0.08
+    ),
+    0 7px 18px
+    color-mix(
+      in srgb,
+      var(--section-accent) 10%,
+      rgba(
+        0,
+        0,
+        0,
+        0.18
+      )
+    );
+}
+
+
+/* Actual image should not fill the container edge-to-edge. */
+
+.card-icon
+.service-icon-content img,
+.canvas-card-icon
+.service-icon-content img {
+  width: 76%;
+  height: 76%;
+
+  transition:
+    transform 180ms ease;
+}
+
+.card:hover
+.card-icon
+.service-icon-content img,
+.canvas-card:hover
+.canvas-card-icon
+.service-icon-content img {
+  transform:
+    scale(1.035);
+}
+
+
+/* =========================================================
+   CARD TYPOGRAPHY AND ARROW
+   ========================================================= */
+
+.card-copy strong,
+.canvas-card-copy strong {
+  color:
+    rgba(
+      248,
+      249,
+      252,
+      0.96
+    );
+
+  font-weight: 690;
+  letter-spacing: -0.012em;
+}
+
+.card-copy small,
+.canvas-card-copy small {
+  color:
+    rgba(
+      158,
+      170,
+      190,
+      0.86
+    );
+}
+
+.card-arrow {
+  color:
+    rgba(
+      170,
+      182,
+      200,
+      0.58
+    );
+
+  transition:
+    color 170ms ease,
+    transform 170ms ease;
+}
+
+.card:hover .card-arrow {
+  color:
+    color-mix(
+      in srgb,
+      var(--section-accent) 48%,
+      #ffffff
+    );
+
+  transform:
+    translate(
+      2px,
+      -2px
+    );
+}
+
+
+/* Editor pencil icon */
+
+.canvas-card-edit {
+  opacity: 0.48;
+
+  transition:
+    opacity 170ms ease,
+    transform 170ms ease,
+    color 170ms ease;
+}
+
+.canvas-card:hover
+.canvas-card-edit {
+  opacity: 1;
+
+  color:
+    color-mix(
+      in srgb,
+      var(--section-accent) 45%,
+      #ffffff
+    );
+
+  transform:
+    translateY(-1px);
+}
+
+
+/* =========================================================
+   EDITOR-ONLY DETAILS
+   ========================================================= */
+
+.editor-canvas-section.selected {
+  outline:
+    2px solid
+    color-mix(
+      in srgb,
+      var(--section-accent) 70%,
+      #ffffff
+    );
+
+  outline-offset: 3px;
+}
+
+.canvas-section-drag-handle {
+  opacity: 0.62;
+
+  transition:
+    opacity 150ms ease,
+    color 150ms ease,
+    border-color 150ms ease,
+    background 150ms ease;
+}
+
+.editor-canvas-section:hover
+.canvas-section-drag-handle,
+.editor-canvas-section.selected
+.canvas-section-drag-handle {
+  opacity: 1;
+}
+
+.canvas-card-handle {
+  opacity: 0.48;
+
+  transition:
+    opacity 150ms ease,
+    color 150ms ease;
+}
+
+.canvas-card:hover
+.canvas-card-handle,
+.canvas-card.selected
+.canvas-card-handle {
+  opacity: 1;
+
+  color:
+    color-mix(
+      in srgb,
+      var(--section-accent) 40%,
+      #aab5c8
+    );
+}
+
+
+/* Add service button feels like part of the section. */
+
+.canvas-add-card {
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.canvas-add-card:hover {
+  transform:
+    translateY(-1px);
+
+  border-color:
+    color-mix(
+      in srgb,
+      var(--section-accent) 42%,
+      rgba(
+        255,
+        255,
+        255,
+        0.1
+      )
+    );
+
+  color: #ffffff;
+
+  background:
+    color-mix(
+      in srgb,
+      var(--section-accent) 8%,
+      rgba(
+        255,
+        255,
+        255,
+        0.025
+      )
+    );
+}
+
+
+/* =========================================================
+   SURFACE-SPECIFIC CARD BEHAVIOR
+   ========================================================= */
+
+/*
+ * On sections without a surface, cards carry slightly more
+ * visual weight so they remain readable over wallpapers.
+ */
+
+.surface-none .card,
+.surface-none .canvas-card {
+  border-color:
+    rgba(
+      255,
+      255,
+      255,
+      0.075
+    ) !important;
+
+  background:
+    rgba(
+      12,
+      17,
+      27,
+      0.68
+    ) !important;
+
+  box-shadow:
+    0 10px 28px
+    rgba(
+      0,
+      0,
+      0,
+      0.2
+    ) !important;
+
+  backdrop-filter:
+    blur(14px);
+
+  -webkit-backdrop-filter:
+    blur(14px);
+}
+
+.surface-glass .card,
+.surface-glass .canvas-card {
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.065
+    ) !important;
+
+  backdrop-filter:
+    blur(8px);
+
+  -webkit-backdrop-filter:
+    blur(8px);
+}
+
+.surface-transparent .card,
+.surface-transparent .canvas-card {
+  background:
+    rgba(
+      12,
+      17,
+      28,
+      0.46
+    ) !important;
+}
+
+
+/* =========================================================
+   ANIMATIONS DISABLED
+   ========================================================= */
+
+.animations-disabled
+.section,
+.animations-disabled
+.card,
+.animations-disabled
+.card-icon,
+.animations-disabled
+.card-arrow,
+.animations-disabled
+.service-icon-content img {
+  transition: none !important;
+}
+
+.animations-disabled
+.card:hover {
+  transform: none;
+}
+
+.animations-disabled
+.card:hover
+.card-icon,
+.animations-disabled
+.card:hover
+.service-icon-content img {
+  transform: none;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 760px) {
+  .section,
+  .editor-canvas-section {
+    padding: 13px;
+  }
+
+  .section.surface-none,
+  .editor-canvas-section.surface-none {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .section-header,
+  .canvas-section-header {
+    min-height: 41px;
+
+    margin-bottom: 8px;
+    padding-bottom: 10px;
+  }
+
+  .section-header h2,
+  .canvas-section-header h2 {
+    font-size: 0.86rem;
+  }
+
+  .accent-dot,
+  .canvas-accent-dot {
+    height: 17px;
+  }
+}
+
+@media (hover: none) {
+  .card:hover,
+  .canvas-card:hover {
+    transform: none;
+  }
+
+  .card:hover .card-icon,
+  .canvas-card:hover
+  .canvas-card-icon {
+    transform: none;
+  }
+}

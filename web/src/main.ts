@@ -18,6 +18,9 @@ import './section-surfaces.css';
 import './service-icons.css';
 import './local-icon-manager.css';
 
+import './ui-polish.css';
+import './mobile-polish.css';
+
 mount(App, {
   target: document.getElementById('app')!
 });
