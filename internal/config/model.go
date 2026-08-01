@@ -1,13 +1,13 @@
 package config
 
 type Config struct {
-	Version    int         `json:"version"`
-	Dashboard  Dashboard   `json:"dashboard"`
-	Appearance Appearance  `json:"appearance"`
-	Search     Search      `json:"search"`
-	Sections   []Section   `json:"sections"`
-	Shortcuts  []Shortcut  `json:"shortcuts"`
-	Weather    Weather     `json:"weather"`
+	Version    int        `json:"version"`
+	Dashboard  Dashboard  `json:"dashboard"`
+	Appearance Appearance `json:"appearance"`
+	Search     Search     `json:"search"`
+	Sections   []Section  `json:"sections"`
+	Shortcuts  []Shortcut `json:"shortcuts"`
+	Modules    Modules    `json:"modules"`
 }
 
 type Dashboard struct {
@@ -17,29 +17,58 @@ type Dashboard struct {
 }
 
 type Appearance struct {
-	Density   string `json:"density"`
-	CardStyle string `json:"cardStyle"`
-	Radius    string `json:"radius"`
+	Mode       string     `json:"mode"`
+	Font       Font       `json:"font"`
+	Cards      Cards      `json:"cards"`
+	Background Background `json:"background"`
+	Animations bool       `json:"animations"`
+}
+
+type Font struct {
+	Family string `json:"family"`
+	Scale  string `json:"scale"`
+}
+
+type Cards struct {
+	Size    string `json:"size"`
+	Density string `json:"density"`
+	Radius  string `json:"radius"`
+	Shadow  string `json:"shadow"`
+	Border  bool   `json:"border"`
+}
+
+type Background struct {
+	Type       string  `json:"type"`
+	Color      string  `json:"color"`
+	Blur       int     `json:"blur"`
+	Brightness int     `json:"brightness"`
+	Overlay    int     `json:"overlay"`
+	Wallpaper  *string `json:"wallpaper"`
 }
 
 type Search struct {
-	AutoFocus           bool   `json:"autoFocus"`
+	AutoFocus            bool   `json:"autoFocus"`
 	OpenShortcutDirectly bool   `json:"openShortcutDirectly"`
-	WebSearchEnabled    bool   `json:"webSearchEnabled"`
-	WebSearchEngine     string `json:"webSearchEngine"`
+	WebSearchEnabled     bool   `json:"webSearchEnabled"`
+	WebSearchEngine      string `json:"webSearchEngine"`
 }
 
 type Section struct {
-	ID        string `json:"id"`
-	Title     string `json:"title"`
-	Accent    string `json:"accent"`
-	Layout    string `json:"layout"`
-	Collapsed bool   `json:"collapsed"`
-	Items     []Item `json:"items"`
+	ID          string `json:"id"`
+	Title       string `json:"title"`
+	Accent      string `json:"accent"`
+	Layout      string `json:"layout"`
+	Width       string `json:"width"`
+	CardSize    string `json:"cardSize"`
+	GridColumns int    `json:"gridColumns"`
+	FillLastRow bool   `json:"fillLastRow"`
+	Collapsed   bool   `json:"collapsed"`
+	Items       []Item `json:"items"`
 }
 
 type Item struct {
 	ID           string `json:"id"`
+	Type         string `json:"type"`
 	Name         string `json:"name"`
 	URL          string `json:"url"`
 	Description  string `json:"description"`
@@ -59,74 +88,93 @@ type Shortcut struct {
 	Icon  Icon   `json:"icon"`
 }
 
-type Weather struct {
+type Modules struct {
+	Weather    WeatherModule    `json:"weather"`
+	Clock      ClockModule      `json:"clock"`
+	Statistics StatisticsModule `json:"statistics"`
+}
+
+type WeatherModule struct {
 	Enabled   bool     `json:"enabled"`
+	Mode      string   `json:"mode"`
 	Location  string   `json:"location"`
 	Latitude  *float64 `json:"latitude"`
 	Longitude *float64 `json:"longitude"`
 }
 
+type ClockModule struct {
+	Enabled    bool   `json:"enabled"`
+	Style      string `json:"style"`
+	TimeFormat string `json:"timeFormat"`
+	ShowDate   bool   `json:"showDate"`
+}
+
+type StatisticsModule struct {
+	Enabled bool `json:"enabled"`
+}
+
 func Default() Config {
 	return Config{
 		Version: 2,
+
 		Dashboard: Dashboard{
 			Title: "Hublet",
 			Theme: "midnight",
 		},
+
 		Appearance: Appearance{
-			Density:   "comfortable",
-			CardStyle: "glass",
-			Radius:    "large",
+			Mode: "minimal",
+
+			Font: Font{
+				Family: "system",
+				Scale:  "medium",
+			},
+
+			Cards: Cards{
+				Size:    "medium",
+				Density: "comfortable",
+				Radius:  "large",
+				Shadow:  "soft",
+				Border:  true,
+			},
+
+			Background: Background{
+				Type:       "solid",
+				Color:      "#090c12",
+				Blur:       0,
+				Brightness: 100,
+				Overlay:    0,
+			},
+
+			Animations: true,
 		},
+
 		Search: Search{
 			AutoFocus:            true,
 			OpenShortcutDirectly: true,
 			WebSearchEnabled:     true,
 			WebSearchEngine:      "google",
 		},
-		Sections: []Section{
-			{
-				ID:        "welcome",
-				Title:     "Getting started",
-				Accent:    "#4f8cff",
-				Layout:    "grid",
-				Collapsed: false,
-				Items: []Item{
-					{
-						ID:           "github",
-						Name:         "GitHub",
-						URL:          "https://github.com",
-						Description:  "Code hosting",
-						Icon:         Icon{Type: "auto"},
-						OpenInNewTab: true,
-					},
-					{
-						ID:           "youtube",
-						Name:         "YouTube",
-						URL:          "https://youtube.com",
-						Description:  "Video platform",
-						Icon:         Icon{Type: "auto"},
-						OpenInNewTab: true,
-					},
-				},
+
+		Sections:  []Section{},
+		Shortcuts: []Shortcut{},
+
+		Modules: Modules{
+			Weather: WeatherModule{
+				Enabled: false,
+				Mode:    "current",
 			},
-		},
-		Shortcuts: []Shortcut{
-			{
-				Key:   "kp",
-				Label: "KupujemProdajem",
-				URL:   "https://www.kupujemprodajem.com",
-				Icon:  Icon{Type: "auto"},
+
+			Clock: ClockModule{
+				Enabled:    false,
+				Style:      "minimal",
+				TimeFormat: "24h",
+				ShowDate:   true,
 			},
-			{
-				Key:   "yt",
-				Label: "YouTube",
-				URL:   "https://www.youtube.com",
-				Icon:  Icon{Type: "auto"},
+
+			Statistics: StatisticsModule{
+				Enabled: false,
 			},
-		},
-		Weather: Weather{
-			Enabled: false,
 		},
 	}
 }

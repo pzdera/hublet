@@ -1,0 +1,1326 @@
+/* =========================================================
+   SECTION WIDTHS
+   ========================================================= */
+
+.width-narrow,
+.canvas-width-narrow {
+  grid-column: span 3;
+}
+
+.width-medium,
+.canvas-width-medium {
+  grid-column: span 4;
+}
+
+.width-wide,
+.canvas-width-wide {
+  grid-column: span 6;
+}
+
+.width-extra-wide,
+.canvas-width-extra-wide {
+  grid-column: span 8;
+}
+
+.width-full,
+.canvas-width-full {
+  grid-column: 1 / -1;
+}
+
+
+/* =========================================================
+   CARD ARRANGEMENTS
+   ========================================================= */
+
+.cards,
+.canvas-cards {
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.arrangement-list {
+  grid-template-columns: 1fr;
+}
+
+.arrangement-grid {
+  grid-template-columns:
+    repeat(
+      var(--grid-columns, 2),
+      minmax(0, 1fr)
+    );
+}
+
+.arrangement-compact {
+  grid-template-columns:
+    repeat(
+      var(--grid-columns, 3),
+      minmax(0, 1fr)
+    );
+
+  gap: 6px;
+}
+
+.arrangement-featured {
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+
+/* =========================================================
+   DASHBOARD CARD SIZES
+   ========================================================= */
+
+.card-size-small .card {
+  min-height: 52px;
+  padding: 7px 9px;
+  gap: 8px;
+}
+
+.card-size-small .card-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+}
+
+.card-size-small .card-icon img {
+  width: 23px;
+  height: 23px;
+}
+
+.card-size-small .card-copy strong {
+  font-size: 0.82rem;
+}
+
+.card-size-small .card-copy small {
+  font-size: 0.68rem;
+}
+
+.card-size-medium .card {
+  min-height: 65px;
+}
+
+.card-size-large .card {
+  min-height: 82px;
+  padding: 13px;
+}
+
+.card-size-large .card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 15px;
+}
+
+.card-size-large .card-icon img {
+  width: 35px;
+  height: 35px;
+}
+
+.card-size-large .card-copy strong {
+  font-size: 1rem;
+}
+
+.card-size-large .card-copy small {
+  font-size: 0.8rem;
+}
+
+
+/* =========================================================
+   COMPACT CARDS
+   ========================================================= */
+
+.arrangement-compact .card {
+  min-height: 48px;
+
+  grid-template-columns:
+    31px
+    minmax(0, 1fr);
+
+  padding: 7px 8px;
+}
+
+.arrangement-compact .card-icon {
+  width: 31px;
+  height: 31px;
+  border-radius: 9px;
+}
+
+.arrangement-compact .card-icon img {
+  width: 21px;
+  height: 21px;
+}
+
+.arrangement-compact .card-copy strong {
+  font-size: 0.78rem;
+}
+
+
+/* =========================================================
+   FEATURED CARDS
+   ========================================================= */
+
+.arrangement-featured .card {
+  min-height: 105px;
+
+  grid-template-columns:
+    64px
+    minmax(0, 1fr)
+    auto;
+
+  padding: 18px;
+  border-radius: 20px;
+}
+
+.arrangement-featured .card-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+}
+
+.arrangement-featured .card-icon img {
+  width: 43px;
+  height: 43px;
+}
+
+.arrangement-featured .card-copy strong {
+  font-size: 1.08rem;
+}
+
+.arrangement-featured .card-copy small {
+  font-size: 0.82rem;
+}
+
+
+/* =========================================================
+   EDITOR CARD LAYOUTS
+   ========================================================= */
+
+.canvas-card-wrapper {
+  min-width: 0;
+}
+
+.canvas-card {
+  min-width: 0;
+}
+
+.canvas-cards.arrangement-grid,
+.canvas-cards.arrangement-compact {
+  grid-template-columns:
+    repeat(
+      var(--grid-columns, 2),
+      minmax(0, 1fr)
+    );
+}
+
+.canvas-cards.arrangement-list,
+.canvas-cards.arrangement-featured {
+  grid-template-columns: 1fr;
+}
+
+.canvas-cards.arrangement-compact {
+  gap: 6px;
+}
+
+.canvas-cards.arrangement-compact
+.canvas-card {
+  min-height: 48px;
+
+  grid-template-columns:
+    18px
+    31px
+    minmax(0, 1fr)
+    auto;
+
+  padding: 6px 7px;
+}
+
+.canvas-cards.arrangement-compact
+.canvas-card-icon {
+  width: 31px;
+  height: 31px;
+  border-radius: 9px;
+}
+
+.canvas-cards.arrangement-featured
+.canvas-card {
+  min-height: 98px;
+
+  grid-template-columns:
+    18px
+    58px
+    minmax(0, 1fr)
+    auto;
+
+  padding: 14px 12px;
+  border-radius: 18px;
+}
+
+.canvas-cards.arrangement-featured
+.canvas-card-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 17px;
+}
+
+.canvas-cards.card-size-small
+.canvas-card {
+  min-height: 51px;
+}
+
+.canvas-cards.card-size-medium
+.canvas-card {
+  min-height: 59px;
+}
+
+.canvas-cards.card-size-large
+.canvas-card {
+  min-height: 78px;
+}
+
+
+/* =========================================================
+   CARD DRAG HANDLE
+   ========================================================= */
+
+.canvas-card-handle {
+  width: 18px;
+  min-height: 30px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 3px);
+
+  place-content: center;
+
+  gap: 3px;
+
+  cursor: grab;
+  touch-action: none;
+
+  color: #68748a;
+}
+
+.canvas-card-handle:active {
+  cursor: grabbing;
+}
+
+.canvas-card-handle i {
+  width: 3px;
+  height: 3px;
+
+  display: block;
+
+  border-radius: 50%;
+  background: currentColor;
+}
+
+
+/* =========================================================
+   SECTION ORDER PANEL
+   ========================================================= */
+
+.section-order-panel {
+  width: min(1360px, 100%);
+  margin: 0 auto 14px;
+  padding: 12px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 17px;
+
+  background:
+    rgba(
+      18,
+      23,
+      34,
+      0.9
+    );
+
+  box-shadow:
+    0 15px 45px
+    rgba(
+      0,
+      0,
+      0,
+      0.2
+    );
+
+  backdrop-filter:
+    blur(20px);
+}
+
+.section-order-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-bottom: 10px;
+}
+
+.section-order-heading > div {
+  display: grid;
+  gap: 3px;
+}
+
+.section-order-heading strong {
+  font-size: 0.77rem;
+}
+
+.section-order-heading small {
+  color: var(--muted);
+  font-size: 0.66rem;
+}
+
+.section-order-heading > button {
+  min-height: 35px;
+  padding: 0 12px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 10px;
+
+  cursor: pointer;
+  color: inherit;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.05
+    );
+}
+
+.section-order-heading > button:hover {
+  border-color:
+    rgba(
+      79,
+      140,
+      255,
+      0.55
+    );
+
+  background:
+    rgba(
+      79,
+      140,
+      255,
+      0.09
+    );
+}
+
+.section-order-zone {
+  min-height: 72px;
+
+  display: flex;
+  align-items: stretch;
+
+  gap: 8px;
+
+  overflow-x: auto;
+
+  padding: 4px;
+
+  border-radius: 13px;
+
+  scrollbar-width: thin;
+}
+
+.section-order-item {
+  min-width: 230px;
+  max-width: 290px;
+
+  flex:
+    0 0 auto;
+
+  display: grid;
+
+  grid-template-rows:
+    minmax(0, 1fr)
+    auto;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 12px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.035
+    );
+
+  transition:
+    border-color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.section-order-item:hover {
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.06
+    );
+}
+
+.section-order-item.selected {
+  border-color:
+    rgba(
+      79,
+      140,
+      255,
+      0.85
+    );
+
+  background:
+    rgba(
+      79,
+      140,
+      255,
+      0.1
+    );
+
+  box-shadow:
+    0 0 0 3px
+    rgba(
+      79,
+      140,
+      255,
+      0.07
+    );
+}
+
+.section-order-select {
+  min-width: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    8px
+    minmax(0, 1fr);
+
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 9px 10px;
+
+  border: 0;
+  border-radius:
+    11px 11px 0 0;
+
+  cursor: pointer;
+
+  color: inherit;
+  text-align: left;
+
+  background: transparent;
+}
+
+.section-order-color {
+  --section-order-accent:
+    #4f8cff;
+
+  width: 8px;
+  height: 31px;
+
+  display: block;
+
+  border-radius: 99px;
+
+  background:
+    var(
+      --section-order-accent
+    );
+
+  box-shadow:
+    0 0 13px
+    color-mix(
+      in srgb,
+      var(
+        --section-order-accent
+      ) 55%,
+      transparent
+    );
+}
+
+.section-order-copy {
+  min-width: 0;
+
+  display: grid;
+  gap: 3px;
+}
+
+.section-order-copy strong,
+.section-order-copy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.section-order-copy strong {
+  font-size: 0.75rem;
+}
+
+.section-order-copy small {
+  color: var(--muted);
+  font-size: 0.62rem;
+}
+
+.section-order-controls {
+  min-height: 34px;
+
+  display: grid;
+
+  grid-template-columns:
+    30px
+    30px
+    minmax(26px, 1fr)
+    30px
+    30px;
+
+  align-items: center;
+
+  gap: 3px;
+
+  padding: 4px;
+
+  border-top:
+    1px solid
+    var(--border);
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.12
+    );
+}
+
+.section-order-controls button {
+  width: 30px;
+  height: 27px;
+
+  display: grid;
+  place-items: center;
+
+  padding: 0;
+
+  border:
+    1px solid
+    transparent;
+
+  border-radius: 7px;
+
+  cursor: pointer;
+
+  color: #a9b5c8;
+
+  background: transparent;
+}
+
+.section-order-controls button:hover:not(:disabled) {
+  border-color:
+    rgba(
+      79,
+      140,
+      255,
+      0.35
+    );
+
+  color: #fff;
+
+  background:
+    rgba(
+      79,
+      140,
+      255,
+      0.12
+    );
+}
+
+.section-order-controls button:disabled {
+  opacity: 0.22;
+  cursor: not-allowed;
+}
+
+.section-order-controls > span {
+  display: grid;
+  place-items: center;
+
+  color: var(--muted);
+
+  font-size: 0.64rem;
+  font-weight: 750;
+}
+
+.section-order-empty {
+  min-width: 220px;
+  min-height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  border:
+    1px dashed
+    var(--border-strong);
+
+  border-radius: 11px;
+
+  cursor: pointer;
+
+  color: var(--muted);
+
+  background: transparent;
+}
+
+.section-order-empty:hover {
+  color: #fff;
+
+  border-color:
+    rgba(
+      79,
+      140,
+      255,
+      0.65
+    );
+
+  background:
+    rgba(
+      79,
+      140,
+      255,
+      0.07
+    );
+}
+
+
+/* =========================================================
+   CANVAS SECTION HEADER
+   ========================================================= */
+
+.canvas-section-header {
+  grid-template-columns:
+    auto
+    minmax(0, 1fr)
+    auto
+    auto;
+}
+
+.canvas-section-width {
+  min-width: 38px;
+  height: 23px;
+
+  display: grid;
+  place-items: center;
+
+  padding: 0 6px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 7px;
+
+  color: var(--muted);
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.035
+    );
+
+  font-size: 0.6rem;
+  font-weight: 750;
+}
+
+
+/* =========================================================
+   CARD DROP PLACEHOLDER
+   ========================================================= */
+
+.dnd-card-zone-active {
+  min-height: 64px;
+
+  border-radius: 14px;
+
+  outline:
+    1px dashed
+    rgba(
+      79,
+      140,
+      255,
+      0.4
+    );
+
+  outline-offset: 4px;
+}
+
+.card-drop-placeholder {
+  min-height: 59px;
+
+  display: grid;
+  place-content: center;
+  justify-items: center;
+
+  gap: 7px;
+
+  border:
+    2px solid
+    rgba(
+      79,
+      140,
+      255,
+      0.95
+    );
+
+  border-radius: 13px;
+
+  color: #a8c7ff;
+
+  background:
+    rgba(
+      79,
+      140,
+      255,
+      0.12
+    );
+
+  box-shadow:
+    0 0 0 4px
+    rgba(
+      79,
+      140,
+      255,
+      0.08
+    );
+}
+
+.card-drop-placeholder span {
+  width: 36px;
+  height: 3px;
+
+  border-radius: 99px;
+  background: #4f8cff;
+}
+
+.card-drop-placeholder strong {
+  font-size: 0.72rem;
+}
+
+
+/* =========================================================
+   INSPECTOR CONTROLS
+   ========================================================= */
+
+.arrangement-options {
+  display: grid;
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 8px;
+}
+
+.arrangement-options button {
+  min-width: 0;
+  min-height: 72px;
+
+  display: grid;
+
+  grid-template-columns:
+    52px
+    minmax(0, 1fr);
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 9px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  color: inherit;
+  text-align: left;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.025
+    );
+}
+
+.arrangement-options button.active {
+  border-color: #4f8cff;
+
+  background:
+    rgba(
+      79,
+      140,
+      255,
+      0.1
+    );
+}
+
+.arrangement-options button >
+span:last-child {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.arrangement-options strong {
+  font-size: 0.74rem;
+}
+
+.arrangement-options small {
+  color: var(--muted);
+  font-size: 0.62rem;
+}
+
+.arrangement-preview {
+  width: 52px;
+  height: 38px;
+
+  display: grid;
+  gap: 3px;
+
+  padding: 5px;
+
+  border-radius: 8px;
+
+  background: #171d29;
+}
+
+.arrangement-preview i {
+  display: block;
+
+  border-radius: 3px;
+
+  background: #637087;
+}
+
+.preview-list {
+  grid-template-columns: 1fr;
+}
+
+.preview-grid {
+  grid-template-columns:
+    1fr 1fr;
+}
+
+.preview-compact {
+  grid-template-columns:
+    repeat(3, 1fr);
+}
+
+.preview-featured {
+  grid-template-columns: 1fr;
+}
+
+.preview-featured i {
+  min-height: 12px;
+}
+
+.column-options {
+  display: grid;
+
+  grid-template-columns:
+    repeat(6, 1fr);
+
+  gap: 6px;
+}
+
+.column-options button {
+  min-height: 39px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  color: inherit;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.025
+    );
+}
+
+.column-options button.active {
+  border-color: #4f8cff;
+  color: #fff;
+
+  background:
+    rgba(
+      79,
+      140,
+      255,
+      0.16
+    );
+}
+
+.setting-value {
+  min-width: 29px;
+  height: 29px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 9px;
+
+  color: #a9c7ff;
+
+  background:
+    rgba(
+      79,
+      140,
+      255,
+      0.12
+    );
+
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.inspector-group-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 12px;
+}
+
+.section-width-options {
+  display: grid;
+  gap: 6px;
+}
+
+.section-width-options button {
+  min-height: 52px;
+
+  display: grid;
+
+  grid-template-columns:
+    58px
+    minmax(0, 1fr);
+
+  align-items: center;
+
+  gap: 11px;
+
+  padding: 7px 10px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 11px;
+
+  cursor: pointer;
+
+  color: inherit;
+  text-align: left;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.025
+    );
+}
+
+.section-width-options button.active {
+  border-color: #4f8cff;
+
+  background:
+    rgba(
+      79,
+      140,
+      255,
+      0.1
+    );
+}
+
+.section-width-options button >
+span:last-child {
+  display: grid;
+  gap: 2px;
+}
+
+.section-width-options strong {
+  font-size: 0.74rem;
+}
+
+.section-width-options small {
+  color: var(--muted);
+  font-size: 0.64rem;
+}
+
+.section-width-preview {
+  height: 14px;
+
+  display: block;
+
+  border-radius: 4px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #64748b,
+      #8291aa
+    );
+}
+
+.section-width-preview.narrow {
+  width: 25%;
+}
+
+.section-width-preview.medium {
+  width: 34%;
+}
+
+.section-width-preview.wide {
+  width: 50%;
+}
+
+.section-width-preview.extra-wide {
+  width: 67%;
+}
+
+.section-width-preview.full {
+  width: 100%;
+}
+
+.card-size-options {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 6px;
+}
+
+.card-size-options button {
+  min-width: 0;
+  min-height: 70px;
+
+  display: grid;
+  place-content: center;
+  justify-items: center;
+
+  gap: 8px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 11px;
+
+  cursor: pointer;
+
+  color: inherit;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.025
+    );
+}
+
+.card-size-options button.active {
+  border-color: #4f8cff;
+
+  background:
+    rgba(
+      79,
+      140,
+      255,
+      0.1
+    );
+}
+
+.card-size-options strong {
+  font-size: 0.66rem;
+}
+
+.card-size-preview {
+  width: 38px;
+
+  display: block;
+
+  border-radius: 5px;
+
+  background: #64748b;
+}
+
+.card-size-preview.inherit {
+  height: 15px;
+
+  border:
+    1px dashed
+    #9aa6b8;
+
+  background: transparent;
+}
+
+.card-size-preview.small {
+  height: 10px;
+}
+
+.card-size-preview.medium {
+  height: 16px;
+}
+
+.card-size-preview.large {
+  height: 24px;
+}
+
+.service-type-badge {
+  display: grid;
+  gap: 4px;
+
+  padding: 11px;
+
+  border:
+    1px solid
+    rgba(
+      79,
+      140,
+      255,
+      0.22
+    );
+
+  border-radius: 12px;
+
+  background:
+    rgba(
+      79,
+      140,
+      255,
+      0.07
+    );
+}
+
+.service-type-badge span {
+  color: #a9c7ff;
+
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.service-type-badge small {
+  color: var(--muted);
+  font-size: 0.67rem;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .width-narrow,
+  .width-medium,
+  .width-wide,
+  .canvas-width-narrow,
+  .canvas-width-medium,
+  .canvas-width-wide {
+    grid-column: span 6;
+  }
+
+  .width-extra-wide,
+  .canvas-width-extra-wide {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 760px) {
+  .width-narrow,
+  .width-medium,
+  .width-wide,
+  .width-extra-wide,
+  .width-full,
+  .canvas-width-narrow,
+  .canvas-width-medium,
+  .canvas-width-wide,
+  .canvas-width-extra-wide,
+  .canvas-width-full {
+    grid-column: 1;
+  }
+
+  .section-order-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .section-order-heading > button {
+    width: 100%;
+  }
+
+  .section-order-zone {
+    padding-bottom: 8px;
+  }
+
+  .section-order-item {
+    min-width: 210px;
+  }
+}
+
+@media (max-width: 480px) {
+  .arrangement-grid,
+  .arrangement-compact,
+  .canvas-cards.arrangement-grid,
+  .canvas-cards.arrangement-compact {
+    grid-template-columns: 1fr;
+  }
+
+  .arrangement-options {
+    grid-template-columns: 1fr;
+  }
+
+  .column-options {
+    grid-template-columns:
+      repeat(3, 1fr);
+  }
+
+  .card-size-options {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+}

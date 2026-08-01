@@ -16,14 +16,25 @@ type Store struct {
 	config     Config
 }
 
-func NewStore(dataDir string) (*Store, error) {
-	if err := os.MkdirAll(dataDir, 0o755); err != nil {
-		return nil, fmt.Errorf("create data directory: %w", err)
+func NewStore(
+	dataDir string,
+) (*Store, error) {
+	if err := os.MkdirAll(
+		dataDir,
+		0o755,
+	); err != nil {
+		return nil, fmt.Errorf(
+			"create data directory: %w",
+			err,
+		)
 	}
 
 	store := &Store{
-		dataDir:    dataDir,
-		configPath: filepath.Join(dataDir, "config.json"),
+		dataDir: dataDir,
+		configPath: filepath.Join(
+			dataDir,
+			"config.json",
+		),
 	}
 
 	if err := store.load(); err != nil {
@@ -40,7 +51,11 @@ func (s *Store) Get() Config {
 	return clone(s.config)
 }
 
-func (s *Store) Save(cfg Config) error {
+func (s *Store) Save(
+	cfg Config,
+) error {
+	Normalize(&cfg)
+
 	if err := Validate(cfg); err != nil {
 		return err
 	}
@@ -52,7 +67,10 @@ func (s *Store) Save(cfg Config) error {
 		return err
 	}
 
-	if err := writeAtomic(s.configPath, cfg); err != nil {
+	if err := writeAtomic(
+		s.configPath,
+		cfg,
+	); err != nil {
 		return err
 	}
 
@@ -62,12 +80,18 @@ func (s *Store) Save(cfg Config) error {
 }
 
 func (s *Store) load() error {
-	raw, err := os.ReadFile(s.configPath)
+	raw, err := os.ReadFile(
+		s.configPath,
+	)
 
 	if os.IsNotExist(err) {
 		cfg := Default()
+		Normalize(&cfg)
 
-		if err := writeAtomic(s.configPath, cfg); err != nil {
+		if err := writeAtomic(
+			s.configPath,
+			cfg,
+		); err != nil {
 			return err
 		}
 
@@ -76,17 +100,87 @@ func (s *Store) load() error {
 	}
 
 	if err != nil {
-		return fmt.Errorf("read config: %w", err)
+		return fmt.Errorf(
+			"read config: %w",
+			err,
+		)
 	}
 
 	var cfg Config
 
-	if err := json.Unmarshal(raw, &cfg); err != nil {
-		return fmt.Errorf("decode config: %w", err)
+	if err := json.Unmarshal(
+		raw,
+		&cfg,
+	); err != nil {
+		return fmt.Errorf(
+			"decode config: %w",
+			err,
+		)
 	}
 
+	originalRaw := append(
+		[]byte(nil),
+		raw...,
+	)
+
+	Normalize(&cfg)
+
 	if err := Validate(cfg); err != nil {
-		return fmt.Errorf("validate config: %w", err)
+		return fmt.Errorf(
+			"validate config: %w",
+			err,
+		)
+	}
+
+	normalizedRaw, err := json.MarshalIndent(
+		cfg,
+		"",
+		"  ",
+	)
+
+	if err != nil {
+		return fmt.Errorf(
+			"encode normalized config: %w",
+			err,
+		)
+	}
+
+	normalizedRaw = append(
+		normalizedRaw,
+		'\n',
+	)
+
+	if string(normalizedRaw) !=
+		string(originalRaw) {
+		backupPath := filepath.Join(
+			s.dataDir,
+			"config.pre-card-layout-migration.json",
+		)
+
+		if _, statErr := os.Stat(
+			backupPath,
+		); os.IsNotExist(statErr) {
+			if writeErr := os.WriteFile(
+				backupPath,
+				originalRaw,
+				0o644,
+			); writeErr != nil {
+				return fmt.Errorf(
+					"write migration backup: %w",
+					writeErr,
+				)
+			}
+		}
+
+		if err := writeAtomic(
+			s.configPath,
+			cfg,
+		); err != nil {
+			return fmt.Errorf(
+				"write normalized config: %w",
+				err,
+			)
+		}
 	}
 
 	s.config = cfg
@@ -95,43 +189,85 @@ func (s *Store) load() error {
 }
 
 func (s *Store) backupCurrent() error {
-	raw, err := os.ReadFile(s.configPath)
+	raw, err := os.ReadFile(
+		s.configPath,
+	)
 
 	if os.IsNotExist(err) {
 		return nil
 	}
 
 	if err != nil {
-		return fmt.Errorf("read config for backup: %w", err)
+		return fmt.Errorf(
+			"read config for backup: %w",
+			err,
+		)
 	}
 
-	backupDir := filepath.Join(s.dataDir, "backups")
+	backupDir := filepath.Join(
+		s.dataDir,
+		"backups",
+	)
 
-	if err := os.MkdirAll(backupDir, 0o755); err != nil {
-		return fmt.Errorf("create backup directory: %w", err)
+	if err := os.MkdirAll(
+		backupDir,
+		0o755,
+	); err != nil {
+		return fmt.Errorf(
+			"create backup directory: %w",
+			err,
+		)
 	}
 
-	filename := "config-" + time.Now().UTC().Format("20060102T150405.000000000Z") + ".json"
-	path := filepath.Join(backupDir, filename)
+	filename :=
+		"config-" +
+			time.Now().
+				UTC().
+				Format(
+					"20060102T150405.000000000Z",
+				) +
+			".json"
 
-	if err := os.WriteFile(path, raw, 0o644); err != nil {
-		return fmt.Errorf("write config backup: %w", err)
+	path := filepath.Join(
+		backupDir,
+		filename,
+	)
+
+	if err := os.WriteFile(
+		path,
+		raw,
+		0o644,
+	); err != nil {
+		return fmt.Errorf(
+			"write config backup: %w",
+			err,
+		)
 	}
 
 	return nil
 }
 
-func (s *Store) pruneBackups(keep int) error {
-	backupDir := filepath.Join(s.dataDir, "backups")
+func (s *Store) pruneBackups(
+	keep int,
+) error {
+	backupDir := filepath.Join(
+		s.dataDir,
+		"backups",
+	)
 
-	entries, err := os.ReadDir(backupDir)
+	entries, err := os.ReadDir(
+		backupDir,
+	)
 
 	if os.IsNotExist(err) {
 		return nil
 	}
 
 	if err != nil {
-		return fmt.Errorf("read backup directory: %w", err)
+		return fmt.Errorf(
+			"read backup directory: %w",
+			err,
+		)
 	}
 
 	if len(entries) <= keep {
@@ -139,60 +275,116 @@ func (s *Store) pruneBackups(keep int) error {
 	}
 
 	for _, entry := range entries[:len(entries)-keep] {
-		if err := os.Remove(filepath.Join(backupDir, entry.Name())); err != nil {
-			return fmt.Errorf("remove old backup: %w", err)
+		if err := os.Remove(
+			filepath.Join(
+				backupDir,
+				entry.Name(),
+			),
+		); err != nil {
+			return fmt.Errorf(
+				"remove old backup: %w",
+				err,
+			)
 		}
 	}
 
 	return nil
 }
 
-func writeAtomic(path string, cfg Config) error {
-	raw, err := json.MarshalIndent(cfg, "", "  ")
+func writeAtomic(
+	path string,
+	cfg Config,
+) error {
+	raw, err := json.MarshalIndent(
+		cfg,
+		"",
+		"  ",
+	)
+
 	if err != nil {
-		return fmt.Errorf("encode config: %w", err)
+		return fmt.Errorf(
+			"encode config: %w",
+			err,
+		)
 	}
 
 	raw = append(raw, '\n')
 
-	temp, err := os.CreateTemp(filepath.Dir(path), ".config-*.tmp")
+	temp, err := os.CreateTemp(
+		filepath.Dir(path),
+		".config-*.tmp",
+	)
+
 	if err != nil {
-		return fmt.Errorf("create temporary config: %w", err)
+		return fmt.Errorf(
+			"create temporary config: %w",
+			err,
+		)
 	}
 
 	tempPath := temp.Name()
+
 	defer os.Remove(tempPath)
 
 	if _, err := temp.Write(raw); err != nil {
-		temp.Close()
-		return fmt.Errorf("write temporary config: %w", err)
+		_ = temp.Close()
+
+		return fmt.Errorf(
+			"write temporary config: %w",
+			err,
+		)
 	}
 
 	if err := temp.Sync(); err != nil {
-		temp.Close()
-		return fmt.Errorf("sync temporary config: %w", err)
+		_ = temp.Close()
+
+		return fmt.Errorf(
+			"sync temporary config: %w",
+			err,
+		)
 	}
 
 	if err := temp.Close(); err != nil {
-		return fmt.Errorf("close temporary config: %w", err)
+		return fmt.Errorf(
+			"close temporary config: %w",
+			err,
+		)
 	}
 
-	if err := os.Chmod(tempPath, 0o644); err != nil {
-		return fmt.Errorf("set config permissions: %w", err)
+	if err := os.Chmod(
+		tempPath,
+		0o644,
+	); err != nil {
+		return fmt.Errorf(
+			"set config permissions: %w",
+			err,
+		)
 	}
 
-	if err := os.Rename(tempPath, path); err != nil {
-		return fmt.Errorf("replace config: %w", err)
+	if err := os.Rename(
+		tempPath,
+		path,
+	); err != nil {
+		return fmt.Errorf(
+			"replace config: %w",
+			err,
+		)
 	}
 
 	return nil
 }
 
-func clone(cfg Config) Config {
+func clone(
+	cfg Config,
+) Config {
 	raw, _ := json.Marshal(cfg)
 
 	var result Config
-	_ = json.Unmarshal(raw, &result)
+
+	_ = json.Unmarshal(
+		raw,
+		&result,
+	)
 
 	return result
 }

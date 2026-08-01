@@ -1,0 +1,322 @@
+/*
+ * SortableJS section drag-and-drop.
+ *
+ * Card drag-and-drop ostaje u card-layout.css i koristi
+ * svelte-dnd-action. Ova pravila utiču samo na sekcije.
+ */
+
+.canvas-section-header {
+  grid-template-columns:
+    28px
+    auto
+    minmax(0, 1fr)
+    auto
+    auto;
+}
+
+.canvas-section-drag-handle {
+  width: 28px;
+  height: 30px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 3px);
+
+  place-content: center;
+  gap: 3px;
+
+  padding: 0;
+
+  border:
+    1px solid
+    transparent;
+
+  border-radius: 8px;
+
+  cursor: grab;
+  touch-action: none;
+
+  color: #718097;
+  background: transparent;
+
+  transition:
+    color 130ms ease,
+    border-color 130ms ease,
+    background 130ms ease;
+}
+
+.canvas-section-drag-handle:hover {
+  color: #dce8ff;
+
+  border-color:
+    rgba(
+      79,
+      140,
+      255,
+      0.28
+    );
+
+  background:
+    rgba(
+      79,
+      140,
+      255,
+      0.1
+    );
+}
+
+.canvas-section-drag-handle:active {
+  cursor: grabbing;
+}
+
+.canvas-section-drag-handle i {
+  width: 3px;
+  height: 3px;
+
+  display: block;
+
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/*
+ * Element koji ostaje u CSS gridu i označava mesto
+ * na koje će section biti spušten.
+ */
+.section-sortable-ghost {
+  position: relative;
+
+  opacity: 1 !important;
+
+  border:
+    2px solid
+    #4f8cff !important;
+
+  background:
+    rgba(
+      79,
+      140,
+      255,
+      0.13
+    ) !important;
+
+  box-shadow:
+    0 0 0 5px
+    rgba(
+      79,
+      140,
+      255,
+      0.1
+    ) !important;
+}
+
+.section-sortable-ghost > * {
+  opacity: 0.18;
+}
+
+.section-sortable-ghost::before {
+  content: "";
+
+  position: absolute;
+  inset: 8px;
+
+  z-index: 5;
+
+  pointer-events: none;
+
+  border:
+    1px dashed
+    rgba(
+      157,
+      192,
+      255,
+      0.8
+    );
+
+  border-radius: 13px;
+}
+
+.section-sortable-ghost::after {
+  content: "Drop section here";
+
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  z-index: 6;
+
+  pointer-events: none;
+
+  padding: 7px 11px;
+
+  border:
+    1px solid
+    rgba(
+      79,
+      140,
+      255,
+      0.4
+    );
+
+  border-radius: 999px;
+
+  color: #dce8ff;
+
+  background:
+    rgba(
+      17,
+      24,
+      39,
+      0.92
+    );
+
+  box-shadow:
+    0 8px 28px
+    rgba(
+      0,
+      0,
+      0,
+      0.35
+    );
+
+  font-size: 0.7rem;
+  font-weight: 750;
+
+  white-space: nowrap;
+
+  transform:
+    translate(
+      -50%,
+      -50%
+    );
+}
+
+/*
+ * Originalni section u trenutku kada je odabran
+ * za prevlačenje.
+ */
+.section-sortable-chosen {
+  border-color:
+    rgba(
+      79,
+      140,
+      255,
+      0.8
+    ) !important;
+
+  box-shadow:
+    0 0 0 4px
+    rgba(
+      79,
+      140,
+      255,
+      0.09
+    ) !important;
+}
+
+/*
+ * Fallback kopija koja prati kursor.
+ */
+.section-sortable-drag {
+  opacity: 0.94 !important;
+
+  border:
+    1px solid
+    rgba(
+      79,
+      140,
+      255,
+      0.9
+    ) !important;
+
+  background:
+    rgba(
+      23,
+      28,
+      40,
+      0.98
+    ) !important;
+
+  box-shadow:
+    0 24px 70px
+    rgba(
+      0,
+      0,
+      0,
+      0.5
+    ) !important;
+
+  transform:
+    rotate(0.4deg);
+}
+
+.section-sort-in-progress {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.section-sort-in-progress
+.editor-canvas-section:not(
+  .section-sortable-ghost
+):not(
+  .section-sortable-drag
+) {
+  transition:
+    transform 190ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+/*
+ * Tokom section drag-a onemogućavamo card handle-e.
+ * Tako parent Sortable i nested card DND ne mogu da
+ * se aktiviraju u isto vreme.
+ */
+.section-sort-in-progress
+.canvas-card-handle {
+  pointer-events: none;
+}
+
+/*
+ * Sortable fallback element dodaje se direktno u body,
+ * pa mu moramo sačuvati razumnu maksimalnu širinu.
+ */
+body >
+.section-sortable-drag {
+  width:
+    min(
+      620px,
+      calc(
+        100vw - 40px
+      )
+    ) !important;
+
+  max-height:
+    min(
+      540px,
+      calc(
+        100vh - 40px
+      )
+    );
+
+  overflow: hidden;
+
+  z-index: 10000 !important;
+}
+
+@media (max-width: 760px) {
+  .canvas-section-drag-handle {
+    width: 34px;
+    height: 34px;
+  }
+
+  body >
+  .section-sortable-drag {
+    width:
+      calc(
+        100vw - 24px
+      ) !important;
+  }
+}

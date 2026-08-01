@@ -3,8 +3,12 @@ export type Icon = {
   value: string;
 };
 
+export type ItemType =
+  | 'service';
+
 export type Item = {
   id: string;
+  type: ItemType;
   name: string;
   url: string;
   description: string;
@@ -12,11 +16,34 @@ export type Item = {
   openInNewTab: boolean;
 };
 
+export type SectionLayout =
+  | 'list'
+  | 'grid'
+  | 'compact'
+  | 'featured';
+
+export type SectionWidth =
+  | 'narrow'
+  | 'medium'
+  | 'wide'
+  | 'extra-wide'
+  | 'full';
+
+export type SectionCardSize =
+  | 'inherit'
+  | 'small'
+  | 'medium'
+  | 'large';
+
 export type Section = {
   id: string;
   title: string;
   accent: string;
-  layout: 'grid' | 'list' | 'compact' | 'large';
+  layout: SectionLayout;
+  width: SectionWidth;
+  cardSize: SectionCardSize;
+  gridColumns: number;
+  fillLastRow: boolean;
   collapsed: boolean;
   items: Item[];
 };
@@ -38,25 +65,106 @@ export type HubletConfig = {
   };
 
   appearance: {
-    density: string;
-    cardStyle: string;
-    radius: string;
+    mode: 'minimal' | 'standard' | 'advanced';
+
+    font: {
+      family:
+        | 'system'
+        | 'inter'
+        | 'geist'
+        | 'manrope'
+        | 'ibm-plex-sans';
+
+      scale:
+        | 'small'
+        | 'medium'
+        | 'large';
+    };
+
+    cards: {
+      size:
+        | 'small'
+        | 'medium'
+        | 'large';
+
+      density:
+        | 'compact'
+        | 'comfortable'
+        | 'relaxed';
+
+      radius:
+        | 'small'
+        | 'medium'
+        | 'large';
+
+      shadow:
+        | 'none'
+        | 'soft'
+        | 'medium'
+        | 'floating';
+
+      border: boolean;
+    };
+
+    background: {
+      type:
+        | 'solid'
+        | 'gradient'
+        | 'wallpaper';
+
+      color: string;
+      blur: number;
+      brightness: number;
+      overlay: number;
+      wallpaper: string | null;
+    };
+
+    animations: boolean;
   };
 
   search: {
     autoFocus: boolean;
     openShortcutDirectly: boolean;
     webSearchEnabled: boolean;
-    webSearchEngine: 'google' | 'duckduckgo' | 'bing';
+
+    webSearchEngine:
+      | 'google'
+      | 'duckduckgo'
+      | 'bing';
   };
 
   sections: Section[];
   shortcuts: Shortcut[];
 
-  weather: {
-    enabled: boolean;
-    location: string;
-    latitude: number | null;
-    longitude: number | null;
+  modules: {
+    weather: {
+      enabled: boolean;
+      mode:
+        | 'current'
+        | 'today'
+        | 'five-day';
+
+      location: string;
+      latitude: number | null;
+      longitude: number | null;
+    };
+
+    clock: {
+      enabled: boolean;
+      style:
+        | 'minimal'
+        | 'digital'
+        | 'large';
+
+      timeFormat:
+        | '12h'
+        | '24h';
+
+      showDate: boolean;
+    };
+
+    statistics: {
+      enabled: boolean;
+    };
   };
 };
