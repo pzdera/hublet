@@ -23,3 +23,8 @@ wallpapers/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Hublet runtime data
+/data/
+/icons/
+/wallpapers/

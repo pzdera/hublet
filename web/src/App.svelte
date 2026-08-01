@@ -16,6 +16,7 @@
 
   import SearchBar from './components/SearchBar.svelte';
   import EditorPanel from './components/EditorPanel.svelte';
+  import ServiceIcon from './components/ServiceIcon.svelte';
 
   let config =
     $state<HubletConfig | null>(null);
@@ -413,20 +414,7 @@
                         rel="noreferrer"
                       >
                         <span class="card-icon">
-                          {#if (
-                            item.icon.type ===
-                              'local' &&
-                            item.icon.value
-                          )}
-                            <img
-                              src={`/icons/${item.icon.value}`}
-                              alt=""
-                            />
-                          {:else}
-                            {item.name
-                              .slice(0, 1)
-                              .toUpperCase()}
-                          {/if}
+                          <ServiceIcon {item} />
                         </span>
 
                         <span class="card-copy">

@@ -25,6 +25,8 @@
     sectionSortable
   } from '../lib/section-sortable';
 
+  import ServiceIcon from './ServiceIcon.svelte';
+
   let {
     config,
     selection,
@@ -460,14 +462,7 @@
                       <span
                         class="canvas-card-icon"
                       >
-                        {#if iconURL(item)}
-                          <img
-                            src={iconURL(item)}
-                            alt=""
-                          />
-                        {:else}
-                          {itemInitial(item)}
-                        {/if}
+                        <ServiceIcon {item} />
                       </span>
 
                       <span
