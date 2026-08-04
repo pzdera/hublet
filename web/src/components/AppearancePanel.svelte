@@ -307,6 +307,37 @@
       )}
         <WallpaperManager {config} />
 
+        <div class="wallpaper-fit-setting">
+          <span>
+            <strong>Wallpaper fit</strong>
+            <small>
+              Cover fills the screen. Fit shows the
+              complete image without cropping.
+            </small>
+          </span>
+
+          <div class="appearance-segmented">
+            {#each [
+              { value: 'cover', label: 'Cover' },
+              { value: 'contain', label: 'Fit' }
+            ] as option}
+              <button
+                class:active={
+                  config.appearance.background.fit ===
+                  option.value
+                }
+                type="button"
+                onclick={() => {
+                  config.appearance.background.fit =
+                    option.value as 'cover' | 'contain';
+                }}
+              >
+                {option.label}
+              </button>
+            {/each}
+          </div>
+        </div>
+
         <label class="appearance-range">
           <span>
             <strong>Brightness</strong>

@@ -115,6 +115,7 @@ export type HubletConfig = {
         | 'wallpaper';
 
       color: string;
+      fit: 'cover' | 'contain';
       blur: number;
       brightness: number;
       overlay: number;

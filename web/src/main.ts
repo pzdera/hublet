@@ -12,11 +12,11 @@ import './editor.css';
 import './card-layout.css';
 import './section-sortable.css';
 import './appearance.css';
-import './section-surfaces.css';
 import './service-icons.css';
 import './local-icon-manager.css';
 
 import './ui-polish.css';
+import './section-surfaces.css';
 import './mobile-polish.css';
 import './dashboard-identity.css';
 import './shortcuts.css';

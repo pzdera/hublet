@@ -141,6 +141,15 @@ func Validate(cfg Config) error {
 		)
 	}
 
+	switch cfg.Appearance.Background.Fit {
+	case "cover", "contain":
+	default:
+		return fmt.Errorf(
+			"unsupported wallpaper fit %q",
+			cfg.Appearance.Background.Fit,
+		)
+	}
+
 	if cfg.Appearance.Background.Blur < 0 ||
 		cfg.Appearance.Background.Blur > 40 {
 		return errors.New(

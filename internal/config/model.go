@@ -45,6 +45,7 @@ type Cards struct {
 type Background struct {
 	Type       string  `json:"type"`
 	Color      string  `json:"color"`
+	Fit        string  `json:"fit"`
 	Blur       int     `json:"blur"`
 	Brightness int     `json:"brightness"`
 	Overlay    int     `json:"overlay"`
@@ -156,6 +157,7 @@ func Default() Config {
 			Background: Background{
 				Type:       "solid",
 				Color:      "#090c12",
+				Fit:        "cover",
 				Blur:       0,
 				Brightness: 100,
 				Overlay:    0,

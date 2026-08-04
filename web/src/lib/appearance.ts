@@ -10,6 +10,7 @@ const variableNames = [
   '--hublet-background-image',
   '--hublet-background-size',
   '--hublet-background-position',
+  '--hublet-background-transform-scale',
   '--hublet-background-blur',
   '--hublet-background-brightness',
   '--hublet-background-overlay',
@@ -166,11 +167,19 @@ export function appearanceVariables(
 
     '--hublet-background-size':
       background.type === 'wallpaper'
-        ? 'cover'
+        ? background.fit === 'contain'
+          ? 'contain'
+          : 'cover'
         : 'auto',
 
     '--hublet-background-position':
       'center center',
+
+    '--hublet-background-transform-scale':
+      background.type === 'wallpaper' &&
+      background.fit !== 'contain'
+        ? '1.035'
+        : '1',
 
     '--hublet-background-blur':
       wallpaperActive

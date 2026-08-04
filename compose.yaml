@@ -1,0 +1,21 @@
+services:
+  hublet:
+    container_name: hublet
+    image: ghcr.io/pzdera/hublet:latest
+
+    restart: unless-stopped
+
+    ports:
+      - "3001:3000"
+
+    environment:
+      HUBLET_ADDR: ":3000"
+      HUBLET_DATA_DIR: "/app/data"
+      HUBLET_ICON_DIR: "/app/icons"
+      HUBLET_WALLPAPER_DIR: "/app/wallpapers"
+      TZ: "Europe/Belgrade"
+
+    volumes:
+      - ./data:/app/data
+      - ./icons:/app/icons
+      - ./wallpapers:/app/wallpapers

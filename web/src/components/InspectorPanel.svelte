@@ -101,8 +101,8 @@
     },
     {
       value: 'none',
-      label: 'None',
-      description: 'No panel background'
+      label: 'Full transparent',
+      description: 'No panel or card surfaces'
     }
   ];
 

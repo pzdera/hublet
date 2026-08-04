@@ -33,10 +33,15 @@ export function sectionSurfaceStyle(
       40
     );
 
+  const effectiveBlur =
+    blur * opacity;
+
   return [
     `--section-accent:${section.accent}`,
     `--section-surface-opacity:${opacity}`,
+    `--section-opacity-percent:${opacity * 100}%`,
     `--section-surface-blur:${blur}px`,
+    `--section-effective-blur:${effectiveBlur}px`,
     `--section-border-width:${
       section.showBorder
         ? '1px'

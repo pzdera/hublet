@@ -61,6 +61,10 @@ func Normalize(cfg *Config) {
 		cfg.Appearance.Background.Color = "#090c12"
 	}
 
+	if cfg.Appearance.Background.Fit == "" {
+		cfg.Appearance.Background.Fit = "cover"
+	}
+
 	if cfg.Appearance.Background.Brightness == 0 {
 		cfg.Appearance.Background.Brightness = 100
 	}

@@ -5,7 +5,9 @@
 .section,
 .editor-canvas-section {
   --section-surface-opacity: 0.82;
+  --section-opacity-percent: 82%;
   --section-surface-blur: 16px;
+  --section-effective-blur: 13.12px;
   --section-border-width: 1px;
 
   position: relative;
@@ -29,25 +31,40 @@
 }
 
 
+/* Accent illumination follows the selected opacity. */
+
+.section::before,
+.editor-canvas-section::before {
+  opacity:
+    var(--section-surface-opacity);
+}
+
+.section:hover::before,
+.editor-canvas-section:hover::before {
+  opacity:
+    var(--section-surface-opacity);
+}
+
+
 /* Solid */
 
 .section.surface-solid,
 .editor-canvas-section.surface-solid {
   background:
-    rgba(
-      13,
-      18,
-      29,
-      var(--section-surface-opacity)
+    color-mix(
+      in srgb,
+      rgb(13, 18, 29)
+        var(--section-opacity-percent),
+      transparent
     ) !important;
 
   box-shadow:
     0 15px 42px
-    rgba(
-      0,
-      0,
-      0,
-      0.23
+    color-mix(
+      in srgb,
+      rgba(0, 0, 0, 0.23)
+        var(--section-opacity-percent),
+      transparent
     );
 
   backdrop-filter: none;
@@ -60,23 +77,20 @@
 .section.surface-transparent,
 .editor-canvas-section.surface-transparent {
   background:
-    rgba(
-      15,
-      21,
-      33,
-      calc(
-        var(--section-surface-opacity) *
-        0.52
-      )
+    color-mix(
+      in srgb,
+      rgba(15, 21, 33, 0.34)
+        var(--section-opacity-percent),
+      transparent
     ) !important;
 
   box-shadow:
     0 10px 32px
-    rgba(
-      0,
-      0,
-      0,
-      0.1
+    color-mix(
+      in srgb,
+      rgba(0, 0, 0, 0.1)
+        var(--section-opacity-percent),
+      transparent
     );
 
   backdrop-filter: none;
@@ -91,51 +105,45 @@
   background:
     linear-gradient(
       145deg,
-      rgba(
-        255,
-        255,
-        255,
-        calc(
-          var(--section-surface-opacity) *
-          0.13
-        )
+      color-mix(
+        in srgb,
+        rgba(255, 255, 255, 0.09)
+          var(--section-opacity-percent),
+        transparent
       ),
-      rgba(
-        8,
-        13,
-        23,
-        calc(
-          var(--section-surface-opacity) *
-          0.55
-        )
+      color-mix(
+        in srgb,
+        rgba(8, 13, 23, 0.38)
+          var(--section-opacity-percent),
+        transparent
       )
     ) !important;
 
   box-shadow:
     0 18px 55px
-    rgba(
-      0,
-      0,
-      0,
-      0.22
+    color-mix(
+      in srgb,
+      rgba(0, 0, 0, 0.22)
+        var(--section-opacity-percent),
+      transparent
     ),
     inset 0 1px 0
-    rgba(
-      255,
-      255,
-      255,
-      0.07
+    color-mix(
+      in srgb,
+      rgba(255, 255, 255, 0.07)
+        var(--section-opacity-percent),
+      transparent
     );
 
   backdrop-filter:
     blur(
-      var(--section-surface-blur)
+      var(--section-effective-blur)
     )
     saturate(1.18);
 
   -webkit-backdrop-filter:
     blur(
-      var(--section-surface-blur)
+      var(--section-effective-blur)
     )
     saturate(1.18);
 }
@@ -145,6 +153,9 @@
 
 .section.surface-none,
 .editor-canvas-section.surface-none {
+  padding-right: 4px;
+  padding-left: 4px;
+
   background:
     transparent !important;
 
@@ -153,6 +164,11 @@
 
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
+}
+
+.section.surface-none::before,
+.editor-canvas-section.surface-none::before {
+  display: none;
 }
 
 
@@ -165,6 +181,100 @@
 .editor-canvas-section.surface-none[style*="--section-border-width:0px"] {
   border-color:
     transparent !important;
+}
+
+
+/* =========================================================
+   SURFACE-SPECIFIC CARD RENDERING
+   ========================================================= */
+
+.surface-solid .card,
+.surface-solid .canvas-card {
+  background:
+    color-mix(
+      in srgb,
+      rgba(
+        255,
+        255,
+        255,
+        var(--hublet-card-background-alpha)
+      ) var(--section-opacity-percent),
+      transparent
+    ) !important;
+}
+
+.surface-transparent .card,
+.surface-transparent .canvas-card {
+  border-color:
+    color-mix(
+      in srgb,
+      rgba(255, 255, 255, 0.06)
+        var(--section-opacity-percent),
+      transparent
+    ) !important;
+
+  background:
+    color-mix(
+      in srgb,
+      rgba(12, 17, 28, 0.18)
+        var(--section-opacity-percent),
+      transparent
+    ) !important;
+
+  box-shadow: none !important;
+}
+
+.surface-glass .card,
+.surface-glass .canvas-card {
+  border-color:
+    color-mix(
+      in srgb,
+      rgba(255, 255, 255, 0.08)
+        var(--section-opacity-percent),
+      transparent
+    ) !important;
+
+  background:
+    color-mix(
+      in srgb,
+      rgba(255, 255, 255, 0.035)
+        var(--section-opacity-percent),
+      transparent
+    ) !important;
+
+  box-shadow: none !important;
+
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.surface-none .card,
+.surface-none .canvas-card {
+  border-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.surface-none .card:hover,
+.surface-none .canvas-card:hover {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--section-accent) 16%,
+      transparent
+    ) !important;
+
+  background:
+    color-mix(
+      in srgb,
+      var(--section-accent) 7%,
+      transparent
+    ) !important;
+
+  box-shadow: none !important;
 }
 
 
