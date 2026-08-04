@@ -5,8 +5,8 @@ func Normalize(cfg *Config) {
 		cfg.Version = 2
 	}
 
-	if cfg.Dashboard.Title == "" {
-		cfg.Dashboard.Title = "Hublet"
+	if cfg.Dashboard.Title == "" || cfg.Dashboard.Title == "Hublet" {
+		cfg.Dashboard.Title = "Hublet v2"
 	}
 
 	if cfg.Dashboard.Description == "" {
@@ -120,11 +120,6 @@ func Normalize(cfg *Config) {
 			section.Width = "extra-wide"
 		}
 
-		if section.StartColumn < 0 ||
-			section.StartColumn > 12 {
-			section.StartColumn = 0
-		}
-
 		if section.CardSize == "" {
 			section.CardSize = "inherit"
 		}
@@ -154,6 +149,8 @@ func Normalize(cfg *Config) {
 		}
 	}
 
+	normalizeSectionGrid(cfg.Sections)
+
 	if cfg.Sections == nil {
 		cfg.Sections = []Section{}
 	}
@@ -168,6 +165,171 @@ func Normalize(cfg *Config) {
 		if shortcut.Icon.Type == "" {
 			shortcut.Icon.Type = "auto"
 		}
+	}
+}
+
+func normalizeSectionGrid(
+	sections []Section,
+) {
+	occupied := map[int][24]bool{}
+
+	for sectionIndex := range sections {
+		section := &sections[sectionIndex]
+		legacyGrid := section.GridColumnSpan == 0
+
+		if legacyGrid {
+			section.GridColumnSpan =
+				legacySectionGridSpan(section.Width)
+
+			if section.GridColumn > 0 {
+				section.GridColumn =
+					(section.GridColumn-1)*2 + 1
+			} else if section.StartColumn > 0 {
+				section.GridColumn =
+					(section.StartColumn-1)*2 + 1
+			}
+		}
+
+		if section.GridColumnSpan < 4 ||
+			section.GridColumnSpan > 24 {
+			section.GridColumnSpan =
+				legacySectionGridSpan(section.Width)
+		}
+
+		if section.GridRowSpan < 1 {
+			section.GridRowSpan = 1
+		}
+
+		if !gridPlacementFits(
+			occupied,
+			section.GridRow,
+			section.GridColumn,
+			section.GridRowSpan,
+			section.GridColumnSpan,
+		) {
+			section.GridRow,
+				section.GridColumn =
+				firstGridPlacement(
+					occupied,
+					section.GridRowSpan,
+					section.GridColumnSpan,
+				)
+		}
+
+		occupyGridPlacement(
+			occupied,
+			section.GridRow,
+			section.GridColumn,
+			section.GridRowSpan,
+			section.GridColumnSpan,
+		)
+
+		section.StartColumn = 0
+	}
+}
+
+func legacySectionGridSpan(
+	width string,
+) int {
+	switch width {
+	case "narrow":
+		return 6
+	case "medium":
+		return 8
+	case "wide":
+		return 12
+	case "extra-wide":
+		return 16
+	case "full":
+		return 24
+	default:
+		return 8
+	}
+}
+
+func gridPlacementFits(
+	occupied map[int][24]bool,
+	row int,
+	column int,
+	rowSpan int,
+	columnSpan int,
+) bool {
+	if row < 1 ||
+		column < 1 ||
+		rowSpan < 1 ||
+		columnSpan < 4 ||
+		column+columnSpan-1 > 24 {
+		return false
+	}
+
+	for gridRow := row;
+		gridRow < row+rowSpan;
+		gridRow++ {
+		cells := occupied[gridRow]
+
+		for cell := column - 1;
+			cell < column-1+columnSpan;
+			cell++ {
+			if cells[cell] {
+				return false
+			}
+		}
+	}
+
+	return true
+}
+
+func firstGridPlacement(
+	occupied map[int][24]bool,
+	rowSpan int,
+	columnSpan int,
+) (int, int) {
+	maximumRow := 1
+
+	for row := range occupied {
+		if row > maximumRow {
+			maximumRow = row
+		}
+	}
+
+	for row := 1; row <= maximumRow+1; row++ {
+		for column := 1;
+			column+columnSpan-1 <= 24;
+			column++ {
+			if gridPlacementFits(
+				occupied,
+				row,
+				column,
+				rowSpan,
+				columnSpan,
+			) {
+				return row, column
+			}
+		}
+	}
+
+	return maximumRow + 1, 1
+}
+
+func occupyGridPlacement(
+	occupied map[int][24]bool,
+	row int,
+	column int,
+	rowSpan int,
+	columnSpan int,
+) {
+	for gridRow := row;
+		gridRow < row+rowSpan;
+		gridRow++ {
+		cells := occupied[gridRow]
+
+		for cell := column - 1;
+			cell < column-1+columnSpan;
+			cell++ {
+			cells[cell] = true
+		}
+
+		occupied[gridRow] = cells
 	}
 }
 

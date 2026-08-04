@@ -22,6 +22,10 @@
     sectionPlacementStyle
   } from './lib/section-placement';
 
+  import {
+    measureSection
+  } from './lib/section-measure';
+
   import SearchBar from './components/SearchBar.svelte';
   import EditorPanel from './components/EditorPanel.svelte';
   import ServiceIcon from './components/ServiceIcon.svelte';
@@ -279,12 +283,12 @@
 
 {#if loading}
   <main class="state">
-    Loading Hublet…
+    Loading Hublet v2…
   </main>
 {:else if error || !config}
   <main class="state error">
     {error ||
-      'Hublet configuration is unavailable.'}
+      'Hublet v2 configuration is unavailable.'}
   </main>
 {:else}
   <div
@@ -378,6 +382,11 @@
                   sectionSurfaceStyle(section),
                   sectionPlacementStyle(section)
                 ].filter(Boolean).join(';')}
+                use:measureSection={{
+                  section,
+                  sections: config.sections,
+                  desktopOnly: true
+                }}
               >
                 <header class="section-header">
                   <div>

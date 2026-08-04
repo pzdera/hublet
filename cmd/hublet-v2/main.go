@@ -17,22 +17,22 @@ var frontend embed.FS
 
 func main() {
 	addr := envOr(
-		"HUBLET_ADDR",
+		"HUBLET_V2_ADDR",
 		":3000",
 	)
 
 	dataDir := envOr(
-		"HUBLET_DATA_DIR",
+		"HUBLET_V2_DATA_DIR",
 		"/app/data",
 	)
 
 	wallpaperDir := envOr(
-		"HUBLET_WALLPAPER_DIR",
+		"HUBLET_V2_WALLPAPER_DIR",
 		"/app/wallpapers",
 	)
 
 	iconDir := envOr(
-		"HUBLET_ICON_DIR",
+		"HUBLET_V2_ICON_DIR",
 		"/app/icons",
 	)
 

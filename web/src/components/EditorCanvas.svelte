@@ -26,12 +26,21 @@
   } from '../lib/section-surface';
 
   import {
-    sectionPlacementStyle
+    dashboardGridColumns,
+    dashboardGridRowStep,
+    maximumGridBottom,
+    normalizeGridLayout,
+    placementCollisions,
+    placementFits,
+    sectionColumnSpan,
+    sectionPlacementStyle,
+    sectionRowSpan,
+    sectionSwapPlan
   } from '../lib/section-placement';
 
   import {
-    sectionSortable
-  } from '../lib/section-sortable';
+    measureSection
+  } from '../lib/section-measure';
 
   import ServiceIcon from './ServiceIcon.svelte';
 
@@ -50,6 +59,50 @@
   } = $props();
 
   const flipDurationMs = 180;
+
+  type SectionDrag = {
+    sectionId: string;
+    pointerId: number;
+    x: number;
+    y: number;
+    columnOffset: number;
+    rowOffset: number;
+    columnSpan: number;
+    rowSpan: number;
+    targetRow: number;
+    targetColumn: number;
+    valid: boolean;
+    swapTargetId: string;
+    swapTargetName: string;
+    swapTargetRow: number;
+    swapTargetColumn: number;
+    swapTargetColumnSpan: number;
+    swapTargetRowSpan: number;
+  };
+
+  let sectionDrag = $state<SectionDrag | null>(null);
+
+  const maximumGridRow = $derived(
+    maximumGridBottom(config.sections)
+  );
+
+  const layoutSignature = $derived(
+    config.sections
+      .map((section) => [
+        section.id,
+        section.width,
+        section.gridRow,
+        section.gridColumn,
+        section.gridRowSpan,
+        section.gridColumnSpan
+      ].join(':'))
+      .join('|')
+  );
+
+  $effect(() => {
+    layoutSignature;
+    normalizeGridLayout(config.sections);
+  });
 
   function isShadowItem(
     item: Item
@@ -92,42 +145,251 @@
       event.detail.items as Item[];
   }
 
-  function reorderSections(
-    orderedSectionIDs: string[]
+  function startSectionDrag(
+    event: PointerEvent,
+    section: Section
+  ) {
+    if (event.button !== 0) {
+      return;
+    }
+
+    const article = (
+      event.currentTarget as HTMLElement
+    ).closest<HTMLElement>(
+      '.editor-canvas-section'
+    );
+
+    if (!article) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const rect = article.getBoundingClientRect();
+    const columnSpan = sectionColumnSpan(section);
+    const rowSpan = sectionRowSpan(section);
+    const relativeX = Math.max(
+      0,
+      Math.min(rect.width - 1, event.clientX - rect.left)
+    );
+
+    sectionDrag = {
+      sectionId: section.id,
+      pointerId: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      columnOffset: Math.min(
+        columnSpan - 1,
+        Math.floor(
+          relativeX / (rect.width / columnSpan)
+        )
+      ),
+      rowOffset: Math.min(
+        rowSpan - 1,
+        Math.max(
+          0,
+          Math.floor(
+            (event.clientY - rect.top) /
+            dashboardGridRowStep
+          )
+        )
+      ),
+      columnSpan,
+      rowSpan,
+      targetRow: section.gridRow,
+      targetColumn: section.gridColumn,
+      valid: true,
+      swapTargetId: '',
+      swapTargetName: '',
+      swapTargetRow: 0,
+      swapTargetColumn: 0,
+      swapTargetColumnSpan: 0,
+      swapTargetRowSpan: 0
+    };
+
+    document.body.classList.add(
+      'section-grid-dragging'
+    );
+  }
+
+  function updateSectionDrag(
+    event: PointerEvent
   ) {
     if (
-      orderedSectionIDs.length !==
-      config.sections.length
+      !sectionDrag ||
+      event.pointerId !== sectionDrag.pointerId
     ) {
       return;
     }
 
-    const sectionsByID = new Map(
-      config.sections.map(
-        (section) => [
-          section.id,
-          section
-        ]
-      )
+    const grid = document.querySelector<HTMLElement>(
+      '.editor-canvas-grid'
     );
 
-    const reordered: Section[] = [];
+    const section = config.sections.find(
+      (candidate) => candidate.id === sectionDrag?.sectionId
+    );
 
-    for (
-      const sectionID
-      of orderedSectionIDs
+    if (!grid || !section) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const rect = grid.getBoundingClientRect();
+    const gap = 16;
+    const columnWidth = (
+      rect.width - gap * (dashboardGridColumns - 1)
+    ) / dashboardGridColumns;
+    const step = columnWidth + gap;
+    const hoveredColumn = Math.max(
+      1,
+      Math.min(
+        dashboardGridColumns,
+        Math.floor((event.clientX - rect.left) / step) + 1
+      )
+    );
+    const columnSpan = sectionColumnSpan(section);
+    const maximumColumn =
+      dashboardGridColumns - columnSpan + 1;
+    const targetColumn = Math.max(
+      1,
+      Math.min(
+        maximumColumn,
+        hoveredColumn - sectionDrag.columnOffset
+      )
+    );
+    const targetRow = Math.max(
+      1,
+      Math.floor(
+        (event.clientY - rect.top) /
+        dashboardGridRowStep
+      ) + 1 - sectionDrag.rowOffset
+    );
+
+    const collisions = placementCollisions(
+      config.sections,
+      section.id,
+      targetRow,
+      targetColumn
+    );
+    let resolvedRow = targetRow;
+    let resolvedColumn = targetColumn;
+    let valid = placementFits(
+      config.sections,
+      section.id,
+      targetRow,
+      targetColumn
+    );
+    let swapTargetId = '';
+    let swapTargetName = '';
+    let swapTargetRow = 0;
+    let swapTargetColumn = 0;
+    let swapTargetColumnSpan = 0;
+    let swapTargetRowSpan = 0;
+
+    if (collisions.length === 1) {
+      const target = collisions[0];
+      const swapPlan = sectionSwapPlan(
+        config.sections,
+        section.id,
+        target.id,
+        targetRow,
+        targetColumn
+      );
+
+      swapTargetName = target.title;
+
+      if (swapPlan) {
+        valid = true;
+        resolvedRow = swapPlan.movingRow;
+        resolvedColumn = swapPlan.movingColumn;
+        swapTargetId = target.id;
+        swapTargetRow = swapPlan.targetRow;
+        swapTargetColumn = swapPlan.targetColumn;
+        swapTargetColumnSpan = sectionColumnSpan(target);
+        swapTargetRowSpan = sectionRowSpan(target);
+      }
+    } else if (collisions.length > 1) {
+      valid = false;
+    }
+
+    sectionDrag.x = event.clientX;
+    sectionDrag.y = event.clientY;
+    sectionDrag.targetRow = resolvedRow;
+    sectionDrag.targetColumn = resolvedColumn;
+    sectionDrag.valid = valid;
+    sectionDrag.swapTargetId = swapTargetId;
+    sectionDrag.swapTargetName = swapTargetName;
+    sectionDrag.swapTargetRow = swapTargetRow;
+    sectionDrag.swapTargetColumn = swapTargetColumn;
+    sectionDrag.swapTargetColumnSpan = swapTargetColumnSpan;
+    sectionDrag.swapTargetRowSpan = swapTargetRowSpan;
+  }
+
+  function finishSectionDrag(
+    event: PointerEvent,
+    cancelled = false
+  ) {
+    if (
+      !sectionDrag ||
+      event.pointerId !== sectionDrag.pointerId
     ) {
-      const section =
-        sectionsByID.get(sectionID);
+      return;
+    }
 
-      if (!section) {
+    const completedDrag = sectionDrag;
+    sectionDrag = null;
+
+    document.body.classList.remove(
+      'section-grid-dragging'
+    );
+
+    if (cancelled || !completedDrag.valid) {
+      return;
+    }
+
+    const section = config.sections.find(
+      (candidate) => candidate.id === completedDrag.sectionId
+    );
+
+    if (!section) {
+      return;
+    }
+
+    if (completedDrag.swapTargetId) {
+      const target = config.sections.find(
+        (candidate) =>
+          candidate.id === completedDrag.swapTargetId
+      );
+      const swapPlan = sectionSwapPlan(
+        config.sections,
+        section.id,
+        completedDrag.swapTargetId,
+        completedDrag.targetRow,
+        completedDrag.targetColumn
+      );
+
+      if (!target || !swapPlan) {
         return;
       }
 
-      reordered.push(section);
+      section.gridRow = swapPlan.movingRow;
+      section.gridColumn = swapPlan.movingColumn;
+      target.gridRow = swapPlan.targetRow;
+      target.gridColumn = swapPlan.targetColumn;
+    } else {
+      section.gridRow = completedDrag.targetRow;
+      section.gridColumn = completedDrag.targetColumn;
     }
 
-    config.sections = reordered;
+    config.sections.sort((left, right) => {
+      return (
+        left.gridRow - right.gridRow ||
+        left.gridColumn - right.gridColumn
+      );
+    });
   }
 
   function sectionSelected(
@@ -248,26 +510,17 @@
   }
 
   function sectionWidthLabel(
-    width: Section['width']
+    section: Section
   ): string {
-    switch (width) {
-      case 'narrow':
-        return '3/12';
-
-      case 'medium':
-        return '4/12';
-
-      case 'wide':
-        return '6/12';
-
-      case 'extra-wide':
-        return '8/12';
-
-      case 'full':
-        return '12/12';
-    }
+    return `${sectionColumnSpan(section)}/24`;
   }
 </script>
+
+<svelte:window
+  onpointermove={updateSectionDrag}
+  onpointerup={(event) => finishSectionDrag(event)}
+  onpointercancel={(event) => finishSectionDrag(event, true)}
+/>
 
 <div class="editor-canvas-shell">
   <div class="canvas-toolbar">
@@ -325,17 +578,19 @@
     </header>
 
     <main
+      class:drag-active={sectionDrag !== null}
       class="editor-canvas-grid"
       aria-label="Dashboard preview"
-      use:sectionSortable={{
-        enabled: true,
-        onReorder: reorderSections
-      }}
     >
       {#each config.sections as section (section.id)}
         <article
           class={sectionClass(section)}
           data-section-id={section.id}
+          data-grid-row={section.gridRow}
+          use:measureSection={{
+            section,
+            sections: config.sections
+          }}
           style={[
             sectionSurfaceStyle(section),
             sectionPlacementStyle(section)
@@ -355,9 +610,9 @@
               type="button"
               aria-label={`Move section ${section.title}`}
               title="Drag to move section"
-              onclick={(event) => {
-                event.stopPropagation();
-              }}
+              onpointerdown={(event) =>
+                startSectionDrag(event, section)}
+              onclick={(event) => event.stopPropagation()}
             >
               <i></i>
               <i></i>
@@ -379,7 +634,7 @@
               class="canvas-section-width"
             >
               {sectionWidthLabel(
-                section.width
+                section
               )}
             </span>
 
@@ -523,6 +778,51 @@
           {/if}
         </article>
       {/each}
+
+      {#if sectionDrag}
+        <div
+          class="section-grid-new-row"
+          style={`grid-row:${maximumGridRow + 1} / span 10`}
+          aria-hidden="true"
+        ></div>
+
+        <div
+          class:invalid={!sectionDrag.valid}
+          class:swap={Boolean(sectionDrag.swapTargetId)}
+          class="section-grid-drop-preview"
+          style={[
+            `grid-row:${sectionDrag.targetRow}`,
+            `grid-column:${sectionDrag.targetColumn} / span ${sectionDrag.columnSpan}`,
+            `grid-row-end:span ${sectionDrag.rowSpan}`
+          ].join(';')}
+          aria-hidden="true"
+        >
+          <span>
+            {sectionDrag.swapTargetId
+              ? `Swap with ${sectionDrag.swapTargetName}`
+              : sectionDrag.valid
+                ? 'Drop section here'
+                : sectionDrag.swapTargetName
+                  ? 'Swap unavailable'
+                  : 'Position occupied'}
+          </span>
+        </div>
+
+        {#if sectionDrag.swapTargetId}
+          <div
+            class="section-grid-drop-preview swap-origin"
+            style={[
+              `grid-row:${sectionDrag.swapTargetRow} / span ${sectionDrag.swapTargetRowSpan}`,
+              `grid-column:${sectionDrag.swapTargetColumn} / span ${sectionDrag.swapTargetColumnSpan}`
+            ].join(';')}
+            aria-hidden="true"
+          >
+            <span>
+              Move {sectionDrag.swapTargetName} here
+            </span>
+          </div>
+        {/if}
+      {/if}
     </main>
 
     <button
@@ -547,3 +847,17 @@
     </button>
   </div>
 </div>
+
+{#if sectionDrag}
+  <div
+    class="section-grid-drag-float"
+    style={`transform:translate3d(${sectionDrag.x + 14}px, ${sectionDrag.y + 14}px, 0)`}
+    aria-hidden="true"
+  >
+    <span></span>
+
+    {config.sections.find(
+      (section) => section.id === sectionDrag?.sectionId
+    )?.title ?? 'Section'}
+  </div>
+{/if}

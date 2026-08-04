@@ -227,6 +227,7 @@ func Validate(cfg Config) error {
 
 	sectionIDs := map[string]struct{}{}
 	itemIDs := map[string]struct{}{}
+	gridOccupancy := map[int][24]bool{}
 
 	for _, section := range cfg.Sections {
 		if !idPattern.MatchString(section.ID) {
@@ -308,49 +309,60 @@ func Validate(cfg Config) error {
 			)
 		}
 
-		sectionSpan := 0
-
-		switch section.Width {
-		case "narrow":
-			sectionSpan = 3
-
-		case "medium":
-			sectionSpan = 4
-
-		case "wide":
-			sectionSpan = 6
-
-		case "extra-wide":
-			sectionSpan = 8
-
-		case "full":
-			sectionSpan = 12
-
-		default:
+		if section.GridRow < 1 {
 			return fmt.Errorf(
-				"section %q has unsupported width %q",
-				section.ID,
-				section.Width,
-			)
-		}
-
-		if section.StartColumn < 0 ||
-			section.StartColumn > 12 {
-			return fmt.Errorf(
-				"section %q start column must be between 0 and 12",
+				"section %q grid row must be at least 1",
 				section.ID,
 			)
 		}
 
-		if section.StartColumn > 0 &&
-			section.StartColumn+sectionSpan-1 > 12 {
+		if section.GridRowSpan < 1 {
 			return fmt.Errorf(
-				"section %q does not fit from column %d with width %d",
+				"section %q grid row span must be at least 1",
 				section.ID,
-				section.StartColumn,
-				sectionSpan,
 			)
 		}
+
+		if section.GridColumnSpan < 4 ||
+			section.GridColumnSpan > 24 {
+			return fmt.Errorf(
+				"section %q grid column span must be between 4 and 24",
+				section.ID,
+			)
+		}
+
+		if section.GridColumn < 1 ||
+			section.GridColumn+
+				section.GridColumnSpan-1 > 24 {
+			return fmt.Errorf(
+				"section %q does not fit from grid column %d with width %d",
+				section.ID,
+				section.GridColumn,
+				section.GridColumnSpan,
+			)
+		}
+
+		if !gridPlacementFits(
+			gridOccupancy,
+			section.GridRow,
+			section.GridColumn,
+			section.GridRowSpan,
+			section.GridColumnSpan,
+		) {
+			return fmt.Errorf(
+				"section %q overlaps another section at row %d",
+				section.ID,
+				section.GridRow,
+			)
+		}
+
+		occupyGridPlacement(
+			gridOccupancy,
+			section.GridRow,
+			section.GridColumn,
+			section.GridRowSpan,
+			section.GridColumnSpan,
+		)
 
 		switch section.CardSize {
 		case "inherit",

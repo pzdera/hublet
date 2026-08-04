@@ -21,7 +21,6 @@ import './local-icon-manager.css';
 import './ui-polish.css';
 import './mobile-polish.css';
 import './dashboard-identity.css';
-import './section-placement.css';
 
 mount(App, {
   target: document.getElementById('app')!

@@ -44,34 +44,40 @@
   ];
 
   const sectionWidths: Array<{
-    value: SectionWidth;
+    value: number;
+    legacyWidth: SectionWidth;
     label: string;
     description: string;
   }> = [
     {
-      value: 'narrow',
+      value: 6,
+      legacyWidth: 'narrow',
       label: 'Narrow',
-      description: '3 / 12'
+      description: '6 / 24'
     },
     {
-      value: 'medium',
+      value: 8,
+      legacyWidth: 'medium',
       label: 'Medium',
-      description: '4 / 12'
+      description: '8 / 24'
     },
     {
-      value: 'wide',
+      value: 12,
+      legacyWidth: 'wide',
       label: 'Wide',
-      description: '6 / 12'
+      description: '12 / 24'
     },
     {
-      value: 'extra-wide',
+      value: 16,
+      legacyWidth: 'extra-wide',
       label: 'Extra wide',
-      description: '8 / 12'
+      description: '16 / 24'
     },
     {
-      value: 'full',
+      value: 24,
+      legacyWidth: 'full',
       label: 'Full',
-      description: '12 / 12'
+      description: '24 / 24'
     }
   ];
 
@@ -205,6 +211,33 @@
     }
   }
 
+  function setSectionColumnSpan(
+    span: number
+  ) {
+    if (!selectedSection) {
+      return;
+    }
+
+    const normalized = Math.max(
+      4,
+      Math.min(24, Math.round(span))
+    );
+
+    selectedSection.gridColumnSpan = normalized;
+
+    if (normalized <= 6) {
+      selectedSection.width = 'narrow';
+    } else if (normalized <= 9) {
+      selectedSection.width = 'medium';
+    } else if (normalized <= 14) {
+      selectedSection.width = 'wide';
+    } else if (normalized <= 20) {
+      selectedSection.width = 'extra-wide';
+    } else {
+      selectedSection.width = 'full';
+    }
+  }
+
   function enableResources() {
     if (!selectedItem) {
       return;
@@ -281,7 +314,6 @@
   import ServiceIcon from './ServiceIcon.svelte';
   import LocalIconManager from './LocalIconManager.svelte';
 
-  import SectionPlacementPicker from './SectionPlacementPicker.svelte';
 </script>
 
 <aside class="inspector-panel">
@@ -305,7 +337,7 @@
           bind:value={config.dashboard.title}
           type="text"
           maxlength="80"
-          placeholder="Hublet"
+          placeholder="Hublet v2"
         />
       </label>
 
@@ -665,7 +697,7 @@
             <strong>Section width</strong>
 
             <small>
-              Space occupied by the complete section.
+              {selectedSection.gridColumnSpan} of 24 desktop columns.
             </small>
           </div>
         </div>
@@ -674,17 +706,16 @@
           {#each sectionWidths as option}
             <button
               class:active={
-                selectedSection.width ===
+                selectedSection.gridColumnSpan ===
                 option.value
               }
               type="button"
               onclick={() => {
-                selectedSection.width =
-                  option.value;
+                setSectionColumnSpan(option.value);
               }}
             >
               <span
-                class={`section-width-preview ${option.value}`}
+                class={`section-width-preview ${option.legacyWidth}`}
               ></span>
 
               <span>
@@ -697,22 +728,26 @@
             </button>
           {/each}
         </div>
-      </div>
 
-      <div class="inspector-group">
-        <div class="inspector-group-heading">
-          <div>
-            <strong>Desktop placement</strong>
+        <label class="section-width-range">
+          <span>
+            <strong>Precise width</strong>
+            <small>{selectedSection.gridColumnSpan} / 24</small>
+          </span>
 
-            <small>
-              Choose the section's horizontal start position.
-            </small>
-          </div>
-        </div>
-
-        <SectionPlacementPicker
-          section={selectedSection}
-        />
+          <input
+            type="range"
+            min="4"
+            max="24"
+            step="1"
+            value={selectedSection.gridColumnSpan}
+            oninput={(event) => {
+              setSectionColumnSpan(
+                Number(event.currentTarget.value)
+              );
+            }}
+          />
+        </label>
       </div>
 
       <div class="inspector-group">
@@ -1102,7 +1137,7 @@
           <strong>Open in new tab</strong>
 
           <small>
-            Keep Hublet open in the current tab.
+            Keep Hublet v2 open in the current tab.
           </small>
         </span>
 

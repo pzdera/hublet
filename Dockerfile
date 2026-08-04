@@ -18,20 +18,20 @@ COPY cmd/ ./cmd/
 COPY internal/ ./internal/
 
 COPY --from=web-build \
-  /src/cmd/hublet/web-dist \
-  ./cmd/hublet/web-dist
+  /src/cmd/hublet-v2/web-dist \
+  ./cmd/hublet-v2/web-dist
 
 RUN CGO_ENABLED=0 go build \
     -trimpath \
     -ldflags="-s -w" \
-    -o /out/hublet \
-    ./cmd/hublet
+    -o /out/hublet-v2 \
+    ./cmd/hublet-v2
 
 
 FROM alpine:3.21
 
-RUN addgroup -S -g 1000 hublet \
-    && adduser -S -D -H -u 1000 -G hublet hublet \
+RUN addgroup -S -g 1000 hublet-v2 \
+    && adduser -S -D -H -u 1000 -G hublet-v2 hublet-v2 \
     && apk add --no-cache \
       ca-certificates \
       tzdata \
@@ -40,17 +40,17 @@ RUN addgroup -S -g 1000 hublet \
       /app/data \
       /app/icons \
       /app/wallpapers \
-    && chown -R hublet:hublet /app
+    && chown -R hublet-v2:hublet-v2 /app
 
 COPY --from=go-build \
-  /out/hublet \
-  /usr/local/bin/hublet
+  /out/hublet-v2 \
+  /usr/local/bin/hublet-v2
 
-USER hublet
+USER hublet-v2
 WORKDIR /app
 
-ENV HUBLET_ADDR=:3000
-ENV HUBLET_DATA_DIR=/app/data
+ENV HUBLET_V2_ADDR=:3000
+ENV HUBLET_V2_DATA_DIR=/app/data
 
 EXPOSE 3000
 
@@ -62,4 +62,4 @@ HEALTHCHECK \
     http://127.0.0.1:3000/api/v2/health \
     || exit 1
 
-ENTRYPOINT ["/usr/local/bin/hublet"]
+ENTRYPOINT ["/usr/local/bin/hublet-v2"]

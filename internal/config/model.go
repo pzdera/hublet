@@ -72,7 +72,11 @@ type Section struct {
 	ShowBorder     bool   `json:"showBorder"`
 	Layout         string `json:"layout"`
 	Width          string `json:"width"`
-	StartColumn    int    `json:"startColumn"`
+	GridRow        int    `json:"gridRow"`
+	GridColumn     int    `json:"gridColumn"`
+	GridRowSpan    int    `json:"gridRowSpan"`
+	GridColumnSpan int    `json:"gridColumnSpan"`
+	StartColumn    int    `json:"startColumn,omitempty"`
 	CardSize       string `json:"cardSize"`
 	GridColumns    int    `json:"gridColumns"`
 	FillLastRow    bool   `json:"fillLastRow"`
@@ -140,7 +144,7 @@ func Default() Config {
 		Version: 2,
 
 		Dashboard: Dashboard{
-			Title:              "Hublet",
+			Title:              "Hublet v2",
 			Description:        "My self-hosted dashboard",
 			DescriptionVisible: true,
 			Icon: DashboardIcon{

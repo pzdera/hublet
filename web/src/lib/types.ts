@@ -59,7 +59,10 @@ export type Section = {
   showBorder: boolean;
   layout: SectionLayout;
   width: SectionWidth;
-  startColumn: number;
+  gridRow: number;
+  gridColumn: number;
+  gridRowSpan: number;
+  gridColumnSpan: number;
   cardSize: SectionCardSize;
   gridColumns: number;
   fillLastRow: boolean;
