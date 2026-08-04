@@ -106,33 +106,6 @@ func Validate(cfg Config) error {
 		)
 	}
 
-	switch cfg.Appearance.Font.Scale {
-	case "small", "medium", "large":
-	default:
-		return fmt.Errorf(
-			"unsupported font scale %q",
-			cfg.Appearance.Font.Scale,
-		)
-	}
-
-	switch cfg.Appearance.Cards.Size {
-	case "small", "medium", "large":
-	default:
-		return fmt.Errorf(
-			"unsupported default card size %q",
-			cfg.Appearance.Cards.Size,
-		)
-	}
-
-	switch cfg.Appearance.Cards.Density {
-	case "compact", "comfortable", "relaxed":
-	default:
-		return fmt.Errorf(
-			"unsupported card density %q",
-			cfg.Appearance.Cards.Density,
-		)
-	}
-
 	switch cfg.Appearance.Cards.Radius {
 	case "small", "medium", "large":
 	default:
@@ -152,7 +125,7 @@ func Validate(cfg Config) error {
 	}
 
 	switch cfg.Appearance.Background.Type {
-	case "solid", "gradient", "wallpaper":
+	case "solid", "wallpaper":
 	default:
 		return fmt.Errorf(
 			"unsupported background type %q",
@@ -296,19 +269,6 @@ func Validate(cfg Config) error {
 			)
 		}
 
-		switch section.Layout {
-		case "list",
-			"grid",
-			"compact",
-			"featured":
-		default:
-			return fmt.Errorf(
-				"section %q has unsupported card arrangement %q",
-				section.ID,
-				section.Layout,
-			)
-		}
-
 		if section.GridRow < 1 {
 			return fmt.Errorf(
 				"section %q grid row must be at least 1",
@@ -363,19 +323,6 @@ func Validate(cfg Config) error {
 			section.GridRowSpan,
 			section.GridColumnSpan,
 		)
-
-		switch section.CardSize {
-		case "inherit",
-			"small",
-			"medium",
-			"large":
-		default:
-			return fmt.Errorf(
-				"section %q has unsupported card size %q",
-				section.ID,
-				section.CardSize,
-			)
-		}
 
 		if section.GridColumns < 1 ||
 			section.GridColumns > 6 {

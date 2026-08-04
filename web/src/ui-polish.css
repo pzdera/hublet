@@ -336,6 +336,89 @@
   white-space: nowrap;
 }
 
+.canvas-section-add {
+  width: 26px;
+  height: 26px;
+
+  display: grid;
+  place-items: center;
+
+  padding: 0;
+
+  border:
+    1px solid
+    color-mix(
+      in srgb,
+      var(--section-accent) 32%,
+      var(--border)
+    );
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  color:
+    color-mix(
+      in srgb,
+      var(--section-accent) 72%,
+      #ffffff
+    );
+
+  background:
+    color-mix(
+      in srgb,
+      var(--section-accent) 8%,
+      transparent
+    );
+
+  font-size: 1.05rem;
+  line-height: 1;
+
+  transition:
+    color 150ms ease,
+    border-color 150ms ease,
+    background 150ms ease,
+    transform 150ms ease;
+}
+
+.canvas-section-add:hover {
+  transform: translateY(-1px);
+
+  border-color:
+    color-mix(
+      in srgb,
+      var(--section-accent) 68%,
+      #ffffff
+    );
+
+  color: #ffffff;
+
+  background:
+    color-mix(
+      in srgb,
+      var(--section-accent) 16%,
+      transparent
+    );
+}
+
+.empty-section,
+.canvas-empty-section {
+  min-height: 58px;
+
+  display: grid;
+  place-items: center;
+
+  padding: 14px;
+
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.78rem;
+}
+
+.empty-section {
+  grid-column: 1 / -1;
+}
+
 
 /*
  * Old circular accent dot becomes a clean vertical marker.
@@ -1039,38 +1122,6 @@
       28,
       0.46
     ) !important;
-}
-
-
-/* =========================================================
-   ANIMATIONS DISABLED
-   ========================================================= */
-
-.animations-disabled
-.section,
-.animations-disabled
-.card,
-.animations-disabled
-.card-icon,
-.animations-disabled
-.card-arrow,
-.animations-disabled
-.service-icon-content img {
-  transition: none !important;
-}
-
-.animations-disabled
-.card:hover {
-  transform: none;
-}
-
-.animations-disabled
-.card:hover
-.card-icon,
-.animations-disabled
-.card:hover
-.service-icon-content img {
-  transform: none;
 }
 
 

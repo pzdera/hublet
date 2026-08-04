@@ -29,7 +29,7 @@
 
 
 /* =========================================================
-   CARD ARRANGEMENTS
+   UNIVERSAL CARD GRID
    ========================================================= */
 
 .cards,
@@ -37,33 +37,12 @@
   min-width: 0;
   display: grid;
   gap: 8px;
-}
 
-.arrangement-list {
-  grid-template-columns: 1fr;
-}
-
-.arrangement-grid {
   grid-template-columns:
     repeat(
       var(--grid-columns, 2),
       minmax(0, 1fr)
     );
-}
-
-.arrangement-compact {
-  grid-template-columns:
-    repeat(
-      var(--grid-columns, 3),
-      minmax(0, 1fr)
-    );
-
-  gap: 6px;
-}
-
-.arrangement-featured {
-  grid-template-columns: 1fr;
-  gap: 10px;
 }
 
 
@@ -1025,23 +1004,31 @@ span:last-child {
 
 .section-width-options {
   display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
   gap: 6px;
 }
 
+.section-width-options button:last-child {
+  grid-column: 1 / -1;
+}
+
 .section-width-options button {
-  min-height: 52px;
+  min-height: 58px;
 
   display: grid;
 
   grid-template-columns:
-    58px
+    44px
     minmax(0, 1fr);
 
   align-items: center;
 
-  gap: 11px;
+  gap: 8px;
 
-  padding: 7px 10px;
+  padding: 7px 9px;
 
   border:
     1px solid
@@ -1303,10 +1290,8 @@ span:last-child {
 }
 
 @media (max-width: 480px) {
-  .arrangement-grid,
-  .arrangement-compact,
-  .canvas-cards.arrangement-grid,
-  .canvas-cards.arrangement-compact {
+  .cards,
+  .canvas-cards {
     grid-template-columns: 1fr;
   }
 

@@ -39,18 +39,6 @@ func Normalize(cfg *Config) {
 		cfg.Appearance.Font.Family = "system"
 	}
 
-	if cfg.Appearance.Font.Scale == "" {
-		cfg.Appearance.Font.Scale = "medium"
-	}
-
-	if cfg.Appearance.Cards.Size == "" {
-		cfg.Appearance.Cards.Size = "medium"
-	}
-
-	if cfg.Appearance.Cards.Density == "" {
-		cfg.Appearance.Cards.Density = "comfortable"
-	}
-
 	if cfg.Appearance.Cards.Radius == "" {
 		cfg.Appearance.Cards.Radius = "large"
 	}
@@ -60,6 +48,10 @@ func Normalize(cfg *Config) {
 	}
 
 	if cfg.Appearance.Background.Type == "" {
+		cfg.Appearance.Background.Type = "solid"
+	}
+
+	if cfg.Appearance.Background.Type == "gradient" {
 		cfg.Appearance.Background.Type = "solid"
 	}
 
@@ -101,13 +93,12 @@ func Normalize(cfg *Config) {
 			section.ShowBorder = true
 		}
 
-		switch section.Layout {
-		case "":
-			section.Layout = "list"
-
-		case "large":
-			section.Layout = "featured"
+		switch section.LegacyLayout {
+		case "list", "featured", "large":
+			section.GridColumns = 1
 		}
+
+		section.LegacyLayout = ""
 
 		switch section.Width {
 		case "":
@@ -118,10 +109,6 @@ func Normalize(cfg *Config) {
 
 		case "large":
 			section.Width = "extra-wide"
-		}
-
-		if section.CardSize == "" {
-			section.CardSize = "inherit"
 		}
 
 		if section.GridColumns == 0 {
@@ -143,9 +130,6 @@ func Normalize(cfg *Config) {
 				item.Icon.Type = "auto"
 			}
 
-			normalizeServiceResources(
-				&item.Resources,
-			)
 		}
 	}
 
@@ -330,25 +314,5 @@ func occupyGridPlacement(
 		}
 
 		occupied[gridRow] = cells
-	}
-}
-
-func normalizeServiceResources(
-	resources *ServiceResources,
-) {
-	/*
-		Resource panel ostaje isključen dok ga korisnik
-		ne uključi za konkretnu Service karticu.
-
-		Ako konfiguracija još nema nijednu izabranu
-		metriku, pripremamo razumne podrazumevane opcije.
-	*/
-	if !resources.Enabled &&
-		!resources.ShowStatus &&
-		!resources.ShowCPU &&
-		!resources.ShowMemory {
-		resources.ShowStatus = true
-		resources.ShowCPU = true
-		resources.ShowMemory = true
 	}
 }

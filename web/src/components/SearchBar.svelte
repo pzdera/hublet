@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import type { Item, Shortcut } from '../lib/types';
+  import ServiceIcon from './ServiceIcon.svelte';
 
   let {
     items,
@@ -47,7 +48,27 @@
     )
   );
 
+  const exactShortcutItem = $derived.by(
+    (): Item | null => {
+      if (!exactShortcut) {
+        return null;
+      }
+
+      return {
+        id: `shortcut-${exactShortcut.key}`,
+        type: 'service',
+        name: exactShortcut.label,
+        url: exactShortcut.url,
+        description: '',
+        icon: exactShortcut.icon,
+        openInNewTab: true
+      };
+    }
+  );
+
   function openURL(url: string, newTab = true) {
+    query = '';
+
     if (newTab) {
       window.open(url, '_blank', 'noopener,noreferrer');
       return;
@@ -167,13 +188,19 @@
           class="result shortcut"
           onclick={() => openURL(exactShortcut.url)}
         >
-          <span class="result-mark">
-            {exactShortcut.key}
+          <span class="result-mark result-icon">
+            {#if exactShortcutItem}
+              <ServiceIcon
+                item={exactShortcutItem}
+              />
+            {/if}
           </span>
 
           <span>
             <strong>{exactShortcut.label}</strong>
-            <small>Shortcut</small>
+            <small>
+              Shortcut · {exactShortcut.key}
+            </small>
           </span>
 
           <span class="enter">↵</span>
@@ -187,8 +214,8 @@
           onclick={() =>
             openURL(item.url, item.openInNewTab)}
         >
-          <span class="result-mark">
-            {item.name.slice(0, 1).toUpperCase()}
+          <span class="result-mark result-icon">
+            <ServiceIcon {item} />
           </span>
 
           <span>

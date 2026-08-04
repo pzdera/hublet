@@ -17,7 +17,7 @@
 
   import EditorCanvas from './EditorCanvas.svelte';
   import InspectorPanel from './InspectorPanel.svelte';
-  import AppearancePanel from './AppearancePanel.svelte';
+  import DashboardSettingsPanel from './DashboardSettingsPanel.svelte';
 
   let {
     config,
@@ -65,16 +65,12 @@
       surfaceOpacity: 82,
       surfaceBlur: 16,
       showBorder: true,
-      layout: 'grid',
       width: 'wide',
       gridRow: 0,
       gridColumn: 0,
       gridRowSpan: 1,
       gridColumnSpan: 12,
-      cardSize: 'inherit',
       gridColumns: 2,
-      fillLastRow: false,
-      collapsed: false,
       items: []
     };
 
@@ -112,13 +108,7 @@
         type: 'auto',
         value: ''
       },
-      openInNewTab: true,
-      resources: {
-        enabled: false,
-        showStatus: true,
-        showCpu: true,
-        showMemory: true
-      }
+      openInNewTab: true
     };
 
     section.items.push(item);
@@ -273,7 +263,7 @@
     />
 
     {#if selection.type === 'dashboard'}
-      <AppearancePanel {config} />
+      <DashboardSettingsPanel {config} />
     {:else}
       <InspectorPanel
         {config}

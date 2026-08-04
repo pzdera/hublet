@@ -1,0 +1,362 @@
+.dashboard-settings-panel {
+  min-width: 0;
+  min-height: 0;
+
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+
+  overflow: hidden;
+
+  border-left: 1px solid var(--border);
+  background: #0d111a;
+}
+
+.dashboard-settings-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+
+  padding: 9px;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.dashboard-settings-tabs button {
+  min-height: 37px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  border: 1px solid transparent;
+  border-radius: 9px;
+
+  cursor: pointer;
+  color: var(--muted);
+  background: transparent;
+
+  font-size: 0.68rem;
+  font-weight: 750;
+}
+
+.dashboard-settings-tabs button:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.dashboard-settings-tabs button.active {
+  border-color: rgba(79, 140, 255, 0.36);
+  color: #dce8ff;
+  background: rgba(79, 140, 255, 0.11);
+}
+
+.dashboard-settings-tabs button span {
+  min-width: 19px;
+  height: 19px;
+
+  display: grid;
+  place-items: center;
+
+  padding: 0 5px;
+  border-radius: 999px;
+
+  color: #a9c7ff;
+  background: rgba(79, 140, 255, 0.14);
+
+  font-size: 0.57rem;
+}
+
+.dashboard-settings-content {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.dashboard-settings-content > .appearance-panel {
+  height: 100%;
+  border-left: 0;
+}
+
+.shortcuts-panel {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.shortcuts-header {
+  min-height: 91px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 16px;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.shortcuts-header-icon {
+  width: 42px;
+  height: 42px;
+
+  display: grid;
+  place-items: center;
+
+  flex: 0 0 auto;
+
+  border-radius: 13px;
+  color: #dce8ff;
+  background: rgba(79, 140, 255, 0.14);
+
+  font-size: 1rem;
+  font-weight: 850;
+}
+
+.shortcuts-header p,
+.shortcuts-header h2,
+.shortcuts-header small {
+  margin: 0;
+}
+
+.shortcuts-header p {
+  margin-bottom: 3px;
+  color: #76a6ff;
+  font-size: 0.62rem;
+  font-weight: 850;
+  letter-spacing: 0.13em;
+}
+
+.shortcuts-header h2 {
+  font-size: 1rem;
+}
+
+.shortcuts-header small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.6rem;
+  line-height: 1.4;
+}
+
+.shortcuts-content {
+  display: grid;
+  gap: 17px;
+  padding: 16px;
+}
+
+.shortcut-add-card,
+.shortcut-card {
+  display: grid;
+  gap: 11px;
+
+  padding: 13px;
+
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.022);
+}
+
+.shortcut-add-card > header,
+.shortcut-list-section > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.shortcut-add-card > header {
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.shortcut-add-card strong,
+.shortcut-list-section strong {
+  font-size: 0.72rem;
+}
+
+.shortcut-add-card small {
+  color: var(--muted);
+  font-size: 0.6rem;
+}
+
+.shortcut-add-card label,
+.shortcut-card label {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.shortcut-add-card label > span,
+.shortcut-card label > span {
+  color: var(--muted);
+  font-size: 0.58rem;
+  font-weight: 720;
+}
+
+.shortcut-add-card input,
+.shortcut-card input {
+  width: 100%;
+  min-width: 0;
+  height: 38px;
+
+  padding: 0 10px;
+
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  outline: none;
+
+  color: var(--text);
+  background: #111722;
+
+  font: inherit;
+  font-size: 0.68rem;
+}
+
+.shortcut-add-card input:focus,
+.shortcut-card input:focus {
+  border-color: rgba(79, 140, 255, 0.72);
+  box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.1);
+}
+
+.shortcut-key-label-row {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 8px;
+}
+
+.shortcut-add-button {
+  min-height: 39px;
+
+  border: 1px solid rgba(79, 140, 255, 0.48);
+  border-radius: 9px;
+
+  cursor: pointer;
+  color: #fff;
+  background: #4f8cff;
+
+  font-size: 0.68rem;
+  font-weight: 780;
+}
+
+.shortcut-add-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
+.shortcut-form-error {
+  margin: 0;
+  color: #ff9ba5;
+  font-size: 0.6rem;
+  line-height: 1.4;
+}
+
+.shortcut-list-section {
+  display: grid;
+  gap: 9px;
+}
+
+.shortcut-list-section > header > span {
+  min-width: 22px;
+  height: 22px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 999px;
+  color: #a9c7ff;
+  background: rgba(79, 140, 255, 0.12);
+
+  font-size: 0.58rem;
+  font-weight: 800;
+}
+
+.shortcut-list {
+  display: grid;
+  gap: 8px;
+}
+
+.shortcut-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.shortcut-card-heading > span {
+  min-width: 34px;
+  min-height: 25px;
+
+  display: inline-grid;
+  place-items: center;
+
+  padding: 3px 8px;
+  border-radius: 7px;
+
+  color: #a9c7ff;
+  background: rgba(79, 140, 255, 0.12);
+
+  font-size: 0.62rem;
+  font-weight: 850;
+}
+
+.shortcut-card-heading button {
+  width: 28px;
+  height: 28px;
+
+  border: 1px solid transparent;
+  border-radius: 8px;
+
+  cursor: pointer;
+  color: #8793a8;
+  background: transparent;
+
+  font-size: 1rem;
+}
+
+.shortcut-card-heading button:hover {
+  border-color: rgba(239, 107, 115, 0.34);
+  color: #ff9ba5;
+  background: rgba(239, 107, 115, 0.09);
+}
+
+.shortcut-empty-state {
+  padding: 22px 12px;
+
+  border: 1px dashed var(--border);
+  border-radius: 11px;
+
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.65rem;
+}
+
+.shortcut-help {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.59rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+  .dashboard-settings-panel {
+    overflow: visible;
+    border-top: 1px solid var(--border);
+    border-left: 0;
+  }
+
+  .dashboard-settings-content {
+    overflow: visible;
+  }
+
+  .shortcuts-panel {
+    height: auto;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 380px) {
+  .shortcut-key-label-row {
+    grid-template-columns: 1fr;
+  }
+}

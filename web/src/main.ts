@@ -11,8 +11,6 @@ import './styles.css';
 import './editor.css';
 import './card-layout.css';
 import './section-sortable.css';
-import './resource-info.css';
-import './service-resources.css';
 import './appearance.css';
 import './section-surfaces.css';
 import './service-icons.css';
@@ -21,6 +19,7 @@ import './local-icon-manager.css';
 import './ui-polish.css';
 import './mobile-polish.css';
 import './dashboard-identity.css';
+import './shortcuts.css';
 
 mount(App, {
   target: document.getElementById('app')!

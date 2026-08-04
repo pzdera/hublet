@@ -110,15 +110,6 @@
         config.appearance.font.family =
           'system';
 
-        config.appearance.font.scale =
-          'medium';
-
-        config.appearance.cards.size =
-          'medium';
-
-        config.appearance.cards.density =
-          'compact';
-
         config.appearance.cards.radius =
           'medium';
 
@@ -134,15 +125,6 @@
         config.appearance.font.family =
           'manrope';
 
-        config.appearance.font.scale =
-          'medium';
-
-        config.appearance.cards.size =
-          'medium';
-
-        config.appearance.cards.density =
-          'comfortable';
-
         config.appearance.cards.radius =
           'large';
 
@@ -153,8 +135,10 @@
           true;
 
         if (
+          config.appearance.background.type ===
+            'wallpaper' &&
           config.appearance.background.overlay <
-          18
+            18
         ) {
           config.appearance.background.overlay =
             28;
@@ -166,15 +150,6 @@
       default:
         config.appearance.font.family =
           'inter';
-
-        config.appearance.font.scale =
-          'medium';
-
-        config.appearance.cards.size =
-          'medium';
-
-        config.appearance.cards.density =
-          'comfortable';
 
         config.appearance.cards.radius =
           'large';
@@ -268,8 +243,7 @@
           <strong>Background</strong>
 
           <small>
-            Choose a solid color, generated
-            gradient, or wallpaper.
+            Choose a solid color or wallpaper.
           </small>
         </div>
       </header>
@@ -287,20 +261,6 @@
           <span class="background-preview solid">
           </span>
           <strong>Solid</strong>
-        </button>
-
-        <button
-          class:active={
-            config.appearance.background.type ===
-            'gradient'
-          }
-          type="button"
-          onclick={() =>
-            selectBackgroundType('gradient')}
-        >
-          <span class="background-preview gradient">
-          </span>
-          <strong>Gradient</strong>
         </button>
 
         <button
@@ -343,83 +303,67 @@
 
       {#if (
         config.appearance.background.type ===
-        'gradient'
-      )}
-        <div class="appearance-info">
-          <span>i</span>
-
-          <p>
-            The second gradient color is generated
-            automatically from the selected base color.
-            Manual two-color gradients come with the
-            wallpaper manager milestone.
-          </p>
-        </div>
-      {/if}
-
-      {#if (
-        config.appearance.background.type ===
         'wallpaper'
       )}
         <WallpaperManager {config} />
+
+        <label class="appearance-range">
+          <span>
+            <strong>Brightness</strong>
+            <output>
+              {config.appearance.background.brightness}%
+            </output>
+          </span>
+
+          <input
+            bind:value={
+              config.appearance.background.brightness
+            }
+            type="range"
+            min="20"
+            max="150"
+            step="1"
+          />
+        </label>
+
+        <label class="appearance-range">
+          <span>
+            <strong>Dark overlay</strong>
+            <output>
+              {config.appearance.background.overlay}%
+            </output>
+          </span>
+
+          <input
+            bind:value={
+              config.appearance.background.overlay
+            }
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+          />
+        </label>
+
+        <label class="appearance-range">
+          <span>
+            <strong>Background blur</strong>
+            <output>
+              {config.appearance.background.blur}px
+            </output>
+          </span>
+
+          <input
+            bind:value={
+              config.appearance.background.blur
+            }
+            type="range"
+            min="0"
+            max="40"
+            step="1"
+          />
+        </label>
       {/if}
-
-      <label class="appearance-range">
-        <span>
-          <strong>Brightness</strong>
-          <output>
-            {config.appearance.background.brightness}%
-          </output>
-        </span>
-
-        <input
-          bind:value={
-            config.appearance.background.brightness
-          }
-          type="range"
-          min="20"
-          max="150"
-          step="1"
-        />
-      </label>
-
-      <label class="appearance-range">
-        <span>
-          <strong>Dark overlay</strong>
-          <output>
-            {config.appearance.background.overlay}%
-          </output>
-        </span>
-
-        <input
-          bind:value={
-            config.appearance.background.overlay
-          }
-          type="range"
-          min="0"
-          max="100"
-          step="1"
-        />
-      </label>
-
-      <label class="appearance-range">
-        <span>
-          <strong>Background blur</strong>
-          <output>
-            {config.appearance.background.blur}px
-          </output>
-        </span>
-
-        <input
-          bind:value={
-            config.appearance.background.blur
-          }
-          type="range"
-          min="0"
-          max="40"
-          step="1"
-        />
-      </label>
     </section>
 
     <section class="appearance-group">
@@ -458,24 +402,6 @@
         {/each}
       </div>
 
-      <div class="appearance-segmented">
-        {#each ['small', 'medium', 'large'] as scale}
-          <button
-            class:active={
-              config.appearance.font.scale ===
-              scale
-            }
-            type="button"
-            onclick={() => {
-              config.appearance.font.scale =
-                scale as
-                  HubletConfig['appearance']['font']['scale'];
-            }}
-          >
-            {scale}
-          </button>
-        {/each}
-      </div>
     </section>
 
     <section class="appearance-group">
@@ -484,61 +410,10 @@
           <strong>Cards</strong>
 
           <small>
-            Global defaults can still be overridden
-            inside individual sections.
+            Shared styling for every service card.
           </small>
         </div>
       </header>
-
-      <label class="appearance-label">
-        <span>Default size</span>
-
-        <div class="appearance-segmented">
-          {#each ['small', 'medium', 'large'] as size}
-            <button
-              class:active={
-                config.appearance.cards.size ===
-                size
-              }
-              type="button"
-              onclick={() => {
-                config.appearance.cards.size =
-                  size as
-                    HubletConfig['appearance']['cards']['size'];
-              }}
-            >
-              {size}
-            </button>
-          {/each}
-        </div>
-      </label>
-
-      <label class="appearance-label">
-        <span>Density</span>
-
-        <div class="appearance-segmented">
-          {#each [
-            'compact',
-            'comfortable',
-            'relaxed'
-          ] as density}
-            <button
-              class:active={
-                config.appearance.cards.density ===
-                density
-              }
-              type="button"
-              onclick={() => {
-                config.appearance.cards.density =
-                  density as
-                    HubletConfig['appearance']['cards']['density'];
-              }}
-            >
-              {density}
-            </button>
-          {/each}
-        </div>
-      </label>
 
       <label class="appearance-label">
         <span>Corner radius</span>
@@ -613,24 +488,5 @@
       </label>
     </section>
 
-    <section class="appearance-group">
-      <label class="appearance-toggle">
-        <span>
-          <strong>Animations</strong>
-
-          <small>
-            Enable hover transitions and smooth
-            interface movement.
-          </small>
-        </span>
-
-        <input
-          bind:checked={
-            config.appearance.animations
-          }
-          type="checkbox"
-        />
-      </label>
-    </section>
   </div>
 </aside>

@@ -26,6 +26,10 @@
   } from '../lib/section-surface';
 
   import {
+    appearanceStyle
+  } from '../lib/appearance';
+
+  import {
     dashboardGridColumns,
     dashboardGridRowStep,
     maximumGridBottom,
@@ -462,18 +466,6 @@
     return '';
   }
 
-  function effectiveCardSize(
-    section: Section
-  ): string {
-    if (
-      section.cardSize === 'inherit'
-    ) {
-      return config.appearance.cards.size;
-    }
-
-    return section.cardSize;
-  }
-
   function sectionClass(
     section: Section
   ): string {
@@ -495,9 +487,6 @@
   ): string {
     return [
       'canvas-card',
-      `card-size-${effectiveCardSize(
-        section
-      )}`,
       itemSelected(
         section.id,
         item.id
@@ -540,7 +529,7 @@
 
   <div
     class="editor-canvas-page"
-    style={`--canvas-background:${config.appearance.background.color}`}
+    style={appearanceStyle(config)}
   >
     <header
       class:selected={
@@ -585,6 +574,9 @@
       {#each config.sections as section (section.id)}
         <article
           class={sectionClass(section)}
+          class:section-swap-target={
+            sectionDrag?.swapTargetId === section.id
+          }
           data-section-id={section.id}
           data-grid-row={section.gridRow}
           use:measureSection={{
@@ -630,6 +622,20 @@
               {section.title}
             </h2>
 
+            <button
+              class="canvas-section-add"
+              type="button"
+              aria-label={`Add service to ${section.title}`}
+              title="Add service"
+              onclick={(event) => {
+                event.stopPropagation();
+
+                onAddItem(section.id);
+              }}
+            >
+              +
+            </button>
+
             <span
               class="canvas-section-width"
             >
@@ -645,15 +651,8 @@
             </span>
           </header>
 
-          {#if !section.collapsed}
-            <div
-              class={[
-                'canvas-cards',
-                `arrangement-${section.layout}`,
-                `card-size-${effectiveCardSize(
-                  section
-                )}`
-              ].join(' ')}
+          <div
+              class="canvas-cards"
               style={`--grid-columns:${section.gridColumns}`}
               aria-label={`${section.title} cards`}
               use:dragHandleZone={{
@@ -740,14 +739,9 @@
                             'Untitled service'}
                         </strong>
 
-                        {#if (
-                          section.layout !==
-                          'compact'
-                        )}
+                        {#if item.description}
                           <small>
-                            {item.description ||
-                              item.url ||
-                              'No URL'}
+                            {item.description}
                           </small>
                         {/if}
                       </span>
@@ -761,20 +755,12 @@
                   {/if}
                 </div>
               {/each}
+          </div>
+
+          {#if section.items.length === 0}
+            <div class="canvas-empty-section">
+              No services in this section.
             </div>
-
-            <button
-              class="canvas-add-card"
-              type="button"
-              onclick={(event) => {
-                event.stopPropagation();
-
-                onAddItem(section.id);
-              }}
-            >
-              <span>+</span>
-              <strong>Add service</strong>
-            </button>
           {/if}
         </article>
       {/each}

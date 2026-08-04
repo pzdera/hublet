@@ -174,14 +174,13 @@ select {
   }
 
   .edit-button {
-    min-width: auto;
+    width: 40px;
+    min-width: 40px;
     min-height: 40px;
 
     flex: 0 0 auto;
 
-    padding: 0 14px;
-
-    font-size: 0.78rem;
+    padding: 0;
   }
 
 
@@ -345,23 +344,7 @@ select {
     gap: 7px;
   }
 
-  /*
-   * List and featured always stay one-column.
-   */
-
-  .cards.arrangement-list,
-  .cards.arrangement-featured {
-    grid-template-columns:
-      minmax(0, 1fr) !important;
-  }
-
-  /*
-   * Grid and compact may retain two columns.
-   * Very narrow screens fall back to one column below.
-   */
-
-  .cards.arrangement-grid,
-  .cards.arrangement-compact {
+  .cards {
     grid-template-columns:
       repeat(
         min(
@@ -455,30 +438,6 @@ select {
   }
 
 
-  /* Resource strip remains usable if currently enabled. */
-
-  .service-resource-strip {
-    grid-column:
-      1 / -1;
-
-    grid-template-columns:
-      repeat(
-        2,
-        minmax(
-          0,
-          1fr
-        )
-      );
-
-    gap: 4px;
-  }
-
-  .service-resource-metric.status {
-    grid-column:
-      1 / -1;
-  }
-
-
   /* Remove hover motion on touch screens. */
 
   .card:hover {
@@ -513,12 +472,13 @@ select {
   }
 
   .edit-button {
-    padding:
-      0 11px;
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    min-height: 38px;
   }
 
-  .cards.arrangement-grid,
-  .cards.arrangement-compact {
+  .cards {
     grid-template-columns:
       minmax(
         0,
@@ -526,9 +486,6 @@ select {
       ) !important;
   }
 
-  .arrangement-grid
-  .card,
-  .arrangement-compact
   .card {
     grid-template-columns:
       38px
@@ -722,6 +679,7 @@ select {
       30px
       auto
       minmax(0, 1fr)
+      auto
       auto;
 
     gap: 6px;

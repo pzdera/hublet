@@ -3,8 +3,6 @@
     HubletConfig,
     Item,
     Section,
-    SectionCardSize,
-    SectionLayout,
     SectionSurface,
     SectionWidth
   } from '../lib/types';
@@ -108,28 +106,6 @@
     }
   ];
 
-  const cardSizes: Array<{
-    value: SectionCardSize;
-    label: string;
-  }> = [
-    {
-      value: 'inherit',
-      label: 'Default'
-    },
-    {
-      value: 'small',
-      label: 'Small'
-    },
-    {
-      value: 'medium',
-      label: 'Medium'
-    },
-    {
-      value: 'large',
-      label: 'Large'
-    }
-  ];
-
   const selectedSection = $derived.by(
     (): Section | null => {
       if (selection.type === 'dashboard') {
@@ -163,53 +139,8 @@
     }
   );
 
-  const enabledResourceCount = $derived.by(
-    (): number => {
-      if (!selectedItem) {
-        return 0;
-      }
-
-      return [
-        selectedItem.resources.showStatus,
-        selectedItem.resources.showCpu,
-        selectedItem.resources.showMemory
-      ].filter(Boolean).length;
-    }
-  );
-
   let sectionDeleteArmed = $state(false);
   let itemDeleteArmed = $state(false);
-
-  function selectLayout(
-    layout: SectionLayout
-  ) {
-    if (!selectedSection) {
-      return;
-    }
-
-    selectedSection.layout = layout;
-
-    if (
-      layout === 'list' ||
-      layout === 'featured'
-    ) {
-      selectedSection.gridColumns = 1;
-    }
-
-    if (
-      layout === 'grid' &&
-      selectedSection.gridColumns < 2
-    ) {
-      selectedSection.gridColumns = 2;
-    }
-
-    if (
-      layout === 'compact' &&
-      selectedSection.gridColumns < 2
-    ) {
-      selectedSection.gridColumns = 3;
-    }
-  }
 
   function setSectionColumnSpan(
     span: number
@@ -236,37 +167,6 @@
     } else {
       selectedSection.width = 'full';
     }
-  }
-
-  function enableResources() {
-    if (!selectedItem) {
-      return;
-    }
-
-    selectedItem.resources.enabled = true;
-
-    if (
-      !selectedItem.resources.showStatus &&
-      !selectedItem.resources.showCpu &&
-      !selectedItem.resources.showMemory
-    ) {
-      selectedItem.resources.showStatus = true;
-      selectedItem.resources.showCpu = true;
-      selectedItem.resources.showMemory = true;
-    }
-  }
-
-  function toggleResources() {
-    if (!selectedItem) {
-      return;
-    }
-
-    if (selectedItem.resources.enabled) {
-      selectedItem.resources.enabled = false;
-      return;
-    }
-
-    enableResources();
   }
 
   function requestSectionDelete() {
@@ -370,22 +270,6 @@
         </label>
       </div>
 
-      <label class="toggle-control">
-        <span>
-          <strong>Animations</strong>
-
-          <small>
-            Use subtle movement and transitions.
-          </small>
-        </span>
-
-        <input
-          bind:checked={
-            config.appearance.animations
-          }
-          type="checkbox"
-        />
-      </label>
     </div>
   {:else if selectedSection && selection.type === 'section'}
     <header class="inspector-header">
@@ -402,7 +286,7 @@
       </div>
     </header>
 
-    <div class="inspector-content">
+    <div class="inspector-content section-inspector-content">
       <label class="inspector-field">
         <span>Title</span>
 
@@ -414,7 +298,7 @@
         />
       </label>
 
-      <div class="inspector-group">
+      <div class="inspector-group accent-settings">
         <div class="inspector-group-heading">
           <div>
             <strong>Accent</strong>
@@ -443,22 +327,27 @@
           {/each}
         </div>
 
-        <details class="advanced-color">
-          <summary>Advanced color</summary>
-
-          <label class="color-value-control">
+        <label class="accent-value-control">
+          <span class="accent-color-input">
             <input
               bind:value={selectedSection.accent}
               type="color"
+              aria-label="Choose accent color"
             />
+          </span>
+
+          <span class="accent-hex-input">
+            <small>Hex color</small>
 
             <input
               bind:value={selectedSection.accent}
               type="text"
               maxlength="7"
+              aria-label="Accent hex color"
+              spellcheck="false"
             />
-          </label>
-        </details>
+          </span>
+        </label>
       </div>
 
 
@@ -539,7 +428,7 @@
           </label>
         {/if}
 
-        <label class="toggle-control section-border-toggle">
+        <label class="toggle-control section-toggle section-border-toggle">
           <span>
             <strong>Section border</strong>
 
@@ -558,138 +447,37 @@
       <div class="inspector-group">
         <div class="inspector-group-heading">
           <div>
-            <strong>Card arrangement</strong>
+            <strong>Cards per row</strong>
 
             <small>
-              Controls how cards flow inside this section.
+              Number of equal-size cards displayed on desktop.
             </small>
           </div>
+
+          <span class="setting-value">
+            {selectedSection.gridColumns}
+          </span>
         </div>
 
-        <div class="arrangement-options">
-          <button
-            class:active={
-              selectedSection.layout === 'list'
-            }
-            type="button"
-            onclick={() =>
-              selectLayout('list')}
-          >
-            <span class="arrangement-preview preview-list">
-              <i></i>
-              <i></i>
-              <i></i>
-            </span>
-
-            <span>
-              <strong>List</strong>
-              <small>One card per row</small>
-            </span>
-          </button>
-
-          <button
-            class:active={
-              selectedSection.layout === 'grid'
-            }
-            type="button"
-            onclick={() =>
-              selectLayout('grid')}
-          >
-            <span class="arrangement-preview preview-grid">
-              <i></i>
-              <i></i>
-              <i></i>
-              <i></i>
-            </span>
-
-            <span>
-              <strong>Grid</strong>
-              <small>Multiple columns</small>
-            </span>
-          </button>
-
-          <button
-            class:active={
-              selectedSection.layout === 'compact'
-            }
-            type="button"
-            onclick={() =>
-              selectLayout('compact')}
-          >
-            <span class="arrangement-preview preview-compact">
-              <i></i>
-              <i></i>
-              <i></i>
-              <i></i>
-              <i></i>
-              <i></i>
-            </span>
-
-            <span>
-              <strong>Compact</strong>
-              <small>Icon and name only</small>
-            </span>
-          </button>
-
-          <button
-            class:active={
-              selectedSection.layout === 'featured'
-            }
-            type="button"
-            onclick={() =>
-              selectLayout('featured')}
-          >
-            <span class="arrangement-preview preview-featured">
-              <i></i>
-              <i></i>
-            </span>
-
-            <span>
-              <strong>Featured</strong>
-              <small>Large prominent cards</small>
-            </span>
-          </button>
+        <div class="column-options">
+          {#each [1, 2, 3, 4, 5, 6] as columns}
+            <button
+              class:active={
+                selectedSection.gridColumns ===
+                columns
+              }
+              type="button"
+              aria-label={`${columns} cards per row`}
+              onclick={() => {
+                selectedSection.gridColumns =
+                  columns;
+              }}
+            >
+              {columns}
+            </button>
+          {/each}
         </div>
       </div>
-
-      {#if (
-        selectedSection.layout === 'grid' ||
-        selectedSection.layout === 'compact'
-      )}
-        <div class="inspector-group">
-          <div class="inspector-group-heading">
-            <div>
-              <strong>Columns</strong>
-
-              <small>
-                Maximum cards displayed in each row.
-              </small>
-            </div>
-
-            <span class="setting-value">
-              {selectedSection.gridColumns}
-            </span>
-          </div>
-
-          <div class="column-options">
-            {#each [1, 2, 3, 4, 5, 6] as columns}
-              <button
-                class:active={
-                  selectedSection.gridColumns ===
-                  columns
-                }
-                type="button"
-                onclick={() => {
-                  selectedSection.gridColumns =
-                    columns;
-                }}
-              >
-                {columns}
-              </button>
-            {/each}
-          </div>
-        </div>
-      {/if}
 
       <div class="inspector-group">
         <div class="inspector-group-heading">
@@ -731,7 +519,7 @@
 
         <label class="section-width-range">
           <span>
-            <strong>Precise width</strong>
+            <strong>Custom width</strong>
             <small>{selectedSection.gridColumnSpan} / 24</small>
           </span>
 
@@ -749,57 +537,6 @@
           />
         </label>
       </div>
-
-      <div class="inspector-group">
-        <div class="inspector-group-heading">
-          <div>
-            <strong>Card size</strong>
-
-            <small>
-              Overrides the dashboard default in this section.
-            </small>
-          </div>
-        </div>
-
-        <div class="card-size-options">
-          {#each cardSizes as option}
-            <button
-              class:active={
-                selectedSection.cardSize ===
-                option.value
-              }
-              type="button"
-              onclick={() => {
-                selectedSection.cardSize =
-                  option.value;
-              }}
-            >
-              <span
-                class={`card-size-preview ${option.value}`}
-              ></span>
-
-              <strong>
-                {option.label}
-              </strong>
-            </button>
-          {/each}
-        </div>
-      </div>
-
-      <label class="toggle-control">
-        <span>
-          <strong>Collapsed by default</strong>
-
-          <small>
-            Show only the section header at startup.
-          </small>
-        </span>
-
-        <input
-          bind:checked={selectedSection.collapsed}
-          type="checkbox"
-        />
-      </label>
 
       <div class="inspector-danger-zone">
         <button
@@ -931,206 +668,6 @@
           <LocalIconManager item={selectedItem} />
         {/if}
       </div>
-
-      <section
-        class:enabled={
-          selectedItem.resources.enabled
-        }
-        class="resource-settings"
-      >
-        <header class="resource-settings-header">
-          <div>
-            <span class="resource-settings-icon">
-              ◔
-            </span>
-
-            <div>
-              <strong>Resource information</strong>
-
-              <small>
-                Show live service metrics on this card.
-              </small>
-            </div>
-          </div>
-
-          <button
-            class:active={
-              selectedItem.resources.enabled
-            }
-            class="resource-master-toggle"
-            type="button"
-            role="switch"
-            aria-checked={
-              selectedItem.resources.enabled
-            }
-            onclick={toggleResources}
-          >
-            <span></span>
-          </button>
-        </header>
-
-        {#if selectedItem.resources.enabled}
-          <div class="resource-settings-body">
-            <div class="resource-option-list">
-              <label class="resource-option">
-                <span class="resource-option-icon status">
-                  ●
-                </span>
-
-                <span>
-                  <strong>Status</strong>
-
-                  <small>
-                    Online, offline, or unavailable.
-                  </small>
-                </span>
-
-                <input
-                  bind:checked={
-                    selectedItem.resources.showStatus
-                  }
-                  type="checkbox"
-                />
-              </label>
-
-              <label class="resource-option">
-                <span class="resource-option-icon">
-                  CPU
-                </span>
-
-                <span>
-                  <strong>CPU usage</strong>
-
-                  <small>
-                    Current service CPU utilization.
-                  </small>
-                </span>
-
-                <input
-                  bind:checked={
-                    selectedItem.resources.showCpu
-                  }
-                  type="checkbox"
-                />
-              </label>
-
-              <label class="resource-option">
-                <span class="resource-option-icon">
-                  RAM
-                </span>
-
-                <span>
-                  <strong>Memory usage</strong>
-
-                  <small>
-                    Memory currently used by the service.
-                  </small>
-                </span>
-
-                <input
-                  bind:checked={
-                    selectedItem.resources.showMemory
-                  }
-                  type="checkbox"
-                />
-              </label>
-            </div>
-
-            {#if enabledResourceCount === 0}
-              <div class="resource-empty-warning">
-                Select at least one metric to display.
-              </div>
-            {/if}
-
-            <div class="resource-preview">
-              <header>
-                <span>Card preview</span>
-
-                <small>
-                  Data source not connected
-                </small>
-              </header>
-
-              <div class="resource-preview-card">
-                <div class="resource-preview-title">
-                  <span class="resource-preview-icon">
-                    {selectedItem.name
-                      .trim()
-                      .slice(0, 1)
-                      .toUpperCase() || '?'}
-                  </span>
-
-                  <div>
-                    <strong>
-                      {selectedItem.name ||
-                        'Untitled service'}
-                    </strong>
-
-                    <small>
-                      {selectedItem.description ||
-                        selectedItem.url ||
-                        'Service'}
-                    </small>
-                  </div>
-                </div>
-
-                {#if selectedItem.resources.showStatus}
-                  <div class="resource-preview-row">
-                    <span>Status</span>
-
-                    <strong class="resource-unavailable">
-                      <i></i>
-                      Not connected
-                    </strong>
-                  </div>
-                {/if}
-
-                {#if selectedItem.resources.showCpu}
-                  <div class="resource-preview-row">
-                    <span>CPU</span>
-                    <strong>—</strong>
-                  </div>
-                {/if}
-
-                {#if selectedItem.resources.showMemory}
-                  <div class="resource-preview-row">
-                    <span>Memory</span>
-                    <strong>—</strong>
-                  </div>
-                {/if}
-              </div>
-            </div>
-
-            <div class="resource-source-note">
-              <span>i</span>
-
-              <p>
-                Metrics will remain unavailable until a Docker,
-                Proxmox, or another supported data source is
-                configured.
-              </p>
-            </div>
-          </div>
-        {:else}
-          <button
-            class="resource-enable-prompt"
-            type="button"
-            onclick={enableResources}
-          >
-            <span>+</span>
-
-            <div>
-              <strong>
-                Enable resource information
-              </strong>
-
-              <small>
-                Configure metrics for this service only.
-              </small>
-            </div>
-          </button>
-        {/if}
-      </section>
 
       <label class="toggle-control">
         <span>

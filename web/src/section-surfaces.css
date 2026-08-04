@@ -192,6 +192,295 @@
   gap: 12px;
 }
 
+.section-inspector-content > .inspector-group {
+  padding-top: 17px;
+
+  border-top:
+    1px solid
+    rgba(255, 255, 255, 0.065);
+}
+
+.inspector-group-heading > div {
+  min-width: 0;
+
+  display: grid;
+  gap: 3px;
+}
+
+.accent-settings {
+  gap: 12px;
+}
+
+.accent-swatches {
+  display: grid;
+
+  grid-template-columns:
+    repeat(6, minmax(0, 1fr));
+
+  gap: 7px;
+}
+
+.accent-swatches button {
+  aspect-ratio: 1;
+
+  display: grid;
+  place-items: center;
+
+  padding: 0;
+
+  border: 1px solid transparent;
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  background:
+    rgba(255, 255, 255, 0.025);
+
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.accent-swatches button:hover {
+  transform: translateY(-1px);
+
+  border-color:
+    rgba(255, 255, 255, 0.18);
+
+  background:
+    rgba(255, 255, 255, 0.055);
+}
+
+.accent-swatches button.active {
+  border-color: var(--swatch);
+
+  background:
+    color-mix(
+      in srgb,
+      var(--swatch) 12%,
+      transparent
+    );
+
+  box-shadow:
+    0 0 0 3px
+    color-mix(
+      in srgb,
+      var(--swatch) 12%,
+      transparent
+    );
+}
+
+.accent-swatches button span {
+  width: 18px;
+  height: 18px;
+
+  display: block;
+
+  border-radius: 6px;
+
+  background: var(--swatch);
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+    0 4px 12px
+    color-mix(
+      in srgb,
+      var(--swatch) 26%,
+      transparent
+    );
+}
+
+.accent-value-control {
+  min-height: 56px;
+
+  display: grid;
+
+  grid-template-columns:
+    58px
+    minmax(0, 1fr);
+
+  align-items: stretch;
+
+  gap: 8px;
+}
+
+.accent-color-input {
+  display: grid;
+  place-items: center;
+
+  padding: 5px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 11px;
+
+  background: #121722;
+}
+
+.accent-color-input input {
+  width: 100%;
+  height: 100%;
+
+  padding: 0;
+
+  overflow: hidden;
+
+  border: 0;
+  border-radius: 7px;
+
+  cursor: pointer;
+
+  background: transparent;
+}
+
+.accent-color-input input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.accent-color-input input::-webkit-color-swatch {
+  border: 0;
+  border-radius: 6px;
+}
+
+.accent-color-input input::-moz-color-swatch {
+  border: 0;
+  border-radius: 6px;
+}
+
+.accent-hex-input {
+  min-width: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    auto
+    minmax(0, 1fr);
+
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 5px 10px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 11px;
+
+  background: #121722;
+}
+
+.accent-hex-input:focus-within,
+.accent-color-input:focus-within {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--inspector-accent, #4f8cff) 72%,
+      #ffffff
+    );
+
+  box-shadow:
+    0 0 0 3px rgba(79, 140, 255, 0.08);
+}
+
+.accent-hex-input small {
+  color: var(--muted);
+
+  font-size: 0.64rem;
+  white-space: nowrap;
+}
+
+.accent-hex-input input {
+  min-width: 0;
+  width: 100%;
+
+  padding: 0;
+
+  border: 0;
+  outline: 0;
+
+  color: var(--text);
+  background: transparent;
+
+  font-family: inherit;
+  font-size: 0.78rem;
+}
+
+.section-toggle > input[type="checkbox"] {
+  position: relative;
+
+  width: 42px;
+  height: 24px;
+
+  flex: 0 0 auto;
+
+  appearance: none;
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.14);
+
+  border-radius: 999px;
+
+  cursor: pointer;
+
+  background:
+    rgba(255, 255, 255, 0.08);
+
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.section-toggle > input[type="checkbox"]::after {
+  content: "";
+
+  position: absolute;
+  top: 3px;
+  left: 3px;
+
+  width: 16px;
+  height: 16px;
+
+  border-radius: 50%;
+
+  background: #c4ccda;
+
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.28);
+
+  transition:
+    transform 150ms ease,
+    background 150ms ease;
+}
+
+.section-toggle > input[type="checkbox"]:checked {
+  border-color:
+    rgba(79, 140, 255, 0.72);
+
+  background: #4f8cff;
+
+  box-shadow:
+    0 0 0 3px rgba(79, 140, 255, 0.09);
+}
+
+.section-toggle > input[type="checkbox"]:checked::after {
+  transform: translateX(18px);
+
+  background: #ffffff;
+}
+
+.section-toggle > input[type="checkbox"]:focus-visible {
+  outline: 2px solid #8fb4ff;
+  outline-offset: 2px;
+}
+
 .section-surface-options {
   display: grid;
 

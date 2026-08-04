@@ -285,9 +285,16 @@ button {
 }
 
 .edit-button {
-  min-height: 42px;
+  width: 42px;
+  height: 42px;
 
-  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+
+  padding: 0;
 
   border:
     1px solid
@@ -302,26 +309,49 @@ button {
       255,
       255,
       255,
-      0.055
+      0.025
     );
 
   transition:
-    background 150ms ease,
-    border-color 150ms ease,
-    transform 150ms ease;
+    background 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.edit-button > span {
+  width: 17px;
+  height: 2px;
+
+  display: block;
+
+  border-radius: 999px;
+  background: rgba(207, 218, 235, 0.62);
+
+  transition:
+    background 180ms ease;
 }
 
 .edit-button:hover {
-  transform:
-    translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.14);
+
+  transform: rotate(90deg);
 
   background:
     rgba(
       255,
       255,
       255,
-      0.09
+      0.055
     );
+}
+
+.edit-button:hover > span {
+  background: rgba(225, 233, 245, 0.88);
+}
+
+.edit-button:focus-visible {
+  outline: 2px solid rgba(79, 140, 255, 0.72);
+  outline-offset: 3px;
 }
 
 .search-shell {
@@ -539,6 +569,33 @@ button {
 
   font-size: 0.78rem;
   font-weight: 800;
+}
+
+.result-mark.result-icon {
+  overflow: hidden;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.08
+    );
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.055
+    );
+}
+
+.result-mark.result-icon
+.service-icon-content img {
+  width: 30px;
+  height: 30px;
 }
 
 .result >
@@ -937,12 +994,14 @@ span:nth-child(2) {
   color: #ffb4b4;
 }
 
-.animations-disabled *,
-.animations-disabled *::before,
-.animations-disabled *::after {
-  scroll-behavior: auto !important;
-  transition: none !important;
-  animation: none !important;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
 }
 
 @media (max-width: 1100px) {
@@ -993,7 +1052,7 @@ span:nth-child(2) {
   }
 
   .edit-button {
-    min-width: 70px;
+    min-width: 42px;
     min-height: 43px;
   }
 

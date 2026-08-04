@@ -3,13 +3,6 @@ export type Icon = {
   value: string;
 };
 
-export type ServiceResources = {
-  enabled: boolean;
-  showStatus: boolean;
-  showCpu: boolean;
-  showMemory: boolean;
-};
-
 export type ItemType =
   | 'service';
 
@@ -21,14 +14,7 @@ export type Item = {
   description: string;
   icon: Icon;
   openInNewTab: boolean;
-  resources: ServiceResources;
 };
-
-export type SectionLayout =
-  | 'list'
-  | 'grid'
-  | 'compact'
-  | 'featured';
 
 export type SectionWidth =
   | 'narrow'
@@ -36,12 +22,6 @@ export type SectionWidth =
   | 'wide'
   | 'extra-wide'
   | 'full';
-
-export type SectionCardSize =
-  | 'inherit'
-  | 'small'
-  | 'medium'
-  | 'large';
 
 export type SectionSurface =
   | 'solid'
@@ -57,16 +37,12 @@ export type Section = {
   surfaceOpacity: number;
   surfaceBlur: number;
   showBorder: boolean;
-  layout: SectionLayout;
   width: SectionWidth;
   gridRow: number;
   gridColumn: number;
   gridRowSpan: number;
   gridColumnSpan: number;
-  cardSize: SectionCardSize;
   gridColumns: number;
-  fillLastRow: boolean;
-  collapsed: boolean;
   items: Item[];
 };
 
@@ -116,24 +92,9 @@ export type HubletConfig = {
         | 'geist'
         | 'manrope'
         | 'ibm-plex-sans';
-
-      scale:
-        | 'small'
-        | 'medium'
-        | 'large';
     };
 
     cards: {
-      size:
-        | 'small'
-        | 'medium'
-        | 'large';
-
-      density:
-        | 'compact'
-        | 'comfortable'
-        | 'relaxed';
-
       radius:
         | 'small'
         | 'medium'
@@ -151,7 +112,6 @@ export type HubletConfig = {
     background: {
       type:
         | 'solid'
-        | 'gradient'
         | 'wallpaper';
 
       color: string;
@@ -160,8 +120,6 @@ export type HubletConfig = {
       overlay: number;
       wallpaper: string | null;
     };
-
-    animations: boolean;
   };
 
   search: {

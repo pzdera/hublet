@@ -30,20 +30,16 @@ type Appearance struct {
 	Font       Font       `json:"font"`
 	Cards      Cards      `json:"cards"`
 	Background Background `json:"background"`
-	Animations bool       `json:"animations"`
 }
 
 type Font struct {
 	Family string `json:"family"`
-	Scale  string `json:"scale"`
 }
 
 type Cards struct {
-	Size    string `json:"size"`
-	Density string `json:"density"`
-	Radius  string `json:"radius"`
-	Shadow  string `json:"shadow"`
-	Border  bool   `json:"border"`
+	Radius string `json:"radius"`
+	Shadow string `json:"shadow"`
+	Border bool   `json:"border"`
 }
 
 type Background struct {
@@ -70,17 +66,14 @@ type Section struct {
 	SurfaceOpacity int    `json:"surfaceOpacity"`
 	SurfaceBlur    int    `json:"surfaceBlur"`
 	ShowBorder     bool   `json:"showBorder"`
-	Layout         string `json:"layout"`
+	LegacyLayout   string `json:"layout,omitempty"`
 	Width          string `json:"width"`
 	GridRow        int    `json:"gridRow"`
 	GridColumn     int    `json:"gridColumn"`
 	GridRowSpan    int    `json:"gridRowSpan"`
 	GridColumnSpan int    `json:"gridColumnSpan"`
 	StartColumn    int    `json:"startColumn,omitempty"`
-	CardSize       string `json:"cardSize"`
 	GridColumns    int    `json:"gridColumns"`
-	FillLastRow    bool   `json:"fillLastRow"`
-	Collapsed      bool   `json:"collapsed"`
 	Items          []Item `json:"items"`
 }
 
@@ -92,14 +85,6 @@ type Item struct {
 	Description  string           `json:"description"`
 	Icon         Icon             `json:"icon"`
 	OpenInNewTab bool             `json:"openInNewTab"`
-	Resources    ServiceResources `json:"resources"`
-}
-
-type ServiceResources struct {
-	Enabled    bool `json:"enabled"`
-	ShowStatus bool `json:"showStatus"`
-	ShowCPU    bool `json:"showCpu"`
-	ShowMemory bool `json:"showMemory"`
 }
 
 type Icon struct {
@@ -160,15 +145,12 @@ func Default() Config {
 
 			Font: Font{
 				Family: "system",
-				Scale:  "medium",
 			},
 
 			Cards: Cards{
-				Size:    "medium",
-				Density: "comfortable",
-				Radius:  "large",
-				Shadow:  "soft",
-				Border:  true,
+				Radius: "large",
+				Shadow: "soft",
+				Border: true,
 			},
 
 			Background: Background{
@@ -179,7 +161,6 @@ func Default() Config {
 				Overlay:    0,
 			},
 
-			Animations: true,
 		},
 
 		Search: Search{

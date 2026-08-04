@@ -10,7 +10,6 @@
     ui-sans-serif,
     system-ui,
     sans-serif;
-  --hublet-font-scale: 1;
   --hublet-card-radius: 20px;
   --hublet-card-shadow:
     0 8px 24px
@@ -28,11 +27,6 @@
   font-family:
     var(--hublet-font-family);
 
-  font-size:
-    calc(
-      1rem *
-      var(--hublet-font-scale)
-    );
 }
 
 .dashboard-background {
@@ -110,11 +104,6 @@
   font-family:
     var(--hublet-font-family);
 
-  font-size:
-    calc(
-      1rem *
-      var(--hublet-font-scale)
-    );
 }
 
 .editor-canvas-page::before {
@@ -439,7 +428,7 @@
   display: grid;
 
   grid-template-columns:
-    repeat(3, 1fr);
+    repeat(2, 1fr);
 
   gap: 7px;
 }
@@ -503,15 +492,6 @@
 .background-preview.solid {
   background:
     var(--hublet-background-color);
-}
-
-.background-preview.gradient {
-  background:
-    linear-gradient(
-      145deg,
-      #365ca1,
-      #090c12
-    );
 }
 
 .background-preview.wallpaper {
@@ -625,60 +605,6 @@
 .appearance-range input {
   width: 100%;
   accent-color: #4f8cff;
-}
-
-.appearance-info {
-  display: grid;
-
-  grid-template-columns:
-    23px
-    minmax(0, 1fr);
-
-  gap: 8px;
-
-  padding: 9px;
-
-  border-radius: 10px;
-
-  color: var(--muted);
-
-  background:
-    rgba(
-      79,
-      140,
-      255,
-      0.06
-    );
-}
-
-.appearance-info > span {
-  width: 23px;
-  height: 23px;
-
-  display: grid;
-  place-items: center;
-
-  border-radius: 7px;
-
-  color: #a9c7ff;
-
-  background:
-    rgba(
-      79,
-      140,
-      255,
-      0.12
-    );
-
-  font-size: 0.65rem;
-  font-weight: 850;
-}
-
-.appearance-info p {
-  margin: 0;
-
-  font-size: 0.62rem;
-  line-height: 1.45;
 }
 
 .font-options {

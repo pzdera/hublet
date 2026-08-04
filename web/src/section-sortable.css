@@ -6,6 +6,7 @@
     auto
     minmax(0, 1fr)
     auto
+    auto
     auto;
 }
 
@@ -90,6 +91,15 @@
       rgba(255, 255, 255, 0.42)
     );
   outline-offset: 3px;
+}
+
+.section-grid-dragging
+.editor-canvas-section.section-swap-target {
+  outline: 2px solid #f5b942 !important;
+  outline-offset: 3px;
+  box-shadow:
+    0 0 0 5px rgba(245, 185, 66, 0.11),
+    0 18px 55px rgba(0, 0, 0, 0.34) !important;
 }
 
 .section-grid-new-row {
@@ -261,6 +271,7 @@
     grid-template-columns:
       auto
       minmax(0, 1fr)
+      auto
       auto
       auto;
   }

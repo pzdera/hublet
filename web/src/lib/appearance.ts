@@ -14,7 +14,6 @@ const variableNames = [
   '--hublet-background-brightness',
   '--hublet-background-overlay',
   '--hublet-font-family',
-  '--hublet-font-scale',
   '--hublet-card-radius',
   '--hublet-card-shadow',
   '--hublet-card-border-width',
@@ -24,73 +23,6 @@ const variableNames = [
   '--hublet-card-backdrop-blur',
   '--hublet-card-background-alpha'
 ] as const;
-
-function clamp(
-  value: number,
-  minimum: number,
-  maximum: number
-): number {
-  return Math.min(
-    maximum,
-    Math.max(minimum, value)
-  );
-}
-
-function parseHex(
-  value: string
-): {
-  red: number;
-  green: number;
-  blue: number;
-} {
-  const normalized =
-    /^#[0-9a-fA-F]{6}$/.test(value)
-      ? value.slice(1)
-      : '090c12';
-
-  return {
-    red: Number.parseInt(
-      normalized.slice(0, 2),
-      16
-    ),
-
-    green: Number.parseInt(
-      normalized.slice(2, 4),
-      16
-    ),
-
-    blue: Number.parseInt(
-      normalized.slice(4, 6),
-      16
-    )
-  };
-}
-
-function componentToHex(
-  value: number
-): string {
-  return clamp(
-    Math.round(value),
-    0,
-    255
-  )
-    .toString(16)
-    .padStart(2, '0');
-}
-
-function shiftHex(
-  value: string,
-  amount: number
-): string {
-  const color = parseHex(value);
-
-  return [
-    '#',
-    componentToHex(color.red + amount),
-    componentToHex(color.green + amount),
-    componentToHex(color.blue + amount)
-  ].join('');
-}
 
 function fontFamily(
   family: HubletConfig['appearance']['font']['family']
@@ -144,22 +76,6 @@ function fontFamily(
   }
 }
 
-function fontScale(
-  scale: HubletConfig['appearance']['font']['scale']
-): string {
-  switch (scale) {
-    case 'small':
-      return '0.92';
-
-    case 'large':
-      return '1.09';
-
-    case 'medium':
-    default:
-      return '1';
-  }
-}
-
 function cardRadius(
   radius: HubletConfig['appearance']['cards']['radius']
 ): string {
@@ -204,38 +120,6 @@ function cardShadow(
   }
 }
 
-function cardDensity(
-  density: HubletConfig['appearance']['cards']['density']
-): {
-  padding: string;
-  minimumHeight: string;
-  gap: string;
-} {
-  switch (density) {
-    case 'compact':
-      return {
-        padding: '7px 9px',
-        minimumHeight: '52px',
-        gap: '7px'
-      };
-
-    case 'relaxed':
-      return {
-        padding: '15px 16px',
-        minimumHeight: '82px',
-        gap: '12px'
-      };
-
-    case 'comfortable':
-    default:
-      return {
-        padding: '10px 12px',
-        minimumHeight: '65px',
-        gap: '9px'
-      };
-  }
-}
-
 function backgroundImage(
   config: HubletConfig
 ): string {
@@ -254,35 +138,6 @@ function backgroundImage(
     return `url("/wallpapers/${filename}")`;
   }
 
-  if (
-    background.type === 'gradient'
-  ) {
-    const lighter =
-      shiftHex(
-        background.color,
-        26
-      );
-
-    const darker =
-      shiftHex(
-        background.color,
-        -34
-      );
-
-    return [
-      'radial-gradient(',
-      'circle at 18% 0%,',
-      `${lighter} 0%,`,
-      'transparent 42%',
-      '),',
-      'linear-gradient(',
-      '145deg,',
-      `${background.color} 0%,`,
-      `${darker} 100%`,
-      ')'
-    ].join(' ');
-  }
-
   return 'none';
 }
 
@@ -295,13 +150,12 @@ export function appearanceVariables(
   const background =
     appearance.background;
 
-  const density =
-    cardDensity(
-      appearance.cards.density
-    );
-
   const advanced =
     appearance.mode === 'advanced';
+
+  const wallpaperActive =
+    background.type === 'wallpaper' &&
+    Boolean(background.wallpaper);
 
   return {
     '--hublet-background-color':
@@ -319,26 +173,27 @@ export function appearanceVariables(
       'center center',
 
     '--hublet-background-blur':
-      `${background.blur}px`,
+      wallpaperActive
+        ? `${background.blur}px`
+        : '0px',
 
     '--hublet-background-brightness':
-      String(
-        background.brightness / 100
-      ),
+      wallpaperActive
+        ? String(
+            background.brightness / 100
+          )
+        : '1',
 
     '--hublet-background-overlay':
-      String(
-        background.overlay / 100
-      ),
+      wallpaperActive
+        ? String(
+            background.overlay / 100
+          )
+        : '0',
 
     '--hublet-font-family':
       fontFamily(
         appearance.font.family
-      ),
-
-    '--hublet-font-scale':
-      fontScale(
-        appearance.font.scale
       ),
 
     '--hublet-card-radius':
@@ -357,13 +212,13 @@ export function appearanceVariables(
         : '0px',
 
     '--hublet-card-padding':
-      density.padding,
+      '10px 12px',
 
     '--hublet-card-min-height':
-      density.minimumHeight,
+      '65px',
 
     '--hublet-card-gap':
-      density.gap,
+      '9px',
 
     '--hublet-card-backdrop-blur':
       advanced

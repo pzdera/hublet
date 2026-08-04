@@ -189,36 +189,6 @@
     );
   }
 
-  function effectiveCardSize(
-    section: Section
-  ): string {
-    if (!config) {
-      return 'medium';
-    }
-
-    if (
-      section.cardSize === 'inherit'
-    ) {
-      return config.appearance.cards.size;
-    }
-
-    return section.cardSize;
-  }
-
-  function resourceMetricCount(
-    item: Item
-  ): number {
-    if (!item.resources.enabled) {
-      return 0;
-    }
-
-    return [
-      item.resources.showStatus,
-      item.resources.showCpu,
-      item.resources.showMemory
-    ].filter(Boolean).length;
-  }
-
   function startEditing() {
     if (!config) {
       return;
@@ -292,9 +262,6 @@
   </main>
 {:else}
   <div
-    class:animations-disabled={
-      !config.appearance.animations
-    }
     class="dashboard-root"
     style={appearanceStyle(config)}
   >
@@ -317,9 +284,13 @@
         <button
           class="edit-button"
           type="button"
+          title="Open editor"
+          aria-label="Open editor"
           onclick={startEditing}
         >
-          Edit
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
         </button>
       </header>
 
@@ -397,23 +368,12 @@
                   <span>{visibleItems.length}</span>
                 </header>
 
-                {#if !section.collapsed}
-                  <div
-                    class={[
-                      'cards',
-                      `arrangement-${section.layout}`,
-                      `card-size-${effectiveCardSize(section)}`
-                    ].join(' ')}
-                    style={`--grid-columns:${section.gridColumns}`}
-                  >
+                <div
+                  class="cards"
+                  style={`--grid-columns:${section.gridColumns}`}
+                >
                     {#each visibleItems as item (item.id)}
-                      {@const metricCount =
-                        resourceMetricCount(item)}
-
                       <a
-                        class:has-resources={
-                          metricCount > 0
-                        }
                         class="card"
                         href={item.url}
                         target={
@@ -430,64 +390,17 @@
                         <span class="card-copy">
                           <strong>{item.name}</strong>
 
-                          {#if (
-                            section.layout !==
-                              'compact' &&
-                            item.description
-                          )}
+                          {#if item.description}
                             <small>
                               {item.description}
                             </small>
                           {/if}
                         </span>
 
-                        {#if section.layout !== 'compact'}
-                          <span class="card-arrow">
-                            ↗
-                          </span>
-                        {/if}
+                        <span class="card-arrow">
+                          ↗
+                        </span>
 
-                        {#if metricCount > 0}
-                          <span
-                            class="service-resource-strip"
-                            aria-label="Service resources"
-                          >
-                            {#if item.resources.showStatus}
-                              <span
-                                class="service-resource-metric status"
-                              >
-                                <span
-                                  class="service-resource-label"
-                                >
-                                  Status
-                                </span>
-
-                                <strong>
-                                  <i></i>
-                                  Not connected
-                                </strong>
-                              </span>
-                            {/if}
-
-                            {#if item.resources.showCpu}
-                              <span class="service-resource-metric">
-                                <span class="service-resource-label">
-                                  CPU
-                                </span>
-                                <strong>—</strong>
-                              </span>
-                            {/if}
-
-                            {#if item.resources.showMemory}
-                              <span class="service-resource-metric">
-                                <span class="service-resource-label">
-                                  Memory
-                                </span>
-                                <strong>—</strong>
-                              </span>
-                            {/if}
-                          </span>
-                        {/if}
                       </a>
                     {/each}
 
@@ -496,8 +409,7 @@
                         No services in this section.
                       </div>
                     {/if}
-                  </div>
-                {/if}
+                </div>
               </section>
             {/if}
           {/each}
