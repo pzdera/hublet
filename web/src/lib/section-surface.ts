@@ -19,12 +19,19 @@ function clamp(
 export function sectionSurfaceStyle(
   section: Section
 ): string {
-  const opacity =
+  const configuredOpacity =
     clamp(
       section.surfaceOpacity,
       0,
       100
     ) / 100;
+
+  const opacity =
+    section.surface === 'solid'
+      ? 1
+      : section.surface === 'none'
+        ? 0
+        : configuredOpacity;
 
   const blur =
     clamp(
@@ -34,7 +41,9 @@ export function sectionSurfaceStyle(
     );
 
   const effectiveBlur =
-    blur * opacity;
+    section.surface === 'glass'
+      ? blur
+      : 0;
 
   return [
     `--section-accent:${section.accent}`,

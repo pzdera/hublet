@@ -388,7 +388,10 @@
           {/each}
         </div>
 
-        {#if selectedSection.surface !== 'none'}
+        {#if
+          selectedSection.surface === 'transparent' ||
+          selectedSection.surface === 'glass'
+        }
           <label class="section-surface-range">
             <span>
               <strong>Opacity</strong>
