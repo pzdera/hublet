@@ -8,8 +8,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/pzdera/hublet-v2/internal/api"
-	"github.com/pzdera/hublet-v2/internal/config"
+	"github.com/pzdera/hublet/internal/api"
+	"github.com/pzdera/hublet/internal/config"
 )
 
 //go:embed all:web-dist

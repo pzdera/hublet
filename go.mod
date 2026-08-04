@@ -1,3 +1,3 @@
-module github.com/pzdera/hublet-v2
+module github.com/pzdera/hublet
 
 go 1.24

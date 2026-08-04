@@ -9,7 +9,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/pzdera/hublet-v2/internal/config"
+	"github.com/pzdera/hublet/internal/config"
 )
 
 type Options struct {
