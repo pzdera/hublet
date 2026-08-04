@@ -5,8 +5,10 @@ func Normalize(cfg *Config) {
 		cfg.Version = 2
 	}
 
-	if cfg.Dashboard.Title == "" || cfg.Dashboard.Title == "Hublet" {
-		cfg.Dashboard.Title = "Hublet v2"
+	if cfg.Dashboard.Title == "" ||
+		cfg.Dashboard.Title == "Hublet" ||
+		cfg.Dashboard.Title == "Hublet v2" {
+		cfg.Dashboard.Title = "Hublet"
 	}
 
 	if cfg.Dashboard.Description == "" {

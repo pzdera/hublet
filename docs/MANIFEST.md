@@ -1,8 +1,8 @@
-# Hublet v2 Manifest
+# Hublet Manifest
 
 ## Simple by default. Powerful when needed.
 
-Hublet v2 is a modern self-hosted dashboard designed around clarity, speed, and graphical configuration.
+Hublet is a modern self-hosted dashboard designed around clarity, speed, and graphical configuration.
 
 ## Principles
 
@@ -14,7 +14,7 @@ Users should not need to edit JSON, YAML, source code, or Docker configuration t
 
 ### Minimal by default
 
-A fresh Hublet v2 installation should contain only:
+A fresh Hublet installation should contain only:
 
 - Dashboard title
 - Search
@@ -69,7 +69,7 @@ The application should avoid multiple overlapping systems that solve the same pr
 
 ## Product boundaries
 
-Hublet v2 is a dashboard and launcher.
+Hublet is a dashboard and launcher.
 
 It is not intended to become:
 

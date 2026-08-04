@@ -237,7 +237,7 @@
           bind:value={config.dashboard.title}
           type="text"
           maxlength="80"
-          placeholder="Hublet v2"
+          placeholder="Hublet"
         />
       </label>
 
@@ -674,7 +674,7 @@
           <strong>Open in new tab</strong>
 
           <small>
-            Keep Hublet v2 open in the current tab.
+            Keep Hublet open in the current tab.
           </small>
         </span>
 

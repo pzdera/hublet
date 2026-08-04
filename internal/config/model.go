@@ -129,7 +129,7 @@ func Default() Config {
 		Version: 2,
 
 		Dashboard: Dashboard{
-			Title:              "Hublet v2",
+			Title:              "Hublet",
 			Description:        "My self-hosted dashboard",
 			DescriptionVisible: true,
 			Icon: DashboardIcon{

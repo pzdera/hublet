@@ -261,7 +261,7 @@ func (s *Server) downloadDashboardIcon(
 
 	httpRequest.Header.Set(
 		"User-Agent",
-		"Hublet-v2-Icon-Downloader/2",
+		"Hublet-Icon-Downloader/2",
 	)
 
 	httpRequest.Header.Set(

@@ -273,7 +273,7 @@ func (
 
 	httpRequest.Header.Set(
 		"User-Agent",
-		"Hublet-v2-Wallpaper-Downloader/2",
+		"Hublet-Wallpaper-Downloader/2",
 	)
 
 	httpRequest.Header.Set(

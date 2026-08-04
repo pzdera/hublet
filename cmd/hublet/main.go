@@ -17,22 +17,22 @@ var frontend embed.FS
 
 func main() {
 	addr := envOr(
-		"HUBLET_V2_ADDR",
+		"HUBLET_ADDR",
 		":3000",
 	)
 
 	dataDir := envOr(
-		"HUBLET_V2_DATA_DIR",
+		"HUBLET_DATA_DIR",
 		"/app/data",
 	)
 
 	wallpaperDir := envOr(
-		"HUBLET_V2_WALLPAPER_DIR",
+		"HUBLET_WALLPAPER_DIR",
 		"/app/wallpapers",
 	)
 
 	iconDir := envOr(
-		"HUBLET_V2_ICON_DIR",
+		"HUBLET_ICON_DIR",
 		"/app/icons",
 	)
 
@@ -92,7 +92,7 @@ func main() {
 	}
 
 	log.Printf(
-		"Hublet v2 listening on %s",
+		"Hublet listening on %s",
 		addr,
 	)
 

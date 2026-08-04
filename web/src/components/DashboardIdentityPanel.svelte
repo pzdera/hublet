@@ -158,7 +158,7 @@
       bind:value={config.dashboard.title}
       type="text"
       maxlength="80"
-      placeholder="Hublet v2"
+      placeholder="Hublet"
     />
   </label>
 

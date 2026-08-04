@@ -253,12 +253,12 @@
 
 {#if loading}
   <main class="state">
-    Loading Hublet v2…
+    Loading Hublet…
   </main>
 {:else if error || !config}
   <main class="state error">
     {error ||
-      'Hublet v2 configuration is unavailable.'}
+      'Hublet configuration is unavailable.'}
   </main>
 {:else}
   <div
