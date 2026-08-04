@@ -97,7 +97,7 @@
     {
       value: 'glass',
       label: 'Glass',
-      description: 'Transparent with blur'
+      description: 'Transparent cards with blur'
     },
     {
       value: 'none',
@@ -411,7 +411,7 @@
         {#if selectedSection.surface === 'glass'}
           <label class="section-surface-range">
             <span>
-              <strong>Backdrop blur</strong>
+              <strong>Card blur</strong>
 
               <output>
                 {selectedSection.surfaceBlur}px
