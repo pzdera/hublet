@@ -1,0 +1,87 @@
+/* =========================================================
+   UNIFIED SECTION VERTICAL RHYTHM
+
+   A section header occupies exactly one card row. Sections
+   can therefore be stacked beside a taller section while
+   staying aligned to the same vertical grid.
+   ========================================================= */
+
+:root {
+  --hublet-section-row-height: 64px;
+  --hublet-section-row-gap: 8px;
+}
+
+.section,
+.editor-canvas-section {
+  /* Do not stretch to a previously persisted gridRowSpan. */
+  align-self: start;
+
+  padding-top: 0 !important;
+  padding-bottom:
+    var(--hublet-section-row-gap) !important;
+
+  /* The optional border must not add pixels to the grid. */
+  border-width: 0 !important;
+  outline:
+    var(--section-border-width)
+    solid
+    color-mix(
+      in srgb,
+      var(--section-accent) 50%,
+      rgba(255, 255, 255, 0.13)
+    );
+  outline-offset:
+    calc(var(--section-border-width) * -1);
+}
+
+.section-header,
+.canvas-section-header {
+  box-sizing: border-box;
+  height:
+    calc(
+      var(--hublet-section-row-height) -
+      var(--hublet-section-row-gap)
+    ) !important;
+  min-height:
+    calc(
+      var(--hublet-section-row-height) -
+      var(--hublet-section-row-gap)
+    ) !important;
+
+  margin-top: 0 !important;
+  margin-bottom: var(--hublet-section-row-gap) !important;
+
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.cards,
+.canvas-cards {
+  gap: var(--hublet-section-row-gap) !important;
+}
+
+.card,
+.canvas-card {
+  box-sizing: border-box;
+  height: var(--hublet-section-row-height) !important;
+  min-height: var(--hublet-section-row-height) !important;
+}
+
+.card {
+  grid-template-columns:
+    43px
+    minmax(0, 1fr) !important;
+}
+
+.empty-section,
+.canvas-empty-section {
+  box-sizing: border-box;
+  height: var(--hublet-section-row-height) !important;
+  min-height: var(--hublet-section-row-height) !important;
+}
+
+@media (max-width: 760px) {
+  :root {
+    --hublet-section-row-height: 60px;
+    --hublet-section-row-gap: 7px;
+  }

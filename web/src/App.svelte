@@ -397,10 +397,6 @@
                           {/if}
                         </span>
 
-                        <span class="card-arrow">
-                          ↗
-                        </span>
-
                       </a>
                     {/each}
 
