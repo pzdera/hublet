@@ -85,7 +85,6 @@ type Item struct {
 	URL          string           `json:"url"`
 	Description  string           `json:"description"`
 	Icon         Icon             `json:"icon"`
-	OpenInNewTab bool             `json:"openInNewTab"`
 }
 
 type Icon struct {

@@ -107,8 +107,7 @@
       icon: {
         type: 'auto',
         value: ''
-      },
-      openInNewTab: true
+      }
     };
 
     section.items.push(item);

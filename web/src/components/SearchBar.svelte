@@ -61,7 +61,6 @@
         url: exactShortcut.url,
         description: '',
         icon: exactShortcut.icon,
-        openInNewTab: true
       };
     }
   );
@@ -100,7 +99,7 @@
 
     if (matchingItems.length === 1) {
       const item = matchingItems[0];
-      openURL(item.url, item.openInNewTab);
+      openURL(item.url);
       return;
     }
 
@@ -211,8 +210,7 @@
         <button
           type="button"
           class="result"
-          onclick={() =>
-            openURL(item.url, item.openInNewTab)}
+          onclick={() => openURL(item.url)}
         >
           <span class="result-mark result-icon">
             <ServiceIcon {item} />

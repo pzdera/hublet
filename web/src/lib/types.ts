@@ -13,7 +13,6 @@ export type Item = {
   url: string;
   description: string;
   icon: Icon;
-  openInNewTab: boolean;
 };
 
 export type SectionWidth =

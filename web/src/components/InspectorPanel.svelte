@@ -572,15 +572,18 @@
     </header>
 
     <div class="inspector-content">
-      <div class="service-type-badge">
-        <span>Service card</span>
-
-        <small>
-          Opens a self-hosted service or website.
-        </small>
-      </div>
-
       <label class="inspector-field primary">
+        <span>Name</span>
+
+        <input
+          bind:value={selectedItem.name}
+          type="text"
+          maxlength="100"
+          placeholder="Proxmox"
+        />
+      </label>
+
+      <label class="inspector-field">
         <span>URL</span>
 
         <input
@@ -595,18 +598,7 @@
       </label>
 
       <label class="inspector-field">
-        <span>Name</span>
-
-        <input
-          bind:value={selectedItem.name}
-          type="text"
-          maxlength="100"
-          placeholder="Proxmox"
-        />
-      </label>
-
-      <label class="inspector-field">
-        <span>Description</span>
+        <span>Description (optional)</span>
 
         <input
           bind:value={selectedItem.description}
@@ -622,7 +614,7 @@
             <strong>Icon</strong>
 
             <small>
-              Automatic icon discovery comes next.
+              Choose automatic discovery, a local icon, or no icon.
             </small>
           </div>
         </div>
@@ -671,23 +663,6 @@
           <LocalIconManager item={selectedItem} />
         {/if}
       </div>
-
-      <label class="toggle-control">
-        <span>
-          <strong>Open in new tab</strong>
-
-          <small>
-            Keep Hublet open in the current tab.
-          </small>
-        </span>
-
-        <input
-          bind:checked={
-            selectedItem.openInNewTab
-          }
-          type="checkbox"
-        />
-      </label>
 
       <div class="inspector-danger-zone">
         <button

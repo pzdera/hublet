@@ -376,12 +376,8 @@
                       <a
                         class="card"
                         href={item.url}
-                        target={
-                          item.openInNewTab
-                            ? '_blank'
-                            : '_self'
-                        }
-                        rel="noreferrer"
+                        target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <span class="card-icon">
                           <ServiceIcon {item} />
