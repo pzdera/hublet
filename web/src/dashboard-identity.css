@@ -11,6 +11,56 @@
   gap: 12px;
 }
 
+body .header {
+  display: grid;
+  grid-template-columns:
+    minmax(190px, 1fr)
+    minmax(280px, 430px)
+    minmax(190px, 1fr);
+
+  align-items: center;
+  gap: clamp(18px, 3vw, 44px);
+
+  margin-bottom: clamp(24px, 3vw, 38px);
+}
+
+body .header .dashboard-brand {
+  justify-self: start;
+}
+
+body .header .search-shell {
+  width: 100% !important;
+  margin: 0 !important;
+  justify-self: center;
+}
+
+body .header .edit-button {
+  justify-self: end;
+}
+
+@media (max-width: 900px) {
+  body .header {
+    grid-template-columns:
+      minmax(0, 1fr)
+      auto;
+
+    gap: 14px 18px;
+  }
+
+  body .header .search-shell {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+@media (max-width: 640px) {
+  body .header {
+    gap: 11px 12px;
+    margin-bottom: 16px;
+    padding: 0 2px;
+  }
+}
+
 
 /* =========================================================
    REFINED DASHBOARD SEARCH

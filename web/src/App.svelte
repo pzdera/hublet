@@ -281,6 +281,22 @@
           dashboard={config.dashboard}
         />
 
+        <SearchBar
+          items={allItems}
+          shortcuts={config.shortcuts}
+          autoFocus={config.search.autoFocus}
+          openShortcutDirectly={
+            config.search.openShortcutDirectly
+          }
+          webSearchEnabled={
+            config.search.webSearchEnabled
+          }
+          webSearchEngine={
+            config.search.webSearchEngine
+          }
+          bind:query
+        />
+
         <button
           class="edit-button"
           type="button"
@@ -293,22 +309,6 @@
           <span aria-hidden="true"></span>
         </button>
       </header>
-
-      <SearchBar
-        items={allItems}
-        shortcuts={config.shortcuts}
-        autoFocus={config.search.autoFocus}
-        openShortcutDirectly={
-          config.search.openShortcutDirectly
-        }
-        webSearchEnabled={
-          config.search.webSearchEnabled
-        }
-        webSearchEngine={
-          config.search.webSearchEngine
-        }
-        bind:query
-      />
 
       <main class="sections">
         {#if config.sections.length === 0}
