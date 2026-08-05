@@ -9,6 +9,30 @@ export type WallpaperFile = {
   modified: string;
 };
 
+export type WeatherLocation = {
+  id: number;
+  name: string;
+  country?: string;
+  admin1?: string;
+  latitude: number;
+  longitude: number;
+  timezone?: string;
+};
+
+export type CurrentWeather = {
+  location: string;
+  country?: string;
+  temperature: number;
+  apparentTemperature: number;
+  precipitation: number;
+  weatherCode: number;
+  windSpeed: number;
+  windDirection: number;
+  windGusts: number;
+  updatedAt: string;
+  provider: 'open-meteo';
+};
+
 async function readError(
   response: Response
 ): Promise<string> {
@@ -27,6 +51,45 @@ async function readError(
   }
 
   return `HTTP ${response.status}`;
+}
+
+export async function searchWeatherLocations(
+  query: string,
+  signal?: AbortSignal
+): Promise<WeatherLocation[]> {
+  const response = await fetch(
+    `/api/v2/weather/locations?q=${
+      encodeURIComponent(query)
+    }`,
+    { signal }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Unable to search locations: ${
+        await readError(response)
+      }`
+    );
+  }
+
+  return response.json();
+}
+
+export async function loadCurrentWeather():
+Promise<CurrentWeather> {
+  const response = await fetch(
+    '/api/v2/weather'
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Unable to load weather: ${
+        await readError(response)
+      }`
+    );
+  }
+
+  return response.json();
 }
 
 export async function loadConfig():

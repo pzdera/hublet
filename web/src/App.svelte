@@ -10,7 +10,6 @@
 
   import type {
     HubletConfig,
-    Item,
     Section
   } from './lib/types';
 
@@ -30,6 +29,7 @@
   import EditorPanel from './components/EditorPanel.svelte';
   import ServiceIcon from './components/ServiceIcon.svelte';
   import DashboardBrand from './components/DashboardBrand.svelte';
+  import WeatherWidget from './components/WeatherWidget.svelte';
 
   let config =
     $state<HubletConfig | null>(null);
@@ -43,7 +43,6 @@
 
   let error = $state('');
   let editorError = $state('');
-  let query = $state('');
 
   loadConfig()
     .then((value) => {
@@ -66,12 +65,6 @@
             section.items
         )
       : []
-  );
-
-  const normalizedQuery = $derived(
-    query
-      .trim()
-      .toLowerCase()
   );
 
   function cloneConfig(
@@ -164,29 +157,6 @@
     }
 
     return normalized;
-  }
-
-  function sectionItems(
-    items: Item[]
-  ): Item[] {
-    if (!normalizedQuery) {
-      return items;
-    }
-
-    return items.filter(
-      (item) => {
-        return [
-          item.name,
-          item.description,
-          item.url
-        ]
-          .join(' ')
-          .toLowerCase()
-          .includes(
-            normalizedQuery
-          );
-      }
-    );
   }
 
   function startEditing() {
@@ -294,20 +264,25 @@
           webSearchEngine={
             config.search.webSearchEngine
           }
-          bind:query
         />
 
-        <button
-          class="edit-button"
-          type="button"
-          title="Open editor"
-          aria-label="Open editor"
-          onclick={startEditing}
-        >
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </button>
+        <div class="header-actions">
+          {#if config.modules.weather.enabled}
+            <WeatherWidget />
+          {/if}
+
+          <button
+            class="edit-button"
+            type="button"
+            title="Open editor"
+            aria-label="Open editor"
+            onclick={startEditing}
+          >
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </button>
+        </div>
       </header>
 
       <main class="sections">
@@ -336,14 +311,7 @@
           </section>
         {:else}
           {#each config.sections as section (section.id)}
-            {@const visibleItems =
-              sectionItems(section.items)}
-
-            {#if (
-              visibleItems.length > 0 ||
-              !normalizedQuery
-            )}
-              <section
+            <section
                 class={[
                   'section',
                   `width-${section.width}`,
@@ -365,14 +333,14 @@
                     <h2>{section.title}</h2>
                   </div>
 
-                  <span>{visibleItems.length}</span>
+                  <span>{section.items.length}</span>
                 </header>
 
                 <div
                   class="cards"
                   style={`--grid-columns:${section.gridColumns}`}
                 >
-                    {#each visibleItems as item (item.id)}
+                    {#each section.items as item (item.id)}
                       <a
                         class="card"
                         href={item.url}
@@ -402,8 +370,7 @@
                       </div>
                     {/if}
                 </div>
-              </section>
-            {/if}
+            </section>
           {/each}
         {/if}
       </main>

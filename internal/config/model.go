@@ -107,8 +107,11 @@ type Modules struct {
 
 type WeatherModule struct {
 	Enabled   bool     `json:"enabled"`
+	Provider  string   `json:"provider"`
 	Mode      string   `json:"mode"`
 	Location  string   `json:"location"`
+	Country   string   `json:"country"`
+	Admin1    string   `json:"admin1"`
 	Latitude  *float64 `json:"latitude"`
 	Longitude *float64 `json:"longitude"`
 }
@@ -176,8 +179,9 @@ func Default() Config {
 
 		Modules: Modules{
 			Weather: WeatherModule{
-				Enabled: false,
-				Mode:    "current",
+				Enabled:  false,
+				Provider: "open-meteo",
+				Mode:     "current",
 			},
 
 			Clock: ClockModule{

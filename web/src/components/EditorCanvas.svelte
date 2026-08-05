@@ -32,14 +32,15 @@
   import {
     dashboardGridColumns,
     dashboardGridRowStep,
-    maximumGridBottom,
+    maximumPlacementRow,
     normalizeGridLayout,
     placementCollisions,
     placementFits,
     sectionColumnSpan,
     sectionPlacementStyle,
     sectionRowSpan,
-    sectionSwapPlan
+    sectionSwapPlan,
+    snapPlacementRow
   } from '../lib/section-placement';
 
   import {
@@ -85,10 +86,6 @@
   };
 
   let sectionDrag = $state<SectionDrag | null>(null);
-
-  const maximumGridRow = $derived(
-    maximumGridBottom(config.sections)
-  );
 
   const layoutSignature = $derived(
     config.sections
@@ -264,12 +261,20 @@
         hoveredColumn - sectionDrag.columnOffset
       )
     );
-    const targetRow = Math.max(
+    const requestedRow = Math.max(
       1,
       Math.floor(
         (event.clientY - rect.top) /
         dashboardGridRowStep
       ) + 1 - sectionDrag.rowOffset
+    );
+
+    const targetRow = Math.min(
+      snapPlacementRow(requestedRow),
+      maximumPlacementRow(
+        config.sections,
+        section.id
+      )
     );
 
     const collisions = placementCollisions(
@@ -564,6 +569,14 @@
           Search services or enter a shortcut…
         </span>
       </div>
+
+      {#if config.modules.weather.enabled}
+        <div class="canvas-weather-preview">
+          <span aria-hidden="true">☀</span>
+          <strong>{config.modules.weather.location}</strong>
+          <small>Metric</small>
+        </div>
+      {/if}
     </header>
 
     <main
@@ -768,7 +781,10 @@
       {#if sectionDrag}
         <div
           class="section-grid-new-row"
-          style={`grid-row:${maximumGridRow + 1} / span 10`}
+          style={`grid-row:${maximumPlacementRow(
+            config.sections,
+            sectionDrag.sectionId
+          )} / span 4`}
           aria-hidden="true"
         ></div>
 

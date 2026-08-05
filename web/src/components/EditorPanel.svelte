@@ -15,6 +15,10 @@
 
   import { createID } from '../lib/id';
 
+  import {
+    firstAvailablePlacement
+  } from '../lib/section-placement';
+
   import EditorCanvas from './EditorCanvas.svelte';
   import InspectorPanel from './InspectorPanel.svelte';
   import DashboardSettingsPanel from './DashboardSettingsPanel.svelte';
@@ -37,6 +41,8 @@
     type: 'dashboard'
   });
 
+  let layoutError = $state('');
+
   const originalSnapshot = JSON.stringify(
     $state.snapshot(
       untrack(() => config)
@@ -54,6 +60,8 @@
   );
 
   function addSection() {
+    layoutError = '';
+
     const section: Section = {
       id: createID(
         'section',
@@ -65,14 +73,33 @@
       surfaceOpacity: 82,
       surfaceBlur: 16,
       showBorder: true,
-      width: 'wide',
+      width: 'narrow',
       gridRow: 0,
       gridColumn: 0,
-      gridRowSpan: 1,
-      gridColumnSpan: 12,
-      gridColumns: 2,
+      gridRowSpan: 10,
+      gridColumnSpan: 6,
+      gridColumns: 1,
       items: []
     };
+
+    const candidateSections = [
+      ...config.sections,
+      section
+    ];
+
+    const placement = firstAvailablePlacement(
+      candidateSections,
+      section.id
+    );
+
+    if (!placement) {
+      layoutError =
+        'Desktop grid is full. Move or delete a section before adding another one.';
+      return;
+    }
+
+    section.gridRow = placement.row;
+    section.gridColumn = placement.column;
 
     config.sections.push(section);
 
@@ -122,6 +149,8 @@
   function deleteSection(
     sectionId: string
   ) {
+    layoutError = '';
+
     const sectionIndex =
       config.sections.findIndex(
         (section) =>
@@ -244,9 +273,9 @@
     </div>
   </header>
 
-  {#if error}
+  {#if error || layoutError}
     <div class="workspace-error">
-      {error}
+      {error || layoutError}
     </div>
   {/if}
 

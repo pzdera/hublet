@@ -7,7 +7,7 @@
    ========================================================= */
 
 :root {
-  --hublet-section-row-height: 64px;
+  --hublet-section-row-height: 72px;
   --hublet-section-row-gap: 8px;
 }
 
@@ -17,8 +17,7 @@
   align-self: start;
 
   padding-top: 0 !important;
-  padding-bottom:
-    var(--hublet-section-row-gap) !important;
+  padding-bottom: 0 !important;
 
   /* The optional border must not add pixels to the grid. */
   border-width: 0 !important;
@@ -38,15 +37,9 @@
 .canvas-section-header {
   box-sizing: border-box;
   height:
-    calc(
-      var(--hublet-section-row-height) -
-      var(--hublet-section-row-gap)
-    ) !important;
+    var(--hublet-section-row-height) !important;
   min-height:
-    calc(
-      var(--hublet-section-row-height) -
-      var(--hublet-section-row-gap)
-    ) !important;
+    var(--hublet-section-row-height) !important;
 
   margin-top: 0 !important;
   margin-bottom: var(--hublet-section-row-gap) !important;
@@ -85,3 +78,4 @@
     --hublet-section-row-height: 60px;
     --hublet-section-row-gap: 7px;
   }
+}

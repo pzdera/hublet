@@ -449,6 +449,8 @@ body.editor-open {
 }
 
 .editor-canvas-grid {
+  --dashboard-grid-rows: 56;
+
   display: grid;
 
   grid-template-columns:
@@ -463,6 +465,11 @@ body.editor-open {
 
   column-gap: 16px;
   row-gap: 8px;
+
+  min-height:
+    calc(
+      var(--dashboard-grid-rows) * 16px - 8px
+    );
 }
 
 .editor-canvas-section {
@@ -1349,6 +1356,8 @@ div {
     grid-template-columns: 1fr;
 
     gap: 11px;
+
+    min-height: 0;
   }
 
   .inspector-panel {

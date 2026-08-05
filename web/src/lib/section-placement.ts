@@ -4,6 +4,8 @@ import type {
 } from './types';
 
 export const dashboardGridColumns = 24;
+export const dashboardGridRows = 56;
+export const dashboardGridRowQuantum = 5;
 export const dashboardGridRowHeight = 8;
 export const dashboardGridGap = 8;
 export const dashboardGridRowStep =
@@ -47,12 +49,38 @@ export function sectionRowSpan(
 export function measuredRowSpan(
   height: number
 ): number {
-  return Math.max(
+  const measured = Math.max(
     1,
     Math.ceil(
       (height + dashboardGridGap) /
       dashboardGridRowStep
     )
+  );
+
+  return Math.ceil(
+    measured / dashboardGridRowQuantum
+  ) * dashboardGridRowQuantum;
+}
+
+export function snapPlacementRow(
+  row: number
+): number {
+  return Math.max(
+    1,
+    1 +
+      Math.round(
+        (row - 1) / dashboardGridRowQuantum
+      ) * dashboardGridRowQuantum
+  );
+}
+
+export function placementRowIsAligned(
+  row: number
+): boolean {
+  return (
+    Number.isInteger(row) &&
+    row >= 1 &&
+    (row - 1) % dashboardGridRowQuantum === 0
   );
 }
 
@@ -76,6 +104,10 @@ export function placementFits(
   const endRow = row + rowSpan - 1;
 
   if (endColumn > dashboardGridColumns) {
+    return false;
+  }
+
+  if (endRow > dashboardGridRows) {
     return false;
   }
 
@@ -306,36 +338,55 @@ export function sectionSwapPlan(
   return bestPlan;
 }
 
-export function maximumGridBottom(
-  sections: Section[]
-): number {
-  return Math.max(
-    1,
-    ...sections.map(
-      (section) =>
-        section.gridRow + sectionRowSpan(section) - 1
-    )
-  );
-}
-
-export function firstAvailablePlacement(
+export function maximumPlacementRow(
   sections: Section[],
   movingSectionId: string
-): { row: number; column: number } {
+): number {
   const moving = sections.find(
     (section) => section.id === movingSectionId
   );
 
   if (!moving) {
-    return { row: 1, column: 1 };
+    return 1;
+  }
+
+  const lastPossibleRow = Math.max(
+    1,
+    dashboardGridRows - sectionRowSpan(moving) + 1
+  );
+
+  return 1 +
+    Math.floor(
+      (lastPossibleRow - 1) /
+      dashboardGridRowQuantum
+    ) * dashboardGridRowQuantum;
+}
+
+export function firstAvailablePlacement(
+  sections: Section[],
+  movingSectionId: string
+): { row: number; column: number } | null {
+  const moving = sections.find(
+    (section) => section.id === movingSectionId
+  );
+
+  if (!moving) {
+    return null;
   }
 
   const columnSpan = sectionColumnSpan(moving);
   const maximumColumn =
     dashboardGridColumns - columnSpan + 1;
-  const maximumRow = maximumGridBottom(sections) + 1;
+  const maximumRow = maximumPlacementRow(
+    sections,
+    movingSectionId
+  );
 
-  for (let row = 1; row <= maximumRow; row += 1) {
+  for (
+    let row = 1;
+    row <= maximumRow;
+    row += dashboardGridRowQuantum
+  ) {
     for (
       let column = 1;
       column <= maximumColumn;
@@ -354,10 +405,69 @@ export function firstAvailablePlacement(
     }
   }
 
-  return {
-    row: maximumRow,
-    column: 1
-  };
+  return null;
+}
+
+function nearestAvailablePlacement(
+  sections: Section[],
+  movingSectionId: string,
+  preferredRow: number,
+  preferredColumn: number
+): { row: number; column: number } | null {
+  const moving = sections.find(
+    (section) => section.id === movingSectionId
+  );
+
+  if (!moving) {
+    return null;
+  }
+
+  const maximumRow = maximumPlacementRow(
+    sections,
+    movingSectionId
+  );
+  const maximumColumn =
+    dashboardGridColumns - sectionColumnSpan(moving) + 1;
+  const rows: number[] = [];
+  const columns = Array.from(
+    { length: maximumColumn },
+    (_, index) => index + 1
+  ).sort(
+    (left, right) =>
+      Math.abs(left - preferredColumn) -
+      Math.abs(right - preferredColumn)
+  );
+
+  for (
+    let row = 1;
+    row <= maximumRow;
+    row += dashboardGridRowQuantum
+  ) {
+    rows.push(row);
+  }
+
+  rows.sort(
+    (left, right) =>
+      Math.abs(left - preferredRow) -
+      Math.abs(right - preferredRow)
+  );
+
+  for (const row of rows) {
+    for (const column of columns) {
+      if (
+        placementFits(
+          sections,
+          movingSectionId,
+          row,
+          column
+        )
+      ) {
+        return { row, column };
+      }
+    }
+  }
+
+  return null;
 }
 
 export function normalizeGridLayout(
@@ -375,7 +485,7 @@ export function normalizeGridLayout(
     ];
 
     const validCurrentPlacement =
-      Number.isInteger(section.gridRow) &&
+      placementRowIsAligned(section.gridRow) &&
       Number.isInteger(section.gridColumn) &&
       placementFits(
         candidateSections,
@@ -385,13 +495,17 @@ export function normalizeGridLayout(
       );
 
     if (!validCurrentPlacement) {
-      const placement = firstAvailablePlacement(
+      const placement = nearestAvailablePlacement(
         candidateSections,
-        section.id
+        section.id,
+        section.gridRow,
+        section.gridColumn
       );
 
-      section.gridRow = placement.row;
-      section.gridColumn = placement.column;
+      if (placement) {
+        section.gridRow = placement.row;
+        section.gridColumn = placement.column;
+      }
     }
 
     placed.push(section);

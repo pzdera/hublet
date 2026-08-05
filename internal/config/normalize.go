@@ -77,6 +77,10 @@ func Normalize(cfg *Config) {
 		cfg.Modules.Weather.Mode = "current"
 	}
 
+	if cfg.Modules.Weather.Provider == "" {
+		cfg.Modules.Weather.Provider = "open-meteo"
+	}
+
 	if cfg.Modules.Clock.Style == "" {
 		cfg.Modules.Clock.Style = "minimal"
 	}

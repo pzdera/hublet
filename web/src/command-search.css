@@ -1,0 +1,165 @@
+/* Terminal-like dashboard command launcher. */
+
+body .header .command-search {
+  width: min(100%, 520px) !important;
+  margin: 0 !important;
+}
+
+body .header .command-search .search-box {
+  min-height: 60px !important;
+  grid-template-columns:
+    43px
+    minmax(0, 1fr)
+    auto !important;
+  gap: 11px !important;
+  padding: 8px 11px !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 15px !important;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.043) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    box-shadow 150ms ease;
+}
+
+body .header .command-search .search-box:focus-within {
+  border-color: rgba(79, 140, 255, 0.38) !important;
+  background: rgba(255, 255, 255, 0.058) !important;
+  box-shadow:
+    0 0 0 3px rgba(79, 140, 255, 0.075),
+    0 10px 28px rgba(0, 0, 0, 0.17) !important;
+}
+
+body .header .command-search .search-icon {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(79, 140, 255, 0.18);
+  border-radius: 13px;
+  color: #8db4ff !important;
+  background: rgba(79, 140, 255, 0.09);
+  font-family:
+    'IBM Plex Mono',
+    ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+  font-size: 0.83rem !important;
+  font-weight: 750;
+}
+
+body .header .command-search .search-box input {
+  height: 42px;
+  font-family:
+    'IBM Plex Mono',
+    ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+  font-size: 0.74rem !important;
+  line-height: 1.4;
+}
+
+body .header .command-search .search-box input::placeholder {
+  color: rgba(171, 187, 211, 0.54) !important;
+}
+
+body .header .command-search .search-box kbd {
+  min-width: 43px;
+  padding: 5px 7px !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  border-radius: 8px !important;
+  color: rgba(185, 201, 225, 0.7) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  font-family:
+    'IBM Plex Mono',
+    ui-monospace,
+    monospace;
+  font-size: 0.52rem !important;
+  text-align: center;
+}
+
+body .header .command-results {
+  top: calc(100% + 8px) !important;
+  max-height: min(370px, 58vh) !important;
+  padding: 7px !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border-radius: 15px !important;
+  background: rgba(10, 15, 24, 0.88) !important;
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.35) !important;
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+
+body .header .command-results .result {
+  min-height: 50px !important;
+  grid-template-columns:
+    36px
+    minmax(0, 1fr)
+    auto !important;
+  gap: 10px !important;
+  padding: 6px 8px !important;
+  border: 1px solid transparent;
+  border-radius: 10px !important;
+}
+
+body .header .command-results .result:hover,
+body .header .command-results .result.exact-result {
+  border-color: rgba(79, 140, 255, 0.17);
+  background: rgba(79, 140, 255, 0.075);
+}
+
+body .header .command-results .history-result {
+  margin-bottom: 4px;
+  border-color: rgba(255, 255, 255, 0.055);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+body .header .command-results .result-mark {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 10px !important;
+}
+
+body .header .command-results strong {
+  font-size: 0.73rem !important;
+}
+
+body .header .command-results small {
+  font-size: 0.61rem !important;
+}
+
+body .header .command-results .enter {
+  color: rgba(145, 176, 229, 0.7);
+  font-family:
+    'IBM Plex Mono',
+    ui-monospace,
+    monospace;
+  font-size: 0.56rem !important;
+}
+
+@media (max-width: 640px) {
+  body .header .command-search .search-box {
+    min-height: 52px !important;
+    grid-template-columns: 35px minmax(0, 1fr) !important;
+    gap: 9px !important;
+    padding: 7px 9px !important;
+  }
+
+  body .header .command-search .search-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 10px;
+    font-size: 0.72rem !important;
+  }
+
+  body .header .command-search .search-box input {
+    height: 36px;
+    font-size: 0.7rem !important;
+  }
+}

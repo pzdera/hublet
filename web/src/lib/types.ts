@@ -140,12 +140,16 @@ export type HubletConfig = {
     weather: {
       enabled: boolean;
 
+	  provider: 'open-meteo';
+
       mode:
         | 'current'
         | 'today'
         | 'five-day';
 
       location: string;
+	  country: string;
+	  admin1: string;
       latitude: number | null;
       longitude: number | null;
     };

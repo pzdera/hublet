@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/pzdera/hublet/internal/config"
 )
@@ -25,6 +26,8 @@ type Server struct {
 	wallpaperDir string
 	iconDir      string
 	mux          *http.ServeMux
+	httpClient   *http.Client
+	weatherCache weatherCache
 }
 
 func New(
@@ -84,6 +87,9 @@ func New(
 		wallpaperDir: wallpaperDir,
 		iconDir:      iconDir,
 		mux:          http.NewServeMux(),
+		httpClient:   &http.Client{
+			Timeout: 8 * time.Second,
+		},
 	}
 
 	server.routes()
@@ -109,6 +115,16 @@ func (s *Server) routes() {
 	s.mux.HandleFunc(
 		"PUT /api/v2/config",
 		s.putConfig,
+	)
+
+	s.mux.HandleFunc(
+		"GET /api/v2/weather",
+		s.currentWeather,
+	)
+
+	s.mux.HandleFunc(
+		"GET /api/v2/weather/locations",
+		s.searchWeatherLocations,
 	)
 
 	s.mux.HandleFunc(

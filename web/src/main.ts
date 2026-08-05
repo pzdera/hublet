@@ -17,10 +17,12 @@ import './local-icon-manager.css';
 
 import './ui-polish.css';
 import './section-surfaces.css';
-import './mobile-polish.css';
 import './dashboard-identity.css';
 import './section-rhythm.css';
 import './shortcuts.css';
+import './weather.css';
+import './command-search.css';
+import './mobile-polish.css';
 
 mount(App, {
   target: document.getElementById('app')!

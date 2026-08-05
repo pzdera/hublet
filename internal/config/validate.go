@@ -189,6 +189,15 @@ func Validate(cfg Config) error {
 		)
 	}
 
+	switch cfg.Modules.Weather.Provider {
+	case "open-meteo":
+	default:
+		return fmt.Errorf(
+			"unsupported weather provider %q",
+			cfg.Modules.Weather.Provider,
+		)
+	}
+
 	switch cfg.Modules.Clock.Style {
 	case "minimal", "digital", "large":
 	default:
@@ -411,11 +420,11 @@ func Validate(cfg Config) error {
 	if cfg.Modules.Weather.Enabled {
 		if strings.TrimSpace(
 			cfg.Modules.Weather.Location,
-		) == "" &&
-			(cfg.Modules.Weather.Latitude == nil ||
-				cfg.Modules.Weather.Longitude == nil) {
+		) == "" ||
+			cfg.Modules.Weather.Latitude == nil ||
+			cfg.Modules.Weather.Longitude == nil {
 			return errors.New(
-				"enabled weather module requires a location or coordinates",
+				"enabled weather module requires a selected location",
 			)
 		}
 

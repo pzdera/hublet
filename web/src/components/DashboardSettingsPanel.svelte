@@ -4,6 +4,7 @@
   } from '../lib/types';
 
   import AppearancePanel from './AppearancePanel.svelte';
+  import WidgetsPanel from './WidgetsPanel.svelte';
   import ShortcutsPanel from './ShortcutsPanel.svelte';
 
   let {
@@ -13,7 +14,7 @@
   } = $props();
 
   let activeTab = $state<
-    'appearance' | 'shortcuts'
+    'appearance' | 'widgets' | 'shortcuts'
   >('appearance');
 </script>
 
@@ -22,6 +23,19 @@
     class="dashboard-settings-tabs"
     aria-label="Dashboard settings"
   >
+    <button
+      class:active={activeTab === 'widgets'}
+      type="button"
+      onclick={() => {
+        activeTab = 'widgets';
+      }}
+    >
+      Widgets
+      {#if config.modules.weather.enabled}
+        <span>1</span>
+      {/if}
+    </button>
+
     <button
       class:active={activeTab === 'appearance'}
       type="button"
@@ -47,6 +61,8 @@
   <div class="dashboard-settings-content">
     {#if activeTab === 'appearance'}
       <AppearancePanel {config} />
+    {:else if activeTab === 'widgets'}
+      <WidgetsPanel {config} />
     {:else}
       <ShortcutsPanel {config} />
     {/if}
