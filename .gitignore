@@ -30,3 +30,6 @@ Thumbs.db
 /data/
 /icons/
 /wallpapers/
+
+# Local test data
+weather-ui-test-data/
